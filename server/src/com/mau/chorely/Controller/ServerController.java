@@ -10,9 +10,11 @@ package com.mau.chorely.Controller;
  * @autor Angelica Asplund, Emma Svensson and Theresa Dannberg
  */
 
-import Model.NetCommands;
+
 import com.mau.chorely.model.RegisteredUsers;
 import Model.User;
+import com.mau.chorely.model.transferrable.NetCommands;
+import com.mau.chorely.model.transferrable.Transferable;
 
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -21,7 +23,7 @@ public class ServerController implements ClientListener {
 
     private RegisteredUsers registeredUsers;
     private ServerNetwork network;
-    private LinkedBlockingDeque<ArrayList<Transferrable>> clientTaskBuffer; //här läggs alla inkommande arraylists från klienterna.
+    private LinkedBlockingDeque<ArrayList<Transferable>> clientTaskBuffer; //här läggs alla inkommande arraylists från klienterna.
 
     public ServerController() {
         registeredUsers = new RegisteredUsers();
@@ -30,7 +32,7 @@ public class ServerController implements ClientListener {
     }
 
     @Override
-    public void sendList(ArrayList<Transferrable> message) {
+    public void sendList(ArrayList<Transferable> message) {
         //lägg in listan i en buffer så att controllern kan hantera listan sen i egen tråd.
         clientTaskBuffer.add(message);
     }
@@ -39,7 +41,7 @@ public class ServerController implements ClientListener {
 
         // 1. Plocka ut första "uppgiften" från clientTask
         // 2. Plocka ut tex position[0]  (om där är enumet)
-        Transferrable command = clientTaskBuffer.getFirst().get(0);
+        Transferable command = clientTaskBuffer.getFirst().get(0);
 
         // 3. Skicka in enumet i en switch sats som kontrollerar vilket enum där är
         // 4. En metod per enum, namnen ska vara talande för vad som händer i de olika scenarion

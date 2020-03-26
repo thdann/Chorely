@@ -6,10 +6,12 @@ package com.mau.chorely.Controller;
  * @autor Angelica Asplund, Emma Svensson and Theresa Dannberg
  */
 
+import com.mau.chorely.model.transferrable.Transferable;
+
 import java.util.ArrayList;
 
 public interface ClientListener {
 
-    void sendList(ArrayList<Transferrable> message);
+    void sendList(ArrayList<Transferable> message);
 
 }

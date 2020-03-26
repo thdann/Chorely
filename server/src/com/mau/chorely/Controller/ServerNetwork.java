@@ -8,8 +8,9 @@ package com.mau.chorely.Controller;
  * @autor Angelica Asplund, Emma Svensson and Theresa Dannberg
  */
 
-import Model.NetCommands;
+
 import Model.User;
+import com.mau.chorely.model.transferrable.NetCommands;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

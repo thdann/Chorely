@@ -25,7 +25,7 @@ public class ErrorMessage implements Transferable {
         return ret;
     }
 
-    
+
     public String toString() {
         return getMessage();
     }
