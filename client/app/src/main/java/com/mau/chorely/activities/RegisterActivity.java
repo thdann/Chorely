@@ -48,10 +48,10 @@ public class RegisterActivity extends AppCompatActivity {
             registration.add(NetCommands.register);
             registration.add(user);
 
-//            Model model = ModelInstances.getInstance();
-//            NetCommands command = model.notifyForResult(registration);
+            Model model = ModelInstances.getInstance();
+            NetCommands command = model.notifyForResult(registration);
 
-            return NetCommands.registrationOk;
+            return command;
         }
 
         protected void onPostExecute(NetCommands command) {

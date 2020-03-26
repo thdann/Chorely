@@ -15,7 +15,8 @@ import java.util.concurrent.LinkedBlockingDeque;
 
 public class NetInterface {
     private static final int SERVER_PORT = 6583;
-    private static final String SERVER_IP ="";
+    private static final String SERVER_IP ="10.0.2.2";
+
     private Socket socket;
     private static Thread inputThread;
     private static Thread outputThread;
@@ -33,6 +34,7 @@ public class NetInterface {
             ArrayList<Transferable> errorList = new ArrayList<>();
             errorList.add(NetCommands.internalClientError);
             errorList.add(new ErrorMessage("Error connecting to server."));
+
             model.notify(errorList);
         }
     }
@@ -52,7 +54,7 @@ public class NetInterface {
             return true;
 
         } catch (IOException e) {
-            System.out.println("Error setting up socket!");
+            System.out.println("Error setting up socket!" + " " + e.getMessage());
         }
         return false;
     }
