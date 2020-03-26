@@ -1,6 +1,8 @@
 package com.mau.chorely.model.utils;
 
-import com.example.myapplication.model.common.NetCommands;
+
+
+import com.mau.chorely.model.common.NetCommands;
 
 import java.util.ArrayList;
 import java.util.HashMap;

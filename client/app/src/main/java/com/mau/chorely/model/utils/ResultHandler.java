@@ -1,6 +1,7 @@
 package com.mau.chorely.model.utils;
 
-import com.example.myapplication.model.common.NetCommands;
+
+import com.mau.chorely.model.common.NetCommands;
 
 public class ResultHandler {
     private volatile NetCommands resultCommand;

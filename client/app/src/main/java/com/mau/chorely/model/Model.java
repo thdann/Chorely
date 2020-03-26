@@ -1,9 +1,11 @@
 package com.mau.chorely.model;
 
-import com.example.myapplication.model.common.NetCommands;
-import com.example.myapplication.model.common.Transferable;
-import com.example.myapplication.model.utils.MultiMap;
-import com.example.myapplication.model.utils.ResultHandler;
+
+
+import com.mau.chorely.model.common.NetCommands;
+import com.mau.chorely.model.common.Transferable;
+import com.mau.chorely.model.utils.MultiMap;
+import com.mau.chorely.model.utils.ResultHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
