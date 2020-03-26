@@ -1,6 +1,8 @@
 package com.mau.chorely.model.transferrable;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Transferable {
     private final String username;
     private final String password;
 
