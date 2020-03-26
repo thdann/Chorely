@@ -52,7 +52,7 @@ public class NetInterface {
             return true;
 
         } catch (IOException e) {
-            System.out.println("Error setting up socket!" e.getMessage());
+            System.out.println("Error setting up socket!" + e.getMessage());
         }
         return false;
     }
