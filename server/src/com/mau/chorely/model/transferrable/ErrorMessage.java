@@ -1,6 +1,6 @@
 package com.mau.chorely.model.transferrable;
 
-import androidx.annotation.NonNull;
+
 
 public class ErrorMessage implements Transferable {
     private String message;
@@ -24,8 +24,7 @@ public class ErrorMessage implements Transferable {
         }
         return ret;
     }
-
-    @NonNull
+    
     @Override
     public String toString() {
         return getMessage();
