@@ -5,13 +5,6 @@ public class ModelInstances {
     private static Model model;
     private ModelInstances(){}
 
-    public static void Stop(){
-
-    }
-
-    public static void start(){
-
-    }
 
     public static Model getInstance(){
         if(model == null){
