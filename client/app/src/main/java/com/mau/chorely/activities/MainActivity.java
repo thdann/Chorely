@@ -1,4 +1,4 @@
-package com.mau.chorely.Activities;
+package com.mau.chorely.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 

@@ -1,9 +1,8 @@
-package com.mau.chorely.Activities;
+package com.mau.chorely.activities;
 
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
