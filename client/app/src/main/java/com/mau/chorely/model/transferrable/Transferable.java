@@ -1,4 +1,6 @@
 package com.mau.chorely.model.transferrable;
 
-public interface Transferable {
+import java.io.Serializable;
+
+public interface Transferable extends Serializable {
 }
