@@ -1,5 +1,7 @@
 package com.mau.chorely.Controller;
 
+import com.mau.chorely.model.transferrable.Transferable;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -45,7 +47,7 @@ public class ClientHandler {
 
             while (true) {
                 try {
-                    ArrayList<Transferrable> list = (ArrayList<Transferrable>) ois.readObject();
+                    ArrayList<Transferable> list = (ArrayList<Transferable>) ois.readObject();
                     listener.sendList(list);
 
                 } catch (IOException e) {
