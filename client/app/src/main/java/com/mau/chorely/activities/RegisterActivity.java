@@ -3,21 +3,20 @@ package com.mau.chorely.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 
 import com.mau.chorely.R;
 import com.mau.chorely.model.Model;
 import com.mau.chorely.model.ModelInstances;
-import com.mau.chorely.model.common.NetCommands;
-import com.mau.chorely.model.common.Transferable;
-import com.mau.chorely.model.common.User;
+import com.mau.chorely.model.transferrable.NetCommands;
+import com.mau.chorely.model.transferrable.Transferable;
+import com.mau.chorely.model.transferrable.User;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class RegisterActivity extends AppCompatActivity {
     @Override
@@ -48,25 +47,27 @@ public class RegisterActivity extends AppCompatActivity {
             registration.add(NetCommands.register);
             registration.add(user);
 
-            Model model = ModelInstances.getInstance();
-            NetCommands command = model.notifyForResult(registration);
-            return command;
+//            Model model = ModelInstances.getInstance();
+//            NetCommands command = model.notifyForResult(registration);
 
+            return NetCommands.registrationOk;
         }
 
         protected void onPostExecute(NetCommands command) {
             switch (command) {
                 case internalClientError:
-                    System.out.println(command);
+                    System.out.println("internal client error.");
                     break;
                 case registrationOk:
-                    System.out.println(command);
+                    System.out.println("registration ok!!!");
+                    Intent intent = new Intent(RegisterActivity.this, CreateGroupActivity.class);
+                    startActivity(intent);
                     break;
                 case registrationDenied:
-                    System.out.println(command);
+                    System.out.println("registration denied");
                     break;
                 default:
-                    System.out.println("Shouldn't get here. Very bad!");
+                    throw new RuntimeException("Shouldn't get here. Very bad!");
 
             }
         }
