@@ -237,7 +237,6 @@ gen-external-apklibs
 obj/
 
 # IntelliJ IDEA
-*.iml
 /out/
 
 # User-specific configurations
