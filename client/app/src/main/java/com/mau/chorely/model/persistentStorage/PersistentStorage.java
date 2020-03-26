@@ -1,4 +1,4 @@
-package com.mau.chorely.model;
+package com.mau.chorely.model.persistentStorage;
 
 public class PersistentStorage {
     public PersistentStorage(){
