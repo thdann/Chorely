@@ -2,6 +2,7 @@ package com.mau.chorely.model;
 
 
 
+import com.mau.chorely.model.transferrable.ErrorMessage;
 import com.mau.chorely.model.transferrable.NetCommands;
 import com.mau.chorely.model.transferrable.Transferable;
 import com.mau.chorely.model.persistentStorage.PersistentStorage;
@@ -10,6 +11,7 @@ import com.mau.chorely.model.utils.ResultHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.LinkedBlockingDeque;
 
 
@@ -20,7 +22,9 @@ public class Model implements NetworkListener{
     private LinkedBlockingDeque<ArrayList<Transferable>> taskToHandle = new LinkedBlockingDeque<>();
     private NetInterface network;
     private Thread modelThread = new Thread(new ModelThread());
+    private ErrorMessage errorMessage;
     PersistentStorage storage = new PersistentStorage();
+
     Model(){
         network = new NetInterface(this);
         modelThread.start();
@@ -36,6 +40,12 @@ public class Model implements NetworkListener{
         modelThread.interrupt();
     }
 
+    public ErrorMessage getErrorMessage(){
+        ErrorMessage ret = errorMessage;
+        errorMessage = null;
+        return ret;
+    }
+
     public synchronized NetCommands notifyForResult(ArrayList<Transferable> curWorkingOn){
         try {
             taskToHandle.put(curWorkingOn);
@@ -49,11 +59,22 @@ public class Model implements NetworkListener{
     }
 
     private void handleResult(NetCommands returnCommand){
-        ArrayList<ResultHandler> waitingThreads =
+        ArrayList<ResultHandler> waitingThreads = new ArrayList<>();
                 threadsWaitingForResult.get(resultAndRequestPairs.get(returnCommand));
 
         for (ResultHandler thread : waitingThreads) {
             thread.notifyResult(returnCommand);
+        }
+    }
+
+    private void handleError(ArrayList<Transferable> errorList){
+        errorMessage = (ErrorMessage) errorList.get(1);
+        HashMap<NetCommands, ArrayList<ResultHandler>> tempMap = threadsWaitingForResult.getHashMap();
+        for (Map.Entry<NetCommands, ArrayList<ResultHandler>> entry : tempMap.entrySet()){
+            ArrayList<ResultHandler> mapData = entry.getValue();
+            for(ResultHandler thread : mapData){
+                thread.notifyResult((NetCommands)errorList.get(0));
+            }
         }
     }
 
@@ -84,6 +105,8 @@ public class Model implements NetworkListener{
                     case registrationOk:
                         handleResult((NetCommands) curWorkingOn.get(0));
                         break;
+                    case internalClientError:
+                        handleError(curWorkingOn);
 
                 }
             }
