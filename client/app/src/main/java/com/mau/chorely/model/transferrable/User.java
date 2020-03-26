@@ -1,4 +1,4 @@
-package com.mau.chorely.model.common;
+package com.mau.chorely.model.transferrable;
 
 import java.io.Serializable;
 

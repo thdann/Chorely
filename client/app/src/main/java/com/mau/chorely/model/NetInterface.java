@@ -2,7 +2,7 @@ package com.mau.chorely.model;
 
 
 
-import com.mau.chorely.model.common.Transferable;
+import com.mau.chorely.model.transferrable.Transferable;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

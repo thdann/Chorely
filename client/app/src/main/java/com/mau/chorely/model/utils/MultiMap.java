@@ -2,7 +2,7 @@ package com.mau.chorely.model.utils;
 
 
 
-import com.mau.chorely.model.common.NetCommands;
+import com.mau.chorely.model.transferrable.NetCommands;
 
 import java.util.ArrayList;
 import java.util.HashMap;
