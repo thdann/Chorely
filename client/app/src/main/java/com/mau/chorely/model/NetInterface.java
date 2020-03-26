@@ -2,6 +2,8 @@ package com.mau.chorely.model;
 
 
 
+import com.mau.chorely.model.transferrable.ErrorMessage;
+import com.mau.chorely.model.transferrable.NetCommands;
 import com.mau.chorely.model.transferrable.Transferable;
 
 import java.io.IOException;
@@ -17,14 +19,22 @@ public class NetInterface {
     private Socket socket;
     private static Thread inputThread;
     private static Thread outputThread;
-    boolean connected = false;
+    private boolean connected = false;
     LinkedBlockingDeque<ArrayList<Transferable>> outBoundQueue = new LinkedBlockingDeque<>();
     NetworkListener model;
 
     public NetInterface(NetworkListener model){
         this.model = model;
-        connected = setupSocket();
-        setupThreads();
+        connect();
+        if(connected) {
+            setupThreads();
+        }
+        else{
+            ArrayList<Transferable> errorList = new ArrayList<>();
+            errorList.add(NetCommands.internalClientError);
+            errorList.add(new ErrorMessage("Error connecting to server."));
+            model.notify(errorList);
+        }
     }
 
     public void sendData(ArrayList<Transferable> data){
@@ -50,8 +60,9 @@ public class NetInterface {
     // TODO: 2020-03-24 Make client resetable. interrupt threads, restart, and reset socket.
 
     private void connect(){
-        connected = setupSocket();
-
+        if(connected = setupSocket()){
+            setupThreads();
+        }
     }
 
     public void disconnect() {

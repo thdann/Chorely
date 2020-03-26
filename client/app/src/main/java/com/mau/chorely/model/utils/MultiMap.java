@@ -10,6 +10,10 @@ import java.util.HashMap;
 public class MultiMap <K, V> {
     private HashMap<K, ArrayList<V>> hashMap = new HashMap<>();
 
+    public HashMap<K, ArrayList<V>> getHashMap(){
+        return hashMap;
+    }
+
     public void put(K key, V value){
         if(hashMap.containsKey(key)){
             ArrayList<V> newList = hashMap.remove(key);
