@@ -1,4 +1,4 @@
-package Controller;
+package com.mau.chorely.Controller;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

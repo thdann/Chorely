@@ -1,4 +1,4 @@
-package Controller;
+package com.mau.chorely.Controller;
 
 /**
  * ServerController handles the over all logic on the server side.
@@ -11,7 +11,7 @@ package Controller;
  */
 
 import Model.NetCommands;
-import Model.RegisteredUsers;
+import com.mau.chorely.model.RegisteredUsers;
 import Model.User;
 
 import java.util.ArrayList;

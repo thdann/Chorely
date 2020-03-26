@@ -1,4 +1,6 @@
-package Model;
+package com.mau.chorely.model;
+
+import Model.User;
 
 import java.util.ArrayList;
 

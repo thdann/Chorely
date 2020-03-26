@@ -1,4 +1,4 @@
-package Controller;
+package com.mau.chorely.Controller;
 
 /**
  * ServerNetwork sets up the serverSocket and starts a thread that awaits clients asking to connect,
