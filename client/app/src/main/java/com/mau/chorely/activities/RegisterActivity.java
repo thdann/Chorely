@@ -16,6 +16,7 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
     }
 
+
     public void register(View view) {
         EditText user = findViewById(R.id.usernameField);
         EditText pass = findViewById(R.id.password);
