@@ -1,10 +1,12 @@
-package com.mau.chorely;
+package com.mau.chorely.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+
+import com.mau.chorely.R;
 
 public class MainActivity extends AppCompatActivity {
 

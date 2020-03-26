@@ -1,4 +1,4 @@
-package com.mau.chorely;
+package com.mau.chorely.Activities;
 
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,6 +7,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+
+import com.mau.chorely.R;
 
 public class RegisterActivity extends AppCompatActivity {
     @Override
