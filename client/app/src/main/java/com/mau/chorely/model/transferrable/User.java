@@ -1,4 +1,4 @@
-package com.mau.chorely.model.common;
+package com.mau.chorely.model.transferrable;
 
 public class User {
     private final String username;
