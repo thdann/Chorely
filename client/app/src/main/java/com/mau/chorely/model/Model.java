@@ -4,6 +4,7 @@ package com.mau.chorely.model;
 
 import com.mau.chorely.model.common.NetCommands;
 import com.mau.chorely.model.common.Transferable;
+import com.mau.chorely.model.persistentStorage.PersistentStorage;
 import com.mau.chorely.model.utils.MultiMap;
 import com.mau.chorely.model.utils.ResultHandler;
 
