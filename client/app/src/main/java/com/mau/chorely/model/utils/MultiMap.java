@@ -2,10 +2,12 @@ package com.mau.chorely.model.utils;
 
 
 
-import com.mau.chorely.model.transferrable.NetCommands;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import shared.transferable.NetCommands;
 
 public class MultiMap <K, V> {
     private HashMap<K, ArrayList<V>> hashMap = new HashMap<>();

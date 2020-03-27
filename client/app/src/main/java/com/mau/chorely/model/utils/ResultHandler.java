@@ -1,7 +1,7 @@
 package com.mau.chorely.model.utils;
 
 
-import com.mau.chorely.model.transferrable.NetCommands;
+import shared.transferable.NetCommands;
 
 public class ResultHandler {
     private volatile NetCommands resultCommand;

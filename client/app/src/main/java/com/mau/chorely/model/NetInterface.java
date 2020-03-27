@@ -2,9 +2,9 @@ package com.mau.chorely.model;
 
 
 
-import com.mau.chorely.model.transferrable.ErrorMessage;
-import com.mau.chorely.model.transferrable.NetCommands;
-import com.mau.chorely.model.transferrable.Transferable;
+import shared.transferable.ErrorMessage;
+import shared.transferable.NetCommands;
+import shared.transferable.Transferable;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

@@ -1,4 +1,4 @@
-package com.mau.chorely.model.transferrable;
+package shared.transferable;
 
 
 

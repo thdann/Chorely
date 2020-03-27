@@ -12,11 +12,12 @@ import android.widget.EditText;
 import com.mau.chorely.R;
 import com.mau.chorely.model.Model;
 import com.mau.chorely.model.ModelInstances;
-import com.mau.chorely.model.transferrable.NetCommands;
-import com.mau.chorely.model.transferrable.Transferable;
-import com.mau.chorely.model.transferrable.User;
 
 import java.util.ArrayList;
+
+import shared.transferable.NetCommands;
+import shared.transferable.Transferable;
+import shared.transferable.User;
 
 public class RegisterActivity extends AppCompatActivity {
     @Override
