@@ -1,4 +1,4 @@
-package Controller;
+package controller;
 
 /**
  * ServerController handles the over all logic on the server side.
@@ -11,7 +11,7 @@ package Controller;
  */
 
 
-import Model.RegisteredUsers;
+import model.RegisteredUsers;
 
 import shared.transferable.NetCommands;
 import shared.transferable.Transferable;
