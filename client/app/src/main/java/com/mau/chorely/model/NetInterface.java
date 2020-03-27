@@ -116,9 +116,9 @@ public class NetInterface {
             try(ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream())){
                 while(!Thread.interrupted()) {
                     try {
-                        outputStream.writeObject(outBoundQueue.getFirst());
+                        outputStream.writeObject(outBoundQueue.take());
                         outputStream.flush();
-                    } catch (IOException e){
+                    } catch (IOException | InterruptedException e){
                         System.out.println("Error writing to outputStream" + e.getMessage());
                         break;
                     }

@@ -95,19 +95,24 @@ public class Model implements NetworkListener{
         public void run() {
 
             while (!Thread.interrupted()){
-                ArrayList<Transferable> curWorkingOn = taskToHandle.remove();
+                System.out.println("Entering queue");
+                try {
+                    ArrayList<Transferable> curWorkingOn = taskToHandle.take();
 
-                switch ((NetCommands)curWorkingOn.get(0)){
-                    case register:
-                        storage.updateData("/user.cho", curWorkingOn.get(0));
-                        network.sendData(curWorkingOn);
-                        break;
-                    case registrationOk:
-                        handleResult((NetCommands) curWorkingOn.get(0));
-                        break;
-                    case internalClientError:
-                        handleError(curWorkingOn);
+                    switch ((NetCommands) curWorkingOn.get(0)) {
+                        case register:
+                            storage.updateData("/user.cho", curWorkingOn.get(0));
+                            network.sendData(curWorkingOn);
+                            break;
+                        case registrationOk:
+                            handleResult((NetCommands) curWorkingOn.get(0));
+                            break;
+                        case internalClientError:
+                            handleError(curWorkingOn);
 
+                    }
+                } catch (InterruptedException e){
+                    System.out.println("Thread interrupted in main model queue");
                 }
             }
         }

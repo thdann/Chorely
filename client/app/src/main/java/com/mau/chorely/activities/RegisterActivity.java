@@ -59,6 +59,7 @@ public class RegisterActivity extends AppCompatActivity {
             switch (command) {
                 case internalClientError:
                     System.out.println("internal client error.");
+                    System.out.println(ModelInstances.getInstance().getErrorMessage());
                     break;
                 case registrationOk:
                     System.out.println("registration ok!!!");
