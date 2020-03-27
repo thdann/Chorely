@@ -7,7 +7,7 @@ package com.mau.chorely.model.utils;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import shared.transferable.NetCommands;
+
 
 public class MultiMap <K, V> {
     private HashMap<K, ArrayList<V>> hashMap = new HashMap<>();
@@ -29,7 +29,7 @@ public class MultiMap <K, V> {
         }
     }
 
-    public boolean containsKey(NetCommands key){
+    public boolean containsKey(K key){
         return hashMap.containsKey(key);
     }
 
@@ -37,7 +37,7 @@ public class MultiMap <K, V> {
         return hashMap.size();
     }
 
-    public ArrayList<V> get(NetCommands key){
+    public ArrayList<V> get(K key){
         return hashMap.get(key);
     }
 }
