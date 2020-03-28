@@ -1,3 +1,8 @@
+/**
+ *
+ */
+
+
 package com.mau.chorely.model;
 
 

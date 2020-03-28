@@ -1,5 +1,10 @@
-package com.mau.chorely.model;
+/**
+ * Callback interface for the clients networking class.
+ * @version 1.0
+ * @author Timothy Denison
+ */
 
+package com.mau.chorely.model;
 
 
 import shared.transferable.Transferable;

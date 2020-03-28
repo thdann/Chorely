@@ -1,3 +1,9 @@
+/**
+ * A generic hashmap with multiple data entities per key.
+ * @version 1.0
+ * @autor Timothy Denison
+ */
+
 package com.mau.chorely.model.utils;
 
 

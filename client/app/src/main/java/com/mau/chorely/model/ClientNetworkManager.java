@@ -1,3 +1,10 @@
+/**
+ * This is the client class for networking.
+ * @version 1.0
+ * @author Timothy Denison
+ */
+
+
 package com.mau.chorely.model;
 
 
@@ -13,7 +20,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingDeque;
 
-public class NetInterface {
+public class ClientNetworkManager {
     private static final int SERVER_PORT = 6583;
     private static final String SERVER_IP ="10.0.2.2";
 
@@ -21,10 +28,10 @@ public class NetInterface {
     private static Thread inputThread;
     private static Thread outputThread;
     private boolean connected = false;
-    LinkedBlockingDeque<ArrayList<Transferable>> outBoundQueue = new LinkedBlockingDeque<>();
-    NetworkListener model;
+    private LinkedBlockingDeque<ArrayList<Transferable>> outBoundQueue = new LinkedBlockingDeque<>();
+    private NetworkListener model;
 
-    public NetInterface(NetworkListener model){
+    public ClientNetworkManager(NetworkListener model){
         this.model = model;
         connect();
         if(connected) {
