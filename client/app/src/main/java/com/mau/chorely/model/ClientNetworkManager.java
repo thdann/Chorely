@@ -80,9 +80,6 @@ public class ClientNetworkManager {
         return false;
     }
 
-    // TODO: 2020-03-24 Make client resetable. interrupt threads, restart, and reset socket.
-
-
 
     public void disconnect() {
         try{
@@ -145,7 +142,6 @@ public class ClientNetworkManager {
             }
             catch(IOException e){
                 System.out.println("Error setting up outputStream" + e.getMessage());
-
             }
             disconnect();
         }

@@ -16,6 +16,8 @@
 package com.mau.chorely.model;
 
 
+import android.util.Log;
+
 import shared.transferable.ErrorMessage;
 import shared.transferable.NetCommands;
 import shared.transferable.Transferable;
@@ -41,15 +43,42 @@ public class Model implements NetworkListener{
 
     Model(){
         System.out.println("Model created");
+        registerCommandPairs();
         network = new ClientNetworkManager(this);
         modelThread.start();
-        registerCommandPairs();
+
+    }
+
+    /**
+     * Method to compile an error task for the main thread.
+     * @param message String message.
+     */
+
+    private void modelError(String message){
+       ErrorMessage errorMessage = new ErrorMessage(message);
+       ArrayList<Transferable> errorList = new ArrayList<>();
+       errorList.add(NetCommands.internalClientError);
+       errorList.add(errorMessage);
+       notify(errorList);
+    }
+
+    /**
+     * Overridden error task method, to take exception instead of string.
+     * @param exception Error message.
+     */
+    private void modelError(Exception exception){
+       ErrorMessage errorMessage = new ErrorMessage(exception);
+       ArrayList<Transferable> errorList = new ArrayList<>();
+       errorList.add(NetCommands.internalClientError);
+       errorList.add(errorMessage);
+       notify(errorList);
     }
 
     /**
      *the method is the first try of an implementation of mapping of requests and responses.
      */
     private void registerCommandPairs(){
+        // FIXME: 2020-03-30 Borde resultAndRequest kanske vara multimap och hålla fler än ett möjligt utgående för varje response?
         resultAndRequestPairs.put(NetCommands.registrationOk, NetCommands.register);
         resultAndRequestPairs.put(NetCommands.registrationDenied, NetCommands.register);
     }
@@ -95,8 +124,6 @@ public class Model implements NetworkListener{
      */
     public synchronized NetCommands notifyForResponse(ArrayList<Transferable> transferred){
         try {
-            // FIXME: 2020-03-28 There is a race condition, if the model thread handles request and notifies the supposedly sleeping thread before the thread is sleeping.
-            // FIXME: 2020-03-28 If this happens, the lock object is discarded, and the thread will never be able to wake.
             taskToHandle.put(transferred);
             ResultHandler threadLockObject = new ResultHandler();
             threadsWaitingForResponse.put(((NetCommands)transferred.get(0)), threadLockObject);
@@ -109,14 +136,31 @@ public class Model implements NetworkListener{
 
     /**
      * Method to handle any command that is sent as a response to a request.
+     * There is also a check to make sure a race condition where the response task is created before
+     * request thread is sleeping.
      * @param responseCommand Any command sent as response.
      */
+
+    // TODO: 2020-03-30 Why cant method be synchronized?
     private void handleResponse(NetCommands responseCommand){
-        ArrayList<ResultHandler> waitingThreads = threadsWaitingForResponse.get(resultAndRequestPairs.get(responseCommand));
-        for (ResultHandler thread : waitingThreads) {
-            thread.notifyResult(responseCommand);
-            System.out.println(responseCommand.toString());
+        for(int i = 0; i < 3; i++) { //loop to check for race condition 3 times before error-task is created.
+            if (threadsWaitingForResponse.containsKey(resultAndRequestPairs.get(responseCommand))) {
+                ArrayList<ResultHandler> waitingThreads = threadsWaitingForResponse.get(resultAndRequestPairs.get(responseCommand));
+                for (ResultHandler thread : waitingThreads) {
+                    thread.notifyResult(responseCommand);
+                    return;
+                }
+            }
+            else{
+                try{
+                    Thread.sleep(100);
+                } catch (InterruptedException e){
+                    modelError("Model thread was interrupted checking for race condition: " + e.getMessage());
+                }
+            }
         }
+        //If the check fails three times an error is generated.
+        modelError("Response without matching request!");
     }
 
     /**
@@ -146,10 +190,8 @@ public class Model implements NetworkListener{
         public void run() {
 
             while (!Thread.interrupted()){
-                System.out.println("Entering queue");
                 try {
                     ArrayList<Transferable> curWorkingOn = taskToHandle.take();
-
                     switch ((NetCommands) curWorkingOn.get(0)) {
                         case register:
                             storage.updateData("/user.cho", curWorkingOn.get(0));
@@ -160,7 +202,6 @@ public class Model implements NetworkListener{
                             break;
                         case internalClientError:
                             handleError(curWorkingOn);
-
                     }
                 } catch (InterruptedException e){
                     System.out.println("Thread interrupted in main model queue");
@@ -168,5 +209,4 @@ public class Model implements NetworkListener{
             }
         }
     }
-
 }

@@ -65,7 +65,7 @@ public class ServerNetwork implements Runnable {
                 oos.writeObject(testArray);
                 //controller.addRegisteredUser((User) ois.readObject()); //Skickar vidare ett nyregistrerat Userobjekt till controllen som skickar till registeredUsers
                 System.out.println("read object");
-                oos.writeObject(NetCommands.registrationOk); //Ska skickas registrationOK tillbaka till klienten.
+                //oos.writeObject(NetCommands.registrationOk); //Ska skickas registrationOK tillbaka till klienten.
 
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
