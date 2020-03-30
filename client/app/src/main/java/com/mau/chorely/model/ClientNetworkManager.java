@@ -7,8 +7,6 @@
 
 package com.mau.chorely.model;
 
-
-
 import shared.transferable.ErrorMessage;
 import shared.transferable.NetCommands;
 import shared.transferable.Transferable;
@@ -33,15 +31,14 @@ public class ClientNetworkManager {
 
     public ClientNetworkManager(NetworkListener model){
         this.model = model;
-        connect();
-        if(connected) {
+
+        if(connected = setupSocket()) {
             setupThreads();
         }
         else{
             ArrayList<Transferable> errorList = new ArrayList<>();
             errorList.add(NetCommands.internalClientError);
             errorList.add(new ErrorMessage("Error connecting to server."));
-
             model.notify(errorList);
         }
     }
@@ -53,6 +50,23 @@ public class ClientNetworkManager {
             // TODO: 2020-03-24 Varför måste tråden blocka när den lägger data i kön? evt byta typ av kö.
             System.out.println("Error putting data in outboundqueue" + e.getMessage());
         }
+    }
+
+    public void reconnect(){
+        if(connected)
+            disconnect();
+        if(connected = setupSocket())
+            setupThreads();
+        else
+            netWorkError("Could not connect to server.");
+    }
+
+    private void netWorkError(String message){
+        ErrorMessage errorMessage = new ErrorMessage(message);
+        ArrayList<Transferable> transferables = new ArrayList<>();
+        transferables.add(NetCommands.internalClientError);
+        transferables.add(errorMessage);
+        model.notify(transferables);
     }
 
     private boolean setupSocket() {
@@ -68,14 +82,12 @@ public class ClientNetworkManager {
 
     // TODO: 2020-03-24 Make client resetable. interrupt threads, restart, and reset socket.
 
-    private void connect(){
-        if(connected = setupSocket()){
-            setupThreads();
-        }
-    }
+
 
     public void disconnect() {
         try{
+            inputThread.interrupt();
+            outputThread.interrupt();
             socket.close();
             connected = false;
         }
@@ -95,7 +107,6 @@ public class ClientNetworkManager {
 
         @Override
         public void run() {
-
                 try (ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream())){
                     while (!Thread.interrupted()) {
                         try {
@@ -104,6 +115,7 @@ public class ClientNetworkManager {
                             System.out.println("Error reading object from stream" + e.getMessage());
                         } catch (IOException e){
                             System.out.println("Error reading object from stream" + e.getMessage());
+                            disconnect();
                             break;
                         }
                     }
@@ -130,7 +142,6 @@ public class ClientNetworkManager {
                         break;
                     }
                 }
-
             }
             catch(IOException e){
                 System.out.println("Error setting up outputStream" + e.getMessage());

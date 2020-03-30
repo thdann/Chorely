@@ -40,6 +40,7 @@ public class Model implements NetworkListener{
     private PersistentStorage storage = new PersistentStorage();
 
     Model(){
+        System.out.println("Model created");
         network = new ClientNetworkManager(this);
         modelThread.start();
         registerCommandPairs();
@@ -72,13 +73,13 @@ public class Model implements NetworkListener{
 
     /**
      * Callback method for any request that doesn't require a response.
-      * @param transfered Arraylist containing NetCommand, and data.
+      * @param transferred Arraylist containing NetCommand, and data.
      */
 
     @Override
-    public  void notify(ArrayList<Transferable> transfered) {
+    public  void notify(ArrayList<Transferable> transferred) {
         try {
-            taskToHandle.put(transfered);
+            taskToHandle.put(transferred);
 
         } catch (InterruptedException e){
             System.out.println("Error in model callback" + e.getMessage());
@@ -89,16 +90,16 @@ public class Model implements NetworkListener{
      * The method is used from an activity, whenever a response to a request is required.
      * The thread is then blocked until a response has been received.
      *
-     * @param transFered Arraylist with a NetCommand on index 0. Typically sent from an activity.
+     * @param transferred Arraylist with a NetCommand on index 0. Typically sent from an activity.
      * @return The method returns the response command, set by handleResponse.
      */
-    public synchronized NetCommands notifyForResponse(ArrayList<Transferable> transFered){
+    public synchronized NetCommands notifyForResponse(ArrayList<Transferable> transferred){
         try {
             // FIXME: 2020-03-28 There is a race condition, if the model thread handles request and notifies the supposedly sleeping thread before the thread is sleeping.
             // FIXME: 2020-03-28 If this happens, the lock object is discarded, and the thread will never be able to wake.
-            taskToHandle.put(transFered);
+            taskToHandle.put(transferred);
             ResultHandler threadLockObject = new ResultHandler();
-            threadsWaitingForResponse.put(((NetCommands)transFered.get(0)), threadLockObject);
+            threadsWaitingForResponse.put(((NetCommands)transferred.get(0)), threadLockObject);
             return threadLockObject.waitForResponse(); //Blocks the thread until notified.
         } catch (InterruptedException e){
             System.out.println("Exception putting in notifyForResult" + e.getMessage());
@@ -114,6 +115,7 @@ public class Model implements NetworkListener{
         ArrayList<ResultHandler> waitingThreads = threadsWaitingForResponse.get(resultAndRequestPairs.get(responseCommand));
         for (ResultHandler thread : waitingThreads) {
             thread.notifyResult(responseCommand);
+            System.out.println(responseCommand.toString());
         }
     }
 

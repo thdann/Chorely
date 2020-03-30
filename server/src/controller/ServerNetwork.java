@@ -11,6 +11,7 @@ package controller;
 
 
 import shared.transferable.NetCommands;
+import shared.transferable.Transferable;
 import shared.transferable.User;
 
 
@@ -19,6 +20,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class ServerNetwork implements Runnable {
 
@@ -53,9 +55,16 @@ public class ServerNetwork implements Runnable {
                 oos = new ObjectOutputStream(socket.getOutputStream());
                 ois = new ObjectInputStream(socket.getInputStream());
 
-                oos.writeObject("Hej klient, du är nu uppkopplad.");
-
-                controller.addRegisteredUser((User) ois.readObject()); //Skickar vidare ett nyregistrerat Userobjekt till controllen som skickar till registeredUsers
+                //oos.writeObject("Hej klient, du är nu uppkopplad.");
+                ArrayList<Transferable> testArray = new ArrayList<>();
+                System.out.println("Reading object");
+                testArray = (ArrayList<Transferable>) ois.readObject();
+                System.out.println(((NetCommands)testArray.get(0)).toString());
+                testArray = new ArrayList<Transferable>();
+                testArray.add(NetCommands.registrationOk);
+                oos.writeObject(testArray);
+                //controller.addRegisteredUser((User) ois.readObject()); //Skickar vidare ett nyregistrerat Userobjekt till controllen som skickar till registeredUsers
+                System.out.println("read object");
                 oos.writeObject(NetCommands.registrationOk); //Ska skickas registrationOK tillbaka till klienten.
 
             } catch (IOException | ClassNotFoundException e) {
