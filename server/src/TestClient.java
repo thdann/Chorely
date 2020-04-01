@@ -1,15 +1,30 @@
+import shared.transferable.NetCommands;
+import shared.transferable.Transferable;
+import shared.transferable.User;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class TestClient {
 
     public TestClient(String ip, int port) {
-       // String message;
+
         try (Socket socket = new Socket(ip, port)) {
-          //  ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
-           // message = (String) ois.readObject();
-           // System.out.println(message);
+
+            ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+
+            ArrayList<Transferable> list = new ArrayList<>();
+            list.add(NetCommands.register);
+            list.add(new User("fredrik","fred"));
+            list.add(new User("Angelica", "ang"));
+
+            oos.writeObject(list);
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }

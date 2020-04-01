@@ -25,31 +25,40 @@ public class ServerController implements ClientListener {
     private RegisteredUsers registeredUsers;
     private ServerNetwork network;
     private LinkedBlockingDeque<ArrayList<Transferable>> clientTaskBuffer; //TODO: här läggs alla inkommande arraylists från klienterna.
+    private BetterNameComingSoon betterNameComingSoon;
 
     public ServerController() {
         registeredUsers = new RegisteredUsers();
         clientTaskBuffer = new LinkedBlockingDeque<>();
         network = new ServerNetwork(this, 6583);
+        betterNameComingSoon = new BetterNameComingSoon();
+        Thread t1 = new Thread(betterNameComingSoon);
+        t1.start();
+
     }
 
     @Override
-    public void sendList(ArrayList<Transferable> message) {
+    public void sendList(ArrayList<Transferable> list) {
         //TODO: lägg in listan i en buffer så att controllern kan hantera listan sen i egen tråd.
-        clientTaskBuffer.add(message);
+        clientTaskBuffer.add(list);
     }
 
-    public void handleClientTask() {
+    public void handleClientTask(ArrayList<Transferable> list) {
+
+        NetCommands command = (NetCommands) list.get(0);
+        User user = (User) list.get(1);
 
         // TODO:  1. Plocka ut första "uppgiften" från clientTask
         // TODO: 2. Plocka ut tex position[0]  (om där är enumet)
-        Transferable command = clientTaskBuffer.getFirst().get(0);
+
 
         // TODO: 3. Skicka in enumet i en switch sats som kontrollerar vilket enum där är
         // TODO: 4. En metod per enum, namnen ska vara talande för vad som händer i de olika scenarion
         // TODO: 5. Skriv metoderna för de olika situationerna.
 
-        switch ((NetCommands) command) {
+        switch (command) {
             case register:
+                registerUser(user);
                 //TODO: metodnamnfördetta(); ska skicka tillbaka registrationOk eller registrationDenied, detta räcker för första sprinten...
                 break;
             default:
@@ -57,6 +66,15 @@ public class ServerController implements ClientListener {
                 break;
         }
     }
+    public void registerUser(User user){
+
+        //1 kontroll användarnamn: får inte vara tomt, får inte vara ett namn som finns redan
+        //2 kontroll password: får inte vara tomt
+
+        registeredUsers.addRegisteredUser(user);  //3 förutsatt att ovan är ok - lägg till new user i registeredUsers
+        
+    }
+
 
     public void addRegisteredUser(User newUser){
         registeredUsers.addRegisteredUser(newUser);
@@ -67,4 +85,34 @@ public class ServerController implements ClientListener {
         //TODO: Sätt upp servertråd (extenda thread) Eller se till att main fortsätter köra...
     }
 
+
+    private class BetterNameComingSoon implements Runnable{ //TODO: Kom på bättre namn för klassen.
+
+        public BetterNameComingSoon(){
+
+
+        }
+
+
+        public void run(){
+            ArrayList<Transferable> list;
+            while (true){
+
+                try {
+                   list = clientTaskBuffer.take();
+                   handleClientTask(list);
+
+
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+        }
+
+    }
 }
+
+

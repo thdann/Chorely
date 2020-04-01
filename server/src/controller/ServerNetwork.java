@@ -7,17 +7,13 @@ package controller;
  * @autor Angelica Asplund, Emma Svensson and Theresa Dannberg
  */
 
-import shared.transferable.NetCommands;
-import shared.transferable.Transferable;
-import shared.transferable.User;
 
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
+
 
 public class ServerNetwork implements Runnable {
 
@@ -46,7 +42,7 @@ public class ServerNetwork implements Runnable {
             try {
 
                 Socket socket = serverSocket.accept();
-                ClientHandler newClient = new ClientHandler(socket);
+                ClientHandler newClient = new ClientHandler(socket, controller);
 
 
 
