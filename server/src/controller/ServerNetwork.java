@@ -1,14 +1,11 @@
 package controller;
 
 /**
- * ServerNetwork sets up the serverSocket and starts a thread that awaits clients asking to connect,
- * then creates a ?????
+ * ServerNetwork sets up the network between the server and connecting clients.
  * version 1.0 2020-03-23
  *
  * @autor Angelica Asplund, Emma Svensson and Theresa Dannberg
  */
-
-
 
 import shared.transferable.NetCommands;
 import shared.transferable.Transferable;
