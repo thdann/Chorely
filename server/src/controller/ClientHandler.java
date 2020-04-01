@@ -20,8 +20,11 @@ public class ClientHandler {
     private Socket socket;
     private InputThread inputThread;
     private OutputThread outputThread;
+    private ServerController controller;
 
-    public ClientHandler(Socket socket) {
+
+    public ClientHandler(Socket socket, ServerController controller) {
+        this.controller=controller;
         this.socket = socket;
         inputThread = new InputThread();
         outputThread = new OutputThread();
@@ -47,18 +50,23 @@ public class ClientHandler {
                 e.printStackTrace();
             }
 
-            while (true) {
+           //while (true) {
                 try {
                     System.out.println("Du har kommit hit");
                     ArrayList<Transferable> list = (ArrayList<Transferable>) ois.readObject();
-                  //  Controller.sendList(list);
+                    controller.sendList(list);
+                    for(int i =0; i<list.size(); i++){
+
+                        System.out.println(list.get(i));
+                    }
+
 
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
-            }
+           // }
 
 
         }
