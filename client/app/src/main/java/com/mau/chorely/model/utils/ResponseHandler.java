@@ -8,14 +8,12 @@
 package com.mau.chorely.model.utils;
 
 
-import android.view.Display;
-
 import com.mau.chorely.model.Model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
+
 
 import shared.transferable.NetCommands;
 import shared.transferable.RequestID;
@@ -42,7 +40,7 @@ public class ResponseHandler {
     }
     // TODO: 2020-03-30 Why cant method be synchronized?
 
-    public static void handleResponse(ArrayList<Transferable> response) {
+    public static void handleResponse(ArrayList<Transferable> response) throws InvalidRequestIDException {
         for (int i = 0; i < 3; i++) { //loop to check for race condition 3 times before error-task is created.
             System.out.println(response.get(1).toString());
             if (threadsWaitingForResponse.containsKey(((RequestID)response.get(Model.ID_ELEMENT)))) {
@@ -60,8 +58,8 @@ public class ResponseHandler {
             }
         }
 
-        System.out.println("FATAL ERROR: response to unknown request. Exiting");
-        //System.exit(1);
+        throw new InvalidRequestIDException("Response with invalid request id! Id: " + ((RequestID) response.get(Model.ID_ELEMENT)).getIdString());
+
     }
 
 
@@ -70,8 +68,8 @@ public class ResponseHandler {
 
     // FIXME: 2020-04-01 Behöver vi någon form av errorhandling här? Det kan i så fall vara att response handler behöver referens till model.
 
-    /**
-    private void responseError(String message, RequestID ID){
+
+    public static void releaseAllThreads (String message, RequestID ID){
         ArrayList<Transferable> errorList = new ArrayList<>();
         errorList.add(NetCommands.internalClientError);
         errorList.add(ID);
@@ -81,5 +79,5 @@ public class ResponseHandler {
                 thread.notifyResult((NetCommands)errorList.get(Model.COMMAND_ELEMENT));
         }
     }
-*/
+
 }

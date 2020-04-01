@@ -20,6 +20,7 @@ import shared.transferable.ErrorMessage;
 import shared.transferable.NetCommands;
 import shared.transferable.Transferable;
 import com.mau.chorely.model.persistentStorage.PersistentStorage;
+import com.mau.chorely.model.utils.InvalidRequestIDException;
 import com.mau.chorely.model.utils.ResponseHandler;
 
 import java.util.ArrayList;
@@ -145,6 +146,8 @@ public class Model implements NetworkListener{
                     }
                 } catch (InterruptedException e){
                     System.out.println("Thread interrupted in main model queue");
+                } catch (InvalidRequestIDException e){
+                    modelError(e);
                 }
             }
         }
