@@ -1,6 +1,5 @@
 package controller;
 
-
 import shared.transferable.Transferable;
 
 import java.io.IOException;
@@ -11,7 +10,7 @@ import java.util.ArrayList;
 
 /**
  * ClientHandler
- * version 1.0 2020-03-23
+ * version 2.0 2020-03-23
  * @autor Angelica Asplund, Emma Svensson and Theresa Dannberg
  */
 
@@ -33,7 +32,7 @@ public class ClientHandler {
     }
 
     /**
-     * The inner class InputThread sets up an InputStream
+     * The inner class InputThread sets up an InputStream to receive messages from connected client
      */
 
     private class InputThread implements Runnable {
