@@ -33,6 +33,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 
 public class Model implements NetworkListener{
 
+    private static final int COMMAND_ELEMENT = 0;
     private MultiMap<NetCommands, ResultHandler> threadsWaitingForResponse = new MultiMap<>();
     private HashMap<NetCommands, NetCommands> resultAndRequestPairs = new HashMap<>();
     private LinkedBlockingDeque<ArrayList<Transferable>> taskToHandle = new LinkedBlockingDeque<>();
@@ -126,7 +127,7 @@ public class Model implements NetworkListener{
         try {
             taskToHandle.put(transferred);
             ResultHandler threadLockObject = new ResultHandler();
-            threadsWaitingForResponse.put(((NetCommands)transferred.get(0)), threadLockObject);
+            threadsWaitingForResponse.put(((NetCommands)transferred.get(COMMAND_ELEMENT)), threadLockObject);
             return threadLockObject.waitForResponse(); //Blocks the thread until notified.
         } catch (InterruptedException e){
             System.out.println("Exception putting in notifyForResult" + e.getMessage());
@@ -156,6 +157,7 @@ public class Model implements NetworkListener{
                     Thread.sleep(100);
                 } catch (InterruptedException e){
                     modelError("Model thread was interrupted checking for race condition: " + e.getMessage());
+                    return;
                 }
             }
         }
@@ -175,7 +177,7 @@ public class Model implements NetworkListener{
         for (Map.Entry<NetCommands, ArrayList<ResultHandler>> entry : tempMap.entrySet()){
             ArrayList<ResultHandler> mapData = entry.getValue();
             for(ResultHandler thread : mapData){
-                thread.notifyResult((NetCommands)errorList.get(0));
+                thread.notifyResult((NetCommands)errorList.get(COMMAND_ELEMENT));
             }
         }
     }
@@ -192,16 +194,17 @@ public class Model implements NetworkListener{
             while (!Thread.interrupted()){
                 try {
                     ArrayList<Transferable> curWorkingOn = taskToHandle.take();
-                    switch ((NetCommands) curWorkingOn.get(0)) {
+                    switch ((NetCommands) curWorkingOn.get(COMMAND_ELEMENT)) {
                         case register:
-                            storage.updateData("/user.cho", curWorkingOn.get(0));
+                            storage.updateData("/user.cho", curWorkingOn.get(COMMAND_ELEMENT));
                             network.sendData(curWorkingOn);
                             break;
                         case registrationOk:
-                            handleResponse((NetCommands) curWorkingOn.get(0));
+                            handleResponse((NetCommands) curWorkingOn.get(COMMAND_ELEMENT));
                             break;
                         case internalClientError:
                             handleError(curWorkingOn);
+                            break;
                     }
                 } catch (InterruptedException e){
                     System.out.println("Thread interrupted in main model queue");
