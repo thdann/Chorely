@@ -23,13 +23,12 @@ import shared.transferable.Transferable;
 
 public class ResponseHandler {
     private volatile NetCommands resultCommand;
-    private static HashMap<UUID, ResponseHandler> threadsWaitingForResponse = new HashMap<>();
+    private static HashMap<RequestID, ResponseHandler> threadsWaitingForResponse = new HashMap<>();
 
 
     public synchronized NetCommands waitForResponse(ArrayList<Transferable> request){
-        threadsWaitingForResponse.put(((RequestID) request.get(Model.ID_ELEMENT)).getId(), this);
+        threadsWaitingForResponse.put(((RequestID) request.get(Model.ID_ELEMENT)), this);
         try {
-
             wait();
             return resultCommand;
         } catch (InterruptedException e){
@@ -46,8 +45,8 @@ public class ResponseHandler {
     public static void handleResponse(ArrayList<Transferable> response) {
         for (int i = 0; i < 3; i++) { //loop to check for race condition 3 times before error-task is created.
             System.out.println(response.get(1).toString());
-            if (threadsWaitingForResponse.containsKey(((RequestID)response.get(Model.ID_ELEMENT)).getId())) {
-                ResponseHandler waitingThread = threadsWaitingForResponse.get(((RequestID) response.get(Model.ID_ELEMENT)).getId());
+            if (threadsWaitingForResponse.containsKey(((RequestID)response.get(Model.ID_ELEMENT)))) {
+                ResponseHandler waitingThread = threadsWaitingForResponse.remove(((RequestID) response.get(Model.ID_ELEMENT)));
                 waitingThread.notifyResult((NetCommands) response.get(Model.COMMAND_ELEMENT));
                 return;
 
@@ -62,7 +61,7 @@ public class ResponseHandler {
         }
 
         System.out.println("FATAL ERROR: response to unknown request. Exiting");
-        System.exit(1);
+        //System.exit(1);
     }
 
 

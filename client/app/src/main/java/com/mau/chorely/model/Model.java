@@ -20,12 +20,9 @@ import shared.transferable.ErrorMessage;
 import shared.transferable.NetCommands;
 import shared.transferable.Transferable;
 import com.mau.chorely.model.persistentStorage.PersistentStorage;
-import com.mau.chorely.model.utils.MultiMap;
 import com.mau.chorely.model.utils.ResponseHandler;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.LinkedBlockingDeque;
 
 
@@ -33,7 +30,6 @@ public class Model implements NetworkListener{
 
     public static final int COMMAND_ELEMENT = 0;
     public static final int ID_ELEMENT = 1;
-    //private HashMap<NetCommands, NetCommands> resultAndRequestPairs = new HashMap<>();
     private LinkedBlockingDeque<ArrayList<Transferable>> taskToHandle = new LinkedBlockingDeque<>();
     private ClientNetworkManager network;
     private Thread modelThread = new Thread(new ModelThread());

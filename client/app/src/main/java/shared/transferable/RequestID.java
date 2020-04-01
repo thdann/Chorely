@@ -2,9 +2,11 @@ package shared.transferable;
 
 
 
+
+
 import java.util.UUID;
 
-public class RequestID implements Transferable, Comparable<UUID> {
+public class RequestID implements Transferable, Comparable<RequestID> {
     private UUID id;
     public RequestID(){
         id = UUID.randomUUID();
@@ -19,7 +21,17 @@ public class RequestID implements Transferable, Comparable<UUID> {
     }
 
     @Override
-    public int compareTo(UUID val) {
-        return id.compareTo(val);
+    public boolean equals(Object obj) {
+        return id.equals(((RequestID)obj).getId());
+    }
+
+    @Override
+    public int compareTo(RequestID val) {
+        return id.compareTo(val.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
     }
 }
