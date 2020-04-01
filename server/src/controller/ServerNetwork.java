@@ -23,15 +23,13 @@ public class ServerNetwork implements Runnable {
 
     private ServerController controller;
     private ServerSocket serverSocket;
-    private Socket socket;
-    private ObjectOutputStream oos;
-    private ObjectInputStream ois;
+
+
 
     public ServerNetwork(ServerController controller, int port) {
         this.controller = controller;
         try {
             serverSocket = new ServerSocket(port);
-            System.out.println("Serversocket skapad");
         } catch (IOException e1) {
             e1.printStackTrace();
         }
@@ -42,29 +40,18 @@ public class ServerNetwork implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("Tråd skapas i run()");
+
 
         while (true) {
             try {
-                socket = serverSocket.accept(); //Tar emot anslutande klient
-                System.out.println("Server tar emot anslutande klient");
-                //Sätter upp strömmar mellan klient och server
-                oos = new ObjectOutputStream(socket.getOutputStream());
-                ois = new ObjectInputStream(socket.getInputStream());
 
-                //oos.writeObject("Hej klient, du är nu uppkopplad.");
-                ArrayList<Transferable> testArray = new ArrayList<>();
-                System.out.println("Reading object");
-                testArray = (ArrayList<Transferable>) ois.readObject();
-                System.out.println(((NetCommands)testArray.get(0)).toString());
-                testArray = new ArrayList<Transferable>();
-                testArray.add(NetCommands.registrationOk);
-                oos.writeObject(testArray);
-                //controller.addRegisteredUser((User) ois.readObject()); //Skickar vidare ett nyregistrerat Userobjekt till controllen som skickar till registeredUsers
-                System.out.println("read object");
-                //oos.writeObject(NetCommands.registrationOk); //Ska skickas registrationOK tillbaka till klienten.
+                Socket socket = serverSocket.accept();
+                ClientHandler newClient = new ClientHandler(socket);
 
-            } catch (IOException | ClassNotFoundException e) {
+
+
+
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
