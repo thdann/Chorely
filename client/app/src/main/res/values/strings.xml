@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Chorely</string>
+    <string name="retrying"> Retrying.. </string>
 </resources>

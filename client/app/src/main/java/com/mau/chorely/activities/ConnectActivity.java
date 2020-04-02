@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.widget.TextView;
 
 import com.mau.chorely.R;
 import com.mau.chorely.model.Model;
@@ -17,6 +18,8 @@ import shared.transferable.RequestID;
 import shared.transferable.TransferList;
 
 public class ConnectActivity extends AppCompatActivity {
+    TextView status;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +30,7 @@ public class ConnectActivity extends AppCompatActivity {
         super.onStart();
         setContentView(R.layout.activity_connect2);
         new Connect().execute(NetCommands.connectionStatus);
+        status = findViewById(R.id.textView2);
     }
 
     private class Connect extends AsyncTask<NetCommands, Void , NetCommands>{
@@ -47,6 +51,7 @@ public class ConnectActivity extends AppCompatActivity {
                    startActivity(intent);
                    break;
                case notConnected:
+                   status.setText(R.string.retrying);
                    new Connect().execute(NetCommands.connectionStatus);
 
            }

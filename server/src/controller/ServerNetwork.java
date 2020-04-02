@@ -71,7 +71,7 @@ public class ServerNetwork implements Runnable {
                     //oos.writeObject(NetCommands.registrationOk); //Ska skickas registrationOK tillbaka till klienten.
                 }
             } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
             }
         }
     }
