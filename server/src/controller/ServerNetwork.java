@@ -8,6 +8,7 @@ package controller;
  */
 
 import shared.transferable.NetCommands;
+import shared.transferable.RequestID;
 import shared.transferable.Transferable;
 import shared.transferable.User;
 
@@ -57,8 +58,12 @@ public class ServerNetwork implements Runnable {
                 System.out.println("Reading object");
                 testArray = (ArrayList<Transferable>) ois.readObject();
                 System.out.println(((NetCommands)testArray.get(0)).toString());
+                RequestID id = (RequestID) testArray.get(1);
+
                 testArray = new ArrayList<Transferable>();
                 testArray.add(NetCommands.registrationOk);
+                testArray.add(id);
+                System.out.println(testArray.size());
                 oos.writeObject(testArray);
                 //controller.addRegisteredUser((User) ois.readObject()); //Skickar vidare ett nyregistrerat Userobjekt till controllen som skickar till registeredUsers
                 System.out.println("read object");

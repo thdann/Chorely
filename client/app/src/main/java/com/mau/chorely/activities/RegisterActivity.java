@@ -16,6 +16,7 @@ import com.mau.chorely.model.ModelInstances;
 import java.util.ArrayList;
 
 import shared.transferable.NetCommands;
+import shared.transferable.RequestID;
 import shared.transferable.Transferable;
 import shared.transferable.User;
 
@@ -47,6 +48,7 @@ public class RegisterActivity extends AppCompatActivity {
 
             ArrayList<Transferable> registration = new ArrayList<>();
             registration.add(NetCommands.register);
+            registration.add(new RequestID());
             registration.add(user);
 
             Model model = ModelInstances.getInstance();
