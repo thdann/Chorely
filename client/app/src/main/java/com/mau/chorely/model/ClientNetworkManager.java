@@ -14,7 +14,11 @@ import shared.transferable.Transferable;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -25,7 +29,7 @@ public class ClientNetworkManager {
     private Socket socket;
     private static Thread inputThread;
     private static Thread outputThread;
-    private boolean connected = false;
+    private static volatile boolean connected = false;
     private LinkedBlockingDeque<ArrayList<Transferable>> outBoundQueue = new LinkedBlockingDeque<>();
     private NetworkListener model;
 
@@ -33,23 +37,30 @@ public class ClientNetworkManager {
         this.model = model;
 
         if(connected = setupSocket()) {
-            setupThreads();
+            //setupThreads();
         }
         else{
             ArrayList<Transferable> errorList = new ArrayList<>();
             errorList.add(NetCommands.internalClientError);
             errorList.add(new ErrorMessage("Error connecting to server."));
-            model.notify(errorList);
+            //model.notify(errorList);
         }
     }
 
     public void sendData(ArrayList<Transferable> data){
+        if((inputThread == null || outputThread == null)){
+
+        }
         try {
             outBoundQueue.put(data);
         } catch (InterruptedException e){
             // TODO: 2020-03-24 Varför måste tråden blocka när den lägger data i kön? evt byta typ av kö.
             System.out.println("Error putting data in outboundqueue" + e.getMessage());
         }
+    }
+
+    public boolean isConnected(){
+        return connected;
     }
 
     public void reconnect(){
@@ -61,36 +72,63 @@ public class ClientNetworkManager {
             netWorkError("Could not connect to server.");
     }
 
+    public void connect(){
+        if(!connected){
+            socket = new Socket();
+            try {
+
+
+                connected = false;
+                SocketAddress socketAddress = new InetSocketAddress(SERVER_IP, SERVER_PORT);
+                socket.connect(socketAddress, 100);
+                connected = (socket.isConnected() && !socket.isClosed());
+                System.out.println(connected);
+                setupThreads();
+            } catch (IOException e){
+                socket = new Socket();
+                System.out.println("ERRROOROOROROROOROR");
+                System.out.println(e.getMessage());
+                System.out.println(e);
+            }
+        }
+    }
+
     private void netWorkError(String message){
         ErrorMessage errorMessage = new ErrorMessage(message);
         ArrayList<Transferable> transferables = new ArrayList<>();
         transferables.add(NetCommands.internalClientError);
         transferables.add(errorMessage);
-        model.notify(transferables);
+        //model.notify(transferables);
     }
 
     private boolean setupSocket() {
-        try {
-            socket = new Socket(SERVER_IP, SERVER_PORT);
-            return true;
 
-        } catch (IOException e) {
-            System.out.println("Error setting up socket!" + e.getMessage());
-        }
-        return false;
+
+            socket = new Socket();
+            try {
+
+                //socket.connect(new InetSocketAddress(SERVER_IP, SERVER_PORT));
+                socket.bind(new InetSocketAddress(SERVER_IP, SERVER_PORT));
+            } catch (IOException e){
+
+            }
+            //socket.setSoTimeout(10);
+            //connect();
+            return (socket.isConnected() && !socket.isClosed());
+
+
+
     }
 
 
     public void disconnect() {
-        try{
+
             inputThread.interrupt();
             outputThread.interrupt();
-            socket.close();
+            //socket.close();
             connected = false;
-        }
-        catch (IOException e){
-            System.out.println("Error closing socket" + e.getMessage());
-        }
+
+
     }
 
     private void setupThreads(){

@@ -18,11 +18,14 @@ package com.mau.chorely.model;
 
 import shared.transferable.ErrorMessage;
 import shared.transferable.NetCommands;
+import shared.transferable.RequestID;
+import shared.transferable.TransferList;
 import shared.transferable.Transferable;
 import com.mau.chorely.model.persistentStorage.PersistentStorage;
 import com.mau.chorely.model.utils.InvalidRequestIDException;
 import com.mau.chorely.model.utils.ResponseHandler;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -36,12 +39,12 @@ public class Model implements NetworkListener{
     private Thread modelThread = new Thread(new ModelThread());
     private ErrorMessage errorMessage;
     private PersistentStorage storage = new PersistentStorage();
-
+    private Model model;
     Model(){
         System.out.println("Model created");
-        network = new ClientNetworkManager(this);
+        //network = new ClientNetworkManager(this);
         modelThread.start();
-
+        model = this;
     }
 
     /**
@@ -66,7 +69,7 @@ public class Model implements NetworkListener{
        ArrayList<Transferable> errorList = new ArrayList<>();
        errorList.add(NetCommands.internalClientError);
        errorList.add(errorMessage);
-       notify(errorList);
+       //notify(errorList);
     }
 
 
@@ -121,6 +124,34 @@ public class Model implements NetworkListener{
     }
 
 
+    private TransferList checkConnection(TransferList list){
+        RequestID id = (RequestID)list.get(Model.ID_ELEMENT);
+        TransferList ret;
+        for (int i = 0; i<3; i++) {
+            if (!network.isConnected()) {
+
+                network.connect();
+                {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e){
+
+                    }
+                }
+            }
+        }
+        if(network.isConnected()){
+            ret = new TransferList(NetCommands.connected, id);
+
+        }
+        else{
+            System.out.println("NOT CONNECTED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            ret = new TransferList(NetCommands.notConnected, id);
+        }
+        return ret;
+    }
+
+
     /**
      * Main model thread. Contains switch statement to handle all NetCommands
      */
@@ -129,10 +160,15 @@ public class Model implements NetworkListener{
         @Override
         public void run() {
 
+            network = new ClientNetworkManager(model);
+
             while (!Thread.interrupted()){
                 try {
                     ArrayList<Transferable> curWorkingOn = taskToHandle.take();
                     switch ((NetCommands) curWorkingOn.get(Model.COMMAND_ELEMENT)) {
+                        case connectionStatus:
+                            ResponseHandler.handleResponse(checkConnection((TransferList)curWorkingOn));
+                            break;
                         case register:
                             storage.updateData("/user.cho", curWorkingOn.get(Model.COMMAND_ELEMENT));
                             network.sendData(curWorkingOn);
