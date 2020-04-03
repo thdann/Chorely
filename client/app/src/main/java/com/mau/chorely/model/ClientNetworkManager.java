@@ -9,12 +9,18 @@ package com.mau.chorely.model;
 
 import shared.transferable.ErrorMessage;
 import shared.transferable.NetCommands;
+import shared.transferable.RequestID;
+import shared.transferable.TransferList;
 import shared.transferable.Transferable;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -25,25 +31,19 @@ public class ClientNetworkManager {
     private Socket socket;
     private static Thread inputThread;
     private static Thread outputThread;
-    private boolean connected = false;
+    private static volatile boolean connected = false;
     private LinkedBlockingDeque<ArrayList<Transferable>> outBoundQueue = new LinkedBlockingDeque<>();
     private NetworkListener model;
 
     public ClientNetworkManager(NetworkListener model){
         this.model = model;
-
-        if(connected = setupSocket()) {
-            setupThreads();
-        }
-        else{
-            ArrayList<Transferable> errorList = new ArrayList<>();
-            errorList.add(NetCommands.internalClientError);
-            errorList.add(new ErrorMessage("Error connecting to server."));
-            model.notify(errorList);
-        }
+        setupSocket();
     }
 
     public void sendData(ArrayList<Transferable> data){
+        if((inputThread == null || outputThread == null)){
+
+        }
         try {
             outBoundQueue.put(data);
         } catch (InterruptedException e){
@@ -52,45 +52,85 @@ public class ClientNetworkManager {
         }
     }
 
-    public void reconnect(){
-        if(connected)
-            disconnect();
-        if(connected = setupSocket())
-            setupThreads();
-        else
-            netWorkError("Could not connect to server.");
+    public boolean isConnected(){
+        return connected;
     }
 
-    private void netWorkError(String message){
-        ErrorMessage errorMessage = new ErrorMessage(message);
-        ArrayList<Transferable> transferables = new ArrayList<>();
-        transferables.add(NetCommands.internalClientError);
-        transferables.add(errorMessage);
-        model.notify(transferables);
+    public TransferList connectAndCheckStatus(TransferList list){
+
+        RequestID id = (RequestID)list.get(Model.ID_ELEMENT);
+        TransferList ret;
+        int iteration = 0;
+
+
+        if(socket.isClosed()){
+            setupSocket();
+        }
+
+        while (!connected && iteration < 3) {
+            connectSocket();
+            iteration++;
+        }
+        if(connected){
+            ret = new TransferList(NetCommands.connected, id);
+        }
+        else{
+            ret = new TransferList(NetCommands.notConnected, id);
+        }
+        return ret;
     }
+
+    private synchronized void connectSocket(){
+        if(!connected){
+            socket = new Socket();
+            try {
+                connected = false;
+                SocketAddress socketAddress = new InetSocketAddress(SERVER_IP, SERVER_PORT);
+                socket.connect(socketAddress, 2000);
+                connected = (socket.isConnected() && !socket.isClosed());
+                System.out.println(connected);
+                setupThreads();
+            } catch (IOException e){
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException intExept){
+                    System.out.println("SHOULD NEVER HAPPEN! thread interrupted trying to connect");
+                }
+                socket = new Socket();
+                System.out.println("ERRROOROOROROROOROR");
+                System.out.println(e.getMessage());
+                System.out.println(e);
+            }
+        }
+    }
+
+
 
     private boolean setupSocket() {
-        try {
-            socket = new Socket(SERVER_IP, SERVER_PORT);
-            return true;
 
-        } catch (IOException e) {
-            System.out.println("Error setting up socket!" + e.getMessage());
-        }
-        return false;
+            socket = new Socket();
+            try {
+                socket.bind(new InetSocketAddress(SERVER_IP, SERVER_PORT));
+            } catch (IOException e){
+                System.out.println("Error setting up socket!");
+            }
+
+            return (socket.isConnected() && !socket.isClosed());
+
     }
 
 
     public void disconnect() {
-        try{
+
             inputThread.interrupt();
             outputThread.interrupt();
-            socket.close();
-            connected = false;
-        }
-        catch (IOException e){
-            System.out.println("Error closing socket" + e.getMessage());
-        }
+
+            try {
+                socket.close();
+                connected = false;
+            } catch (IOException e){
+                System.out.println("ERROR CLOSING SOCKET");
+            }
     }
 
     private void setupThreads(){
@@ -128,7 +168,6 @@ public class ClientNetworkManager {
     private class OutputThread implements Runnable {
         @Override
         public void run() {
-
             try(ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream())){
                 while(!Thread.interrupted()) {
                     try {

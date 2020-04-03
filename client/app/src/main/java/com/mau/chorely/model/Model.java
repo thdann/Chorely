@@ -18,6 +18,7 @@ package com.mau.chorely.model;
 
 import shared.transferable.ErrorMessage;
 import shared.transferable.NetCommands;
+import shared.transferable.TransferList;
 import shared.transferable.Transferable;
 import com.mau.chorely.model.persistentStorage.PersistentStorage;
 import com.mau.chorely.model.utils.InvalidRequestIDException;
@@ -36,12 +37,12 @@ public class Model implements NetworkListener{
     private Thread modelThread = new Thread(new ModelThread());
     private ErrorMessage errorMessage;
     private PersistentStorage storage = new PersistentStorage();
-
+    private Model model;
     Model(){
         System.out.println("Model created");
-        network = new ClientNetworkManager(this);
+        //network = new ClientNetworkManager(this);
         modelThread.start();
-
+        model = this;
     }
 
     /**
@@ -66,7 +67,7 @@ public class Model implements NetworkListener{
        ArrayList<Transferable> errorList = new ArrayList<>();
        errorList.add(NetCommands.internalClientError);
        errorList.add(errorMessage);
-       notify(errorList);
+       //notify(errorList);
     }
 
 
@@ -121,6 +122,9 @@ public class Model implements NetworkListener{
     }
 
 
+
+
+
     /**
      * Main model thread. Contains switch statement to handle all NetCommands
      */
@@ -129,10 +133,15 @@ public class Model implements NetworkListener{
         @Override
         public void run() {
 
+            network = new ClientNetworkManager(model);
+
             while (!Thread.interrupted()){
                 try {
                     ArrayList<Transferable> curWorkingOn = taskToHandle.take();
                     switch ((NetCommands) curWorkingOn.get(Model.COMMAND_ELEMENT)) {
+                        case connectionStatus:
+                            ResponseHandler.handleResponse(network.connectAndCheckStatus((TransferList)curWorkingOn));
+                            break;
                         case register:
                             storage.updateData("/user.cho", curWorkingOn.get(Model.COMMAND_ELEMENT));
                             network.sendData(curWorkingOn);
