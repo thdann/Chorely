@@ -1,5 +1,7 @@
 package shared.transferable;
 
+
+
 public class User implements Transferable {
     private final String username;
     private final String password;
@@ -23,5 +25,22 @@ public class User implements Transferable {
                 "username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 '}';
+    }
+
+    @Override
+    public int hashCode() {
+        return username.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(!(obj instanceof User)){
+            return false;
+        }
+        else {
+            String hashString = username + password;
+            String objHashString = ((User) obj).getUsername() + ((User) obj).getPassword();
+            return hashString.hashCode() == objHashString.hashCode();
+        }
     }
 }
