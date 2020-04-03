@@ -9,6 +9,8 @@ package com.mau.chorely.model;
 
 import shared.transferable.ErrorMessage;
 import shared.transferable.NetCommands;
+import shared.transferable.RequestID;
+import shared.transferable.TransferList;
 import shared.transferable.Transferable;
 
 import java.io.IOException;
@@ -35,16 +37,7 @@ public class ClientNetworkManager {
 
     public ClientNetworkManager(NetworkListener model){
         this.model = model;
-
-        if(connected = setupSocket()) {
-            //setupThreads();
-        }
-        else{
-            ArrayList<Transferable> errorList = new ArrayList<>();
-            errorList.add(NetCommands.internalClientError);
-            errorList.add(new ErrorMessage("Error connecting to server."));
-            //model.notify(errorList);
-        }
+        setupSocket();
     }
 
     public void sendData(ArrayList<Transferable> data){
@@ -63,28 +56,46 @@ public class ClientNetworkManager {
         return connected;
     }
 
-    public void reconnect(){
-        if(connected)
-            disconnect();
-        if(connected = setupSocket())
-            setupThreads();
-        else
-            netWorkError("Could not connect to server.");
+    public TransferList connectAndCheckStatus(TransferList list){
+
+        RequestID id = (RequestID)list.get(Model.ID_ELEMENT);
+        TransferList ret;
+        int iteration = 0;
+
+
+        if(socket.isClosed()){
+            setupSocket();
+        }
+
+        while (!connected && iteration < 3) {
+            connectSocket();
+            iteration++;
+        }
+        if(connected){
+            ret = new TransferList(NetCommands.connected, id);
+        }
+        else{
+            ret = new TransferList(NetCommands.notConnected, id);
+        }
+        return ret;
     }
 
-    public void connect(){
+    private synchronized void connectSocket(){
         if(!connected){
             socket = new Socket();
             try {
-
-
                 connected = false;
                 SocketAddress socketAddress = new InetSocketAddress(SERVER_IP, SERVER_PORT);
-                socket.connect(socketAddress, 100);
+                socket.connect(socketAddress, 2000);
                 connected = (socket.isConnected() && !socket.isClosed());
                 System.out.println(connected);
                 setupThreads();
             } catch (IOException e){
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException intExept){
+                    System.out.println("SHOULD NEVER HAPPEN! thread interrupted trying to connect");
+                }
                 socket = new Socket();
                 System.out.println("ERRROOROOROROROOROR");
                 System.out.println(e.getMessage());
@@ -93,30 +104,18 @@ public class ClientNetworkManager {
         }
     }
 
-    private void netWorkError(String message){
-        ErrorMessage errorMessage = new ErrorMessage(message);
-        ArrayList<Transferable> transferables = new ArrayList<>();
-        transferables.add(NetCommands.internalClientError);
-        transferables.add(errorMessage);
-        //model.notify(transferables);
-    }
+
 
     private boolean setupSocket() {
 
-
             socket = new Socket();
             try {
-
-                //socket.connect(new InetSocketAddress(SERVER_IP, SERVER_PORT));
                 socket.bind(new InetSocketAddress(SERVER_IP, SERVER_PORT));
             } catch (IOException e){
-
+                System.out.println("Error setting up socket!");
             }
-            //socket.setSoTimeout(10);
-            //connect();
+
             return (socket.isConnected() && !socket.isClosed());
-
-
 
     }
 
@@ -125,10 +124,13 @@ public class ClientNetworkManager {
 
             inputThread.interrupt();
             outputThread.interrupt();
-            //socket.close();
-            connected = false;
 
-
+            try {
+                socket.close();
+                connected = false;
+            } catch (IOException e){
+                System.out.println("ERROR CLOSING SOCKET");
+            }
     }
 
     private void setupThreads(){
@@ -166,7 +168,6 @@ public class ClientNetworkManager {
     private class OutputThread implements Runnable {
         @Override
         public void run() {
-
             try(ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream())){
                 while(!Thread.interrupted()) {
                     try {
