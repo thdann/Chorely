@@ -24,6 +24,7 @@ import com.mau.chorely.model.persistentStorage.PersistentStorage;
 import com.mau.chorely.model.utils.InvalidRequestIDException;
 import com.mau.chorely.model.utils.ResponseHandler;
 
+import java.security.acl.Group;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -70,6 +71,9 @@ public class Model implements NetworkListener{
        //notify(errorList);
     }
 
+    public Group[] getGroups(){
+        return null;
+    }
 
     public void stop(){
         network.disconnect();
@@ -138,6 +142,7 @@ public class Model implements NetworkListener{
             while (!Thread.interrupted()){
                 try {
                     ArrayList<Transferable> curWorkingOn = taskToHandle.take();
+                    System.out.println("GRabbing new list");
                     switch ((NetCommands) curWorkingOn.get(Model.COMMAND_ELEMENT)) {
                         case connectionStatus:
                             ResponseHandler.handleResponse(network.connectAndCheckStatus((TransferList)curWorkingOn));
@@ -152,6 +157,9 @@ public class Model implements NetworkListener{
                         case internalClientError:
                             ResponseHandler.handleResponse(curWorkingOn);
                             break;
+                        default:
+                            System.out.println("Unrecognized command: " + (curWorkingOn.get(Model.COMMAND_ELEMENT).toString()));
+                            ResponseHandler.handleResponse(curWorkingOn);
                     }
                 } catch (InterruptedException e){
                     System.out.println("Thread interrupted in main model queue");

@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">Chorely</string>
     <string name="retrying"> Retrying.. </string>
+    <string name="register_title" >Register </string>
+    <string name="label_welcome" >Welcome</string>
+    <string name="label_groups">Groups</string>
+    <string name="noGroup">You are not a member of a group yet please create a group</string>
+    <string name="groups">Your groups</string>
+    <string name="createGroup"> Create group </string>
+
 </resources>

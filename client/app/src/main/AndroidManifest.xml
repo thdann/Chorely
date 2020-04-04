@@ -19,10 +19,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.CreateGroupActivity" />
-        <activity android:name=".activities.RegisterActivity" />
-        <activity android:name=".activities.MainActivity">
-
+        <activity android:name=".activities.CreateGroupActivity"
+            android:label="@string/label_groups"/>
+        <activity android:name=".activities.RegisterActivity"
+            android:parentActivityName=".activities.MainActivity"
+            android:label="@string/register_title"/>
+        <activity android:name=".activities.MainActivity"
+            android:label="@string/label_welcome">
         </activity>
     </application>
 
