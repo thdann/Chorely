@@ -66,17 +66,24 @@ public class ServerController implements ClientListener {
                 break;
         }
     }
-    public void registerUser(User user){
 
+    public void registerUser(User user) {
         //1 kontroll användarnamn: får inte vara tomt, får inte vara ett namn som finns redan
-        //2 kontroll password: får inte vara tomt
+        if (registeredUsers.userNameAvailable(user.getUsername())) {
+            if (user.getPassword() != "") {         //2 kontroll password: får inte vara tomt/Null?
+                registeredUsers.addRegisteredUser(user);  //3 förutsatt att ovan är ok - lägg till new user i registeredUsers
+                //Skicka meddelande till klienten att användaren är registerad ok.
 
-        registeredUsers.addRegisteredUser(user);  //3 förutsatt att ovan är ok - lägg till new user i registeredUsers
-        
+            }
+        } else {
+            //skicka meddelande till klienten att användarnamnet är upptaget.
+        }
+
     }
 
 
-    public void addRegisteredUser(User newUser){
+
+    public void addRegisteredUser(User newUser) {
         registeredUsers.addRegisteredUser(newUser);
     }
 
@@ -86,22 +93,21 @@ public class ServerController implements ClientListener {
     }
 
 
-    private class BetterNameComingSoon implements Runnable{ //TODO: Kom på bättre namn för klassen.
+    private class BetterNameComingSoon implements Runnable { //TODO: Kom på bättre namn för klassen.
 
-        public BetterNameComingSoon(){
+        public BetterNameComingSoon() {
 
 
         }
 
 
-        public void run(){
+        public void run() {
             ArrayList<Transferable> list;
-            while (true){
+            while (true) {
 
                 try {
-                   list = clientTaskBuffer.take();
-                   handleClientTask(list);
-
+                    list = clientTaskBuffer.take();
+                    handleClientTask(list);
 
 
                 } catch (InterruptedException e) {

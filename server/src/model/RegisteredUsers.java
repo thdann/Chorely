@@ -48,6 +48,7 @@ public class RegisteredUsers {
         System.out.printf("När det tillagt %d användare", registeredUsers.size());
 
     }
+
     public void printUsers() {
         if (registeredUsers.size() == 0) {
             System.out.println("Listan är tom på användare");
@@ -101,15 +102,33 @@ public class RegisteredUsers {
 
     }
 
+    /**
+     * Compares the username of a new user to already registered users.
+     * @param newUsername the requested username of a new user.
+     * @return true if username is available and false if it already taken.
+     */
+
+    public boolean userNameAvailable(String newUsername) {
+        for (User u : registeredUsers) {
+            if (u.getUsername().equals(newUsername)) {
+                return false;
+            }
+        }
+        return true;
+
+    }
+
 
     public static void main(String[] args) {
         RegisteredUsers test = new RegisteredUsers();
-        test.printUsers();
-        test.readUsersFromFile();
+//        test.printUsers();
+//        test.readUsersFromFile();
         test.addTestUsers();
         test.writeUsersToFile();
         test.readUsersFromFile();
-        test.printUsers();
+//        test.printUsers();
+        System.out.println(test.checkIfExistingUser("Theresa"));
+        System.out.println(test.checkIfExistingUser("Therese"));
 
     }
 
