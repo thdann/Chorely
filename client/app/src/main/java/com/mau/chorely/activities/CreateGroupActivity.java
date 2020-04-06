@@ -58,6 +58,7 @@ public class CreateGroupActivity extends AppCompatActivity {
         new GetGroups().execute(NetCommands.requestUserGroups);
     }
 
+
     private void updateGroups(Group[] updatedGroups){
         if(updatedGroups != null){
 
@@ -90,6 +91,7 @@ public class CreateGroupActivity extends AppCompatActivity {
 
         }
     }
+
 
 
 
