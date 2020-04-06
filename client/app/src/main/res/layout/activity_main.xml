@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#0D0221"
     tools:context=".activities.MainActivity">
 
     <Button
@@ -11,11 +12,12 @@
         android:layout_width="88dp"
         android:layout_height="42dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="400dp"
         android:layout_marginEnd="16dp"
+        android:background="#C0E0DE"
         android:text="Login"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -24,9 +26,26 @@
         android:layout_width="250dp"
         android:layout_height="42dp"
         android:layout_marginTop="16dp"
+        android:background="#c0e0de"
         android:onClick="register"
         android:text="Register new user"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button"
+        app:layout_constraintVertical_bias="0.064" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="120dp"
+        app:layout_constraintBottom_toTopOf="@+id/button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0"
+        app:srcCompat="@drawable/logo" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -13,4 +13,6 @@ public class CreateGroupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_group);
     }
+
+
 }

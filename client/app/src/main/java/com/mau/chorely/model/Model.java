@@ -16,37 +16,33 @@
 package com.mau.chorely.model;
 
 
-import android.util.Log;
-
 import shared.transferable.ErrorMessage;
 import shared.transferable.NetCommands;
+import shared.transferable.TransferList;
 import shared.transferable.Transferable;
 import com.mau.chorely.model.persistentStorage.PersistentStorage;
-import com.mau.chorely.model.utils.MultiMap;
-import com.mau.chorely.model.utils.ResultHandler;
+import com.mau.chorely.model.utils.InvalidRequestIDException;
+import com.mau.chorely.model.utils.ResponseHandler;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.LinkedBlockingDeque;
 
 
 public class Model implements NetworkListener{
 
-    private MultiMap<NetCommands, ResultHandler> threadsWaitingForResponse = new MultiMap<>();
-    private HashMap<NetCommands, NetCommands> resultAndRequestPairs = new HashMap<>();
+    public static final int COMMAND_ELEMENT = 0;
+    public static final int ID_ELEMENT = 1;
     private LinkedBlockingDeque<ArrayList<Transferable>> taskToHandle = new LinkedBlockingDeque<>();
     private ClientNetworkManager network;
     private Thread modelThread = new Thread(new ModelThread());
     private ErrorMessage errorMessage;
     private PersistentStorage storage = new PersistentStorage();
-
+    private Model model;
     Model(){
         System.out.println("Model created");
-        registerCommandPairs();
-        network = new ClientNetworkManager(this);
+        //network = new ClientNetworkManager(this);
         modelThread.start();
-
+        model = this;
     }
 
     /**
@@ -54,7 +50,7 @@ public class Model implements NetworkListener{
      * @param message String message.
      */
 
-    private void modelError(String message){
+    public void modelError(String message){
        ErrorMessage errorMessage = new ErrorMessage(message);
        ArrayList<Transferable> errorList = new ArrayList<>();
        errorList.add(NetCommands.internalClientError);
@@ -71,17 +67,9 @@ public class Model implements NetworkListener{
        ArrayList<Transferable> errorList = new ArrayList<>();
        errorList.add(NetCommands.internalClientError);
        errorList.add(errorMessage);
-       notify(errorList);
+       //notify(errorList);
     }
 
-    /**
-     *the method is the first try of an implementation of mapping of requests and responses.
-     */
-    private void registerCommandPairs(){
-        // FIXME: 2020-03-30 Borde resultAndRequest kanske vara multimap och hålla fler än ett möjligt utgående för varje response?
-        resultAndRequestPairs.put(NetCommands.registrationOk, NetCommands.register);
-        resultAndRequestPairs.put(NetCommands.registrationDenied, NetCommands.register);
-    }
 
     public void stop(){
         network.disconnect();
@@ -125,60 +113,16 @@ public class Model implements NetworkListener{
     public synchronized NetCommands notifyForResponse(ArrayList<Transferable> transferred){
         try {
             taskToHandle.put(transferred);
-            ResultHandler threadLockObject = new ResultHandler();
-            threadsWaitingForResponse.put(((NetCommands)transferred.get(0)), threadLockObject);
-            return threadLockObject.waitForResponse(); //Blocks the thread until notified.
+            ResponseHandler threadLockObject = new ResponseHandler();
+            return threadLockObject.waitForResponse(transferred); //Blocks the thread until notified.
         } catch (InterruptedException e){
             System.out.println("Exception putting in notifyForResult" + e.getMessage());
             return NetCommands.internalClientError;
         }
     }
 
-    /**
-     * Method to handle any command that is sent as a response to a request.
-     * There is also a check to make sure a race condition where the response task is created before
-     * request thread is sleeping.
-     * @param responseCommand Any command sent as response.
-     */
 
-    // TODO: 2020-03-30 Why cant method be synchronized?
-    private void handleResponse(NetCommands responseCommand){
-        for(int i = 0; i < 3; i++) { //loop to check for race condition 3 times before error-task is created.
-            if (threadsWaitingForResponse.containsKey(resultAndRequestPairs.get(responseCommand))) {
-                ArrayList<ResultHandler> waitingThreads = threadsWaitingForResponse.get(resultAndRequestPairs.get(responseCommand));
-                for (ResultHandler thread : waitingThreads) {
-                    thread.notifyResult(responseCommand);
-                    return;
-                }
-            }
-            else{
-                try{
-                    Thread.sleep(100);
-                } catch (InterruptedException e){
-                    modelError("Model thread was interrupted checking for race condition: " + e.getMessage());
-                }
-            }
-        }
-        //If the check fails three times an error is generated.
-        modelError("Response without matching request!");
-    }
 
-    /**
-     * First attempt at implementing error handling.
-     * This is meant as a means to be able to communicate different errors to the activities, and
-     * release any threads blocking for a result.
-     * @param errorList Arraylist containing an error command, and a error message.
-     */
-    private void handleError(ArrayList<Transferable> errorList){
-        errorMessage = (ErrorMessage) errorList.get(1);
-        HashMap<NetCommands, ArrayList<ResultHandler>> tempMap = threadsWaitingForResponse.getHashMap();
-        for (Map.Entry<NetCommands, ArrayList<ResultHandler>> entry : tempMap.entrySet()){
-            ArrayList<ResultHandler> mapData = entry.getValue();
-            for(ResultHandler thread : mapData){
-                thread.notifyResult((NetCommands)errorList.get(0));
-            }
-        }
-    }
 
 
     /**
@@ -189,22 +133,30 @@ public class Model implements NetworkListener{
         @Override
         public void run() {
 
+            network = new ClientNetworkManager(model);
+
             while (!Thread.interrupted()){
                 try {
                     ArrayList<Transferable> curWorkingOn = taskToHandle.take();
-                    switch ((NetCommands) curWorkingOn.get(0)) {
+                    switch ((NetCommands) curWorkingOn.get(Model.COMMAND_ELEMENT)) {
+                        case connectionStatus:
+                            ResponseHandler.handleResponse(network.connectAndCheckStatus((TransferList)curWorkingOn));
+                            break;
                         case register:
-                            storage.updateData("/user.cho", curWorkingOn.get(0));
+                            storage.updateData("/user.cho", curWorkingOn.get(Model.COMMAND_ELEMENT));
                             network.sendData(curWorkingOn);
                             break;
                         case registrationOk:
-                            handleResponse((NetCommands) curWorkingOn.get(0));
+                            ResponseHandler.handleResponse(curWorkingOn);
                             break;
                         case internalClientError:
-                            handleError(curWorkingOn);
+                            ResponseHandler.handleResponse(curWorkingOn);
+                            break;
                     }
                 } catch (InterruptedException e){
                     System.out.println("Thread interrupted in main model queue");
+                } catch (InvalidRequestIDException e){
+                    modelError(e);
                 }
             }
         }

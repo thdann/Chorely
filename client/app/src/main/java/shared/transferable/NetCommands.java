@@ -4,5 +4,8 @@ public enum NetCommands implements Transferable {
     register,
     registrationOk,
     registrationDenied,
-    internalClientError;
+    internalClientError,
+    connectionStatus,
+    notConnected,
+    connected;
 }

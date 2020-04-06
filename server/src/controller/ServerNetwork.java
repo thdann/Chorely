@@ -7,8 +7,6 @@ package controller;
  * @autor Angelica Asplund, Emma Svensson and Theresa Dannberg
  */
 
-
-
 import java.io.IOException;
 
 import java.net.ServerSocket;
@@ -36,17 +34,10 @@ public class ServerNetwork implements Runnable {
 
     @Override
     public void run() {
-
-
         while (true) {
             try {
-
                 Socket socket = serverSocket.accept();
                 ClientHandler newClient = new ClientHandler(socket, controller);
-
-
-
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
