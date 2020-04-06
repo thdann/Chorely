@@ -127,8 +127,6 @@ public class Model implements NetworkListener{
 
 
 
-
-
     /**
      * Main model thread. Contains switch statement to handle all NetCommands
      */
@@ -142,7 +140,7 @@ public class Model implements NetworkListener{
             while (!Thread.interrupted()){
                 try {
                     ArrayList<Transferable> curWorkingOn = taskToHandle.take();
-                    System.out.println("GRabbing new list");
+                    System.out.println(curWorkingOn.get(Model.COMMAND_ELEMENT));
                     switch ((NetCommands) curWorkingOn.get(Model.COMMAND_ELEMENT)) {
                         case connectionStatus:
                             ResponseHandler.handleResponse(network.connectAndCheckStatus((TransferList)curWorkingOn));

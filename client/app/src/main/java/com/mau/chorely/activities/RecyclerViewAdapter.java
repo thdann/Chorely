@@ -17,11 +17,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private ArrayList<ListItem> mItemList;
 
     public static class RecyclerViewHolder extends RecyclerView.ViewHolder{
-        public ImageView mImageView;
-        public TextView mTextView1;
-        public TextView mTextView2;
+        private ImageView mImageView;
+        private TextView mTextView1;
+        private TextView mTextView2;
 
-        public RecyclerViewHolder(@NonNull View itemView) {
+        private RecyclerViewHolder(@NonNull View itemView) {
             super(itemView);
             mImageView = itemView.findViewById(R.id.imageViewGroupList);
             mTextView1 = itemView.findViewById(R.id.textViewGroupCard1);

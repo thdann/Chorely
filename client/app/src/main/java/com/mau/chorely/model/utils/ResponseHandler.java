@@ -47,7 +47,6 @@ public class ResponseHandler {
                 ResponseHandler waitingThread = threadsWaitingForResponse.remove(((RequestID) response.get(Model.ID_ELEMENT)));
                 waitingThread.notifyResult((NetCommands) response.get(Model.COMMAND_ELEMENT));
                 return;
-
             } else {
                 try {
                     Thread.sleep(100);

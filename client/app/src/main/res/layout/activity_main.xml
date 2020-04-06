@@ -14,7 +14,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="400dp"
         android:layout_marginEnd="16dp"
-        android:background="#C0E0DE"
+        android:background="@drawable/button_shape_color"
         android:text="Login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -26,7 +26,7 @@
         android:layout_width="250dp"
         android:layout_height="42dp"
         android:layout_marginTop="16dp"
-        android:background="#c0e0de"
+        android:background="@drawable/button_shape_color"
         android:onClick="register"
         android:text="Register new user"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -34,7 +34,10 @@
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button"
-        app:layout_constraintVertical_bias="0.064" />
+        app:layout_constraintVertical_bias="0.064"
+
+
+        />
 
     <ImageView
         android:id="@+id/imageView3"
