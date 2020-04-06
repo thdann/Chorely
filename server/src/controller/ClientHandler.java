@@ -1,6 +1,5 @@
 package controller;
 
-
 import shared.transferable.Transferable;
 
 import java.io.IOException;
@@ -11,7 +10,7 @@ import java.util.ArrayList;
 
 /**
  * ClientHandler
- * version 1.0 2020-03-23
+ * version 2.0 2020-03-23
  * @autor Angelica Asplund, Emma Svensson and Theresa Dannberg
  */
 
@@ -20,22 +19,26 @@ public class ClientHandler {
     private Socket socket;
     private InputThread inputThread;
     private OutputThread outputThread;
-    private ClientListener listener;
+    private ServerController controller;
 
-    public ClientHandler(Socket socket, ClientListener listener) {
-        this.listener=listener;
+
+    public ClientHandler(Socket socket, ServerController controller) {
+        this.controller=controller;
         this.socket = socket;
         inputThread = new InputThread();
         outputThread = new OutputThread();
-        inputThread.start();
         outputThread.start();
+
+        Thread inputThread = new Thread(this.inputThread);
+        inputThread.start();
+
     }
 
     /**
-     * The inner class InputThread sets up an InputStream
+     * The inner class InputThread sets up an InputStream to receive messages from connected client
      */
 
-    private class InputThread extends Thread {
+    private class InputThread implements Runnable {
         ObjectInputStream ois;
 
         public void run() {
@@ -46,17 +49,23 @@ public class ClientHandler {
                 e.printStackTrace();
             }
 
-            while (true) {
+           //while (true) {
                 try {
+                    System.out.println("Du har kommit hit");
                     ArrayList<Transferable> list = (ArrayList<Transferable>) ois.readObject();
-                    listener.sendList(list);
+                    controller.sendList(list);
+                    for(int i =0; i<list.size(); i++){
+
+                        System.out.println(list.get(i));
+                    }
+
 
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
-            }
+           // }
 
 
         }
