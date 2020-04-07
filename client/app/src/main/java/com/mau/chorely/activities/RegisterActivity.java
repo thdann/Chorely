@@ -1,6 +1,7 @@
 package com.mau.chorely.activities;
 
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -11,12 +12,12 @@ import android.widget.EditText;
 
 import com.mau.chorely.R;
 import com.mau.chorely.model.Model;
-import com.mau.chorely.model.ModelInstances;
+import com.mau.chorely.activities.utils.BridgeInstances;
 
 import java.util.ArrayList;
 
 import shared.transferable.NetCommands;
-import shared.transferable.RequestID;
+import shared.transferable.GenericID;
 import shared.transferable.Transferable;
 import shared.transferable.User;
 
@@ -24,6 +25,16 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
+
+        ActionBar ab = getSupportActionBar();
+
+
+        ab.setDisplayHomeAsUpEnabled(true);
+
+
         setContentView(R.layout.activity_register);
     }
 
@@ -48,10 +59,10 @@ public class RegisterActivity extends AppCompatActivity {
 
             ArrayList<Transferable> registration = new ArrayList<>();
             registration.add(NetCommands.register);
-            registration.add(new RequestID());
+            registration.add(new GenericID());
             registration.add(user);
 
-            Model model = ModelInstances.getInstance();
+            Model model = BridgeInstances.getModel();
             NetCommands command = model.notifyForResponse(registration);
 
             return command;
@@ -61,7 +72,7 @@ public class RegisterActivity extends AppCompatActivity {
             switch (command) {
                 case internalClientError:
                     System.out.println("internal client error.");
-                    System.out.println(ModelInstances.getInstance().getErrorMessage());
+                    System.out.println(BridgeInstances.getModel().getErrorMessage());
                     break;
                 case registrationOk:
                     System.out.println("registration ok!!!");

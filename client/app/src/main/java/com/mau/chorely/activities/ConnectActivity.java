@@ -2,8 +2,6 @@ package com.mau.chorely.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,10 +9,10 @@ import android.widget.TextView;
 
 import com.mau.chorely.R;
 import com.mau.chorely.model.Model;
-import com.mau.chorely.model.ModelInstances;
+import com.mau.chorely.activities.utils.BridgeInstances;
 
 import shared.transferable.NetCommands;
-import shared.transferable.RequestID;
+import shared.transferable.GenericID;
 import shared.transferable.TransferList;
 
 public class ConnectActivity extends AppCompatActivity {
@@ -38,8 +36,8 @@ public class ConnectActivity extends AppCompatActivity {
         @Override
         protected NetCommands doInBackground(NetCommands... netCommands) {
             NetCommands command = netCommands[0];
-            Model model = ModelInstances.getInstance();
-            TransferList transferees = new TransferList(command, new RequestID());
+            Model model = BridgeInstances.getModel();
+            TransferList transferees = new TransferList(command, new GenericID());
             return model.notifyForResponse(transferees);
         }
 

@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.mau.chorely.R;
-import com.mau.chorely.model.Model;
-import com.mau.chorely.model.ModelInstances;
 
 public class MainActivity extends AppCompatActivity {
 

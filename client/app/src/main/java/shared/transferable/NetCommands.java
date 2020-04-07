@@ -7,5 +7,8 @@ public enum NetCommands implements Transferable {
     internalClientError,
     connectionStatus,
     notConnected,
-    connected;
+    connected,
+    requestUserGroups,
+    userHasNoGroup,
+    userHasGroupUpdate;
 }
