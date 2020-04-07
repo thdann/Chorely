@@ -16,16 +16,16 @@ import java.util.Map;
 
 
 import shared.transferable.NetCommands;
-import shared.transferable.RequestID;
+import shared.transferable.GenericID;
 import shared.transferable.Transferable;
 
 public class ResponseHandler {
     private volatile NetCommands resultCommand;
-    private static HashMap<RequestID, ResponseHandler> threadsWaitingForResponse = new HashMap<>();
+    private static HashMap<GenericID, ResponseHandler> threadsWaitingForResponse = new HashMap<>();
 
 
     public synchronized NetCommands waitForResponse(ArrayList<Transferable> request){
-        threadsWaitingForResponse.put(((RequestID) request.get(Model.ID_ELEMENT)), this);
+        threadsWaitingForResponse.put(((GenericID) request.get(Model.ID_ELEMENT)), this);
         try {
             wait();
             return resultCommand;
@@ -43,8 +43,8 @@ public class ResponseHandler {
     public static void handleResponse(ArrayList<Transferable> response) throws InvalidRequestIDException {
         for (int i = 0; i < 3; i++) { //loop to check for race condition 3 times before error-task is created.
             System.out.println(response.get(1).toString());
-            if (threadsWaitingForResponse.containsKey(((RequestID)response.get(Model.ID_ELEMENT)))) {
-                ResponseHandler waitingThread = threadsWaitingForResponse.remove(((RequestID) response.get(Model.ID_ELEMENT)));
+            if (threadsWaitingForResponse.containsKey(((GenericID)response.get(Model.ID_ELEMENT)))) {
+                ResponseHandler waitingThread = threadsWaitingForResponse.remove(((GenericID) response.get(Model.ID_ELEMENT)));
                 waitingThread.notifyResult((NetCommands) response.get(Model.COMMAND_ELEMENT));
                 return;
             } else {
@@ -57,7 +57,7 @@ public class ResponseHandler {
             }
         }
 
-        throw new InvalidRequestIDException("Response with invalid request id! Id: " + ((RequestID) response.get(Model.ID_ELEMENT)).getIdString());
+        throw new InvalidRequestIDException("Response with invalid request id! Id: " + ((GenericID) response.get(Model.ID_ELEMENT)).getIdString());
 
     }
 
@@ -68,12 +68,12 @@ public class ResponseHandler {
     // FIXME: 2020-04-01 Behöver vi någon form av errorhandling här? Det kan i så fall vara att response handler behöver referens till model.
 
 
-    public static void releaseAllThreads (String message, RequestID ID){
+    public static void releaseAllThreads (String message, GenericID ID){
         ArrayList<Transferable> errorList = new ArrayList<>();
         errorList.add(NetCommands.internalClientError);
         errorList.add(ID);
 
-        for (Map.Entry<RequestID, ResponseHandler> entry : threadsWaitingForResponse.entrySet()){
+        for (Map.Entry<GenericID, ResponseHandler> entry : threadsWaitingForResponse.entrySet()){
             ResponseHandler thread = entry.getValue();
                 thread.notifyResult((NetCommands)errorList.get(Model.COMMAND_ELEMENT));
         }

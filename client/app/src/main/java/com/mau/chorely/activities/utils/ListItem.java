@@ -1,4 +1,4 @@
-package com.mau.chorely.activities;
+package com.mau.chorely.activities.utils;
 
 public class ListItem {
     private int mImageResource;

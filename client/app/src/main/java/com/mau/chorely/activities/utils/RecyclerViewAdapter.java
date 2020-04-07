@@ -1,4 +1,4 @@
-package com.mau.chorely.activities;
+package com.mau.chorely.activities.utils;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +33,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public RecyclerViewAdapter (ArrayList<ListItem> itemList){
         this.mItemList = itemList;
     }
-
 
     @NonNull
     @Override

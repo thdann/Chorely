@@ -7,20 +7,17 @@
 
 package com.mau.chorely.model;
 
-import shared.transferable.ErrorMessage;
 import shared.transferable.NetCommands;
-import shared.transferable.RequestID;
+import shared.transferable.GenericID;
 import shared.transferable.TransferList;
 import shared.transferable.Transferable;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -58,7 +55,7 @@ public class ClientNetworkManager {
 
     public TransferList connectAndCheckStatus(TransferList list){
 
-        RequestID id = (RequestID)list.get(Model.ID_ELEMENT);
+        GenericID id = (GenericID)list.get(Model.ID_ELEMENT);
         TransferList ret;
         int iteration = 0;
 

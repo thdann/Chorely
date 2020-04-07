@@ -17,14 +17,17 @@ package com.mau.chorely.model;
 
 
 import shared.transferable.ErrorMessage;
+import shared.transferable.Group;
 import shared.transferable.NetCommands;
 import shared.transferable.TransferList;
 import shared.transferable.Transferable;
+
+import com.mau.chorely.activities.utils.BridgeInstances;
+import com.mau.chorely.activities.utils.Presenter;
 import com.mau.chorely.model.persistentStorage.PersistentStorage;
 import com.mau.chorely.model.utils.InvalidRequestIDException;
 import com.mau.chorely.model.utils.ResponseHandler;
 
-import java.security.acl.Group;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -39,7 +42,7 @@ public class Model implements NetworkListener{
     private ErrorMessage errorMessage;
     private PersistentStorage storage = new PersistentStorage();
     private Model model;
-    Model(){
+    public Model(){
         System.out.println("Model created");
         //network = new ClientNetworkManager(this);
         modelThread.start();
@@ -51,6 +54,7 @@ public class Model implements NetworkListener{
      * @param message String message.
      */
 
+    //TODO släng skiten
     public void modelError(String message){
        ErrorMessage errorMessage = new ErrorMessage(message);
        ArrayList<Transferable> errorList = new ArrayList<>();
@@ -59,7 +63,7 @@ public class Model implements NetworkListener{
        notify(errorList);
     }
 
-    /**
+    /** TODO släng skiten
      * Overridden error task method, to take exception instead of string.
      * @param exception Error message.
      */
@@ -69,6 +73,8 @@ public class Model implements NetworkListener{
        errorList.add(NetCommands.internalClientError);
        errorList.add(errorMessage);
        //notify(errorList);
+
+
     }
 
     public Group[] getGroups(){
@@ -157,6 +163,7 @@ public class Model implements NetworkListener{
                             break;
                         default:
                             System.out.println("Unrecognized command: " + (curWorkingOn.get(Model.COMMAND_ELEMENT).toString()));
+                            BridgeInstances.getPresenter().toastCurrent("Hejsan!!!!");
                             ResponseHandler.handleResponse(curWorkingOn);
                     }
                 } catch (InterruptedException e){

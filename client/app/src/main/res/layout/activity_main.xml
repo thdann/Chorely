@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0D0221"
+    android:background="@color/background"
     tools:context=".activities.MainActivity">
 
     <Button
@@ -14,7 +14,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="400dp"
         android:layout_marginEnd="16dp"
-        android:background="@drawable/button_shape_color"
+        android:background="@drawable/button_background"
         android:text="Login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -26,7 +26,7 @@
         android:layout_width="250dp"
         android:layout_height="42dp"
         android:layout_marginTop="16dp"
-        android:background="@drawable/button_shape_color"
+        android:background="@drawable/button_background"
         android:onClick="register"
         android:text="Register new user"
         app:layout_constraintBottom_toBottomOf="parent"

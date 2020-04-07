@@ -7,8 +7,9 @@ package controller;
  * @autor Angelica Asplund, Emma Svensson and Theresa Dannberg
  */
 
+import shared.transferable.GenericID;
 import shared.transferable.NetCommands;
-import shared.transferable.RequestID;
+
 import shared.transferable.Transferable;
 import shared.transferable.User;
 
@@ -59,7 +60,8 @@ public class ServerNetwork implements Runnable {
                     System.out.println("Reading object");
                     testArray = (ArrayList<Transferable>) ois.readObject();
                     System.out.println(((NetCommands) testArray.get(0)).toString());
-                    RequestID id = (RequestID) testArray.get(1);
+                    GenericID id = (GenericID) testArray.get(1);
+                    System.out.println(testArray.get(2));
 
                     testArray = new ArrayList<Transferable>();
                     testArray.add(NetCommands.registrationOk);

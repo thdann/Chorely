@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:background="@drawable/button_shape_color"
+        android:background="@drawable/button_background"
         android:onClick="register"
         android:text="Register"
         app:layout_constraintBottom_toBottomOf="parent"
