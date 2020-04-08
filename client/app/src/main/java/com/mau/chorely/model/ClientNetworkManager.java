@@ -95,9 +95,6 @@ public class ClientNetworkManager {
                 try {
                     model.handleTask((Message) input.readObject());
                 } catch (IOException e) {
-                    connected = false;
-                    // Interrupt the output thread in case it's waiting on an empty outBoundQueue.
-                    outputThread.interrupt();
                     break;
                 } catch (ClassNotFoundException e) {
                     // We should only be here if we have a bug in the program that makes
@@ -108,6 +105,9 @@ public class ClientNetworkManager {
                         socket.close();
                     } catch (IOException ignore) {
                     }
+                    connected = false;
+                    // Interrupt the output thread in case it's waiting on an empty outBoundQueue.
+                    outputThread.interrupt();
                     connectionHandler.wakeConnectionHandler();
                     model.handleTask(new Message(NetCommands.connectionFailed, null, new ArrayList<Transferable>()));
                 }
@@ -138,18 +138,17 @@ public class ClientNetworkManager {
                     // tried to send it with writeObject. In that case we need to put it back
                     // on the output queue before terminating the thread.
                     outBoundQueue.addFirst(msg);
-                    connected = false;
                     break;
                 } catch (InterruptedException e2) {
                     // This interrupted exception happens if another thread interrupts this thread
                     // while the output queue is waiting.
-                    connected = false;
                     break;
                 } finally {
                     try {
                         socket.close();
                     } catch (IOException ignore) {
                     }
+                    connected = false;
                 }
             }
         }
