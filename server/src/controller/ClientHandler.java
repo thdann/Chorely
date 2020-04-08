@@ -61,52 +61,52 @@ public class ClientHandler {
                 e.printStackTrace();
             }
 
-            //while (true) {
+
             try {
-                System.out.println("Du har kommit hit");
-                Message msg = (Message) ois.readObject();
-                controller.addOnlineClient(msg.getUser(), ClientHandler.this);
-                onlineClient = true;
-                controller.sendMessage(msg);
-//                for (int i = 0; i < list.size(); i++) {
-//
-//                    System.out.println(list.get(i));
-//                }
 
+                while (true) {
+                    try {
+                        System.out.println("Du har kommit hit");
+                        Message msg = (Message) ois.readObject();
+                        controller.addOnlineClient(msg.getUser(), ClientHandler.this);
+                        onlineClient = true;
+                        controller.sendMessage(msg);
+                        //                for (int i = 0; i < list.size(); i++) {
+                        //
+                        //                    System.out.println(list.get(i));
+                        //                }
 
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
             } catch (IOException e) {
                 e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
             }
-            // }
-
-
         }
-    }
 
-    /**
-     * The inner class OutputThread sets up an OutputStream
-     */
+        /**
+         * The inner class OutputThread sets up an OutputStream
+         */
 
-    private class OutputThread extends Thread {
-        ObjectOutputStream oos;
+        private class OutputThread extends Thread {
+            ObjectOutputStream oos;
 
-        public void run() {
-            //Sätt upp ObjectOutputStream från socket
-            try {
-                oos = new ObjectOutputStream(socket.getOutputStream());
-                oos.writeObject(outgoingMessages.take());
-                oos.flush();
-                System.out.println("skickat svar till klienten");
+            public void run() {
+                //Sätt upp ObjectOutputStream från socket
+                try {
+                    oos = new ObjectOutputStream(socket.getOutputStream());
+                    oos.writeObject(outgoingMessages.take());
+                    oos.flush();
+                    System.out.println("skickat svar till klienten");
 
-            } catch (IOException | InterruptedException e) {
-                e.printStackTrace();
+                } catch (IOException | InterruptedException e) {
+                    e.printStackTrace();
+
+                }
 
             }
 
         }
 
     }
-
-}
