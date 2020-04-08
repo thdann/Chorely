@@ -22,7 +22,7 @@ public class ConnectActivity extends AppCompatActivity  implements UpdatableActi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        BridgeInstances.getModel(); // startar modellen.
+
 
     }
 
@@ -32,7 +32,9 @@ public class ConnectActivity extends AppCompatActivity  implements UpdatableActi
 
         setContentView(R.layout.activity_connect2);
         status = findViewById(R.id.textView2);
+
         BridgeInstances.getPresenter().register(this);
+        BridgeInstances.getModel(); // startar modellen.
     }
 
     @Override

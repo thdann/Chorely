@@ -20,17 +20,10 @@ import shared.transferable.ErrorMessage;
 import shared.transferable.Group;
 import shared.transferable.Message;
 import shared.transferable.NetCommands;
-import shared.transferable.TransferList;
-import shared.transferable.Transferable;
 
 import com.mau.chorely.activities.utils.BridgeInstances;
-import com.mau.chorely.activities.utils.Presenter;
 import com.mau.chorely.model.persistentStorage.PersistentStorage;
-import com.mau.chorely.model.utils.InvalidRequestIDException;
-import com.mau.chorely.model.utils.ResponseHandler;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingDeque;
 
 
@@ -90,7 +83,8 @@ public class Model implements NetworkListener{
         @Override
         public void run() {
 
-            network = new ClientNetworkManager(model);
+
+
 
             while (!Thread.interrupted()){
                 try {
@@ -115,8 +109,9 @@ public class Model implements NetworkListener{
                         case connectionFailed:
                             isConnected = false;
                             BridgeInstances.getPresenter().updateCurrent();
+
                             break;
-                            
+
                         case connected:
                             isConnected = true;
                             BridgeInstances.getPresenter().updateCurrent();
