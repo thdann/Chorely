@@ -72,7 +72,7 @@ public class Model implements NetworkListener{
      */
 
     @Override
-    public  void notify(Message msg) {
+    public void handleTask(Message msg) {
         try {
             taskToHandle.put(msg);
 

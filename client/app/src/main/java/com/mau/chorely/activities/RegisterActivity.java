@@ -57,7 +57,7 @@ public class RegisterActivity extends AppCompatActivity implements UpdatableActi
         System.out.println(userToRegister);
 
         Message registerMsg = new Message(NetCommands.register, userToRegister, new ArrayList<Transferable>());
-        BridgeInstances.getModel().notify(registerMsg);
+        BridgeInstances.getModel().handleTask(registerMsg);
 
         user.setVisibility(View.INVISIBLE);
         pass.setVisibility(View.INVISIBLE);

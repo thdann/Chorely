@@ -13,5 +13,5 @@ import shared.transferable.Transferable;
 import java.util.ArrayList;
 
 public interface NetworkListener {
-    public void notify(Message msg);
+     void handleTask(Message msg);
 }
