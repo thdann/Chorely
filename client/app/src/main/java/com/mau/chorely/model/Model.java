@@ -18,6 +18,7 @@ package com.mau.chorely.model;
 
 import shared.transferable.ErrorMessage;
 import shared.transferable.Group;
+import shared.transferable.Message;
 import shared.transferable.NetCommands;
 import shared.transferable.TransferList;
 import shared.transferable.Transferable;
@@ -36,7 +37,7 @@ public class Model implements NetworkListener{
 
     public static final int COMMAND_ELEMENT = 0;
     public static final int ID_ELEMENT = 1;
-    private LinkedBlockingDeque<ArrayList<Transferable>> taskToHandle = new LinkedBlockingDeque<>();
+    private LinkedBlockingDeque<Message> taskToHandle = new LinkedBlockingDeque<>();
     private ClientNetworkManager network;
     private Thread modelThread = new Thread(new ModelThread());
     private ErrorMessage errorMessage;
@@ -104,9 +105,9 @@ public class Model implements NetworkListener{
      */
 
     @Override
-    public  void notify(ArrayList<Transferable> transferred) {
+    public  void notify(Message msg) {
         try {
-            taskToHandle.put(transferred);
+            taskToHandle.put(msg);
 
         } catch (InterruptedException e){
             System.out.println("Error in model callback" + e.getMessage());
