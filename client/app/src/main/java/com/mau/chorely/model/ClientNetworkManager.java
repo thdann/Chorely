@@ -35,6 +35,8 @@ public class ClientNetworkManager {
     public ClientNetworkManager(NetworkListener model){
         this.model = model;
         setupSocket();
+        connect();
+        //setupSocket();
     }
 
     public void sendData(Message data){
@@ -49,29 +51,32 @@ public class ClientNetworkManager {
         }
     }
 
+
     public boolean isConnected(){
         return connected;
     }
 
-    public Message connectAndCheckStatus(){
 
-        Message ret;
-        int iteration = 0;
-        if(socket.isClosed()){
-            setupSocket();
+    private boolean setupSocket() {
+
+        socket = new Socket();
+        try {
+            socket.bind(new InetSocketAddress(SERVER_IP, SERVER_PORT));
+        } catch (IOException e){
+            System.out.println("Error setting up socket!");
         }
 
-        while (!connected && iteration < 3) {
-            connectSocket();
-            iteration++;
+        return (socket.isConnected() && !socket.isClosed());
+
+    }
+
+    public void connect(){
+        if (socket == null){
+            while (!connected){
+                System.out.println("HERREEERERER");
+                connectSocket();
+            }
         }
-        if(connected){
-            ret = new Message(NetCommands.connected, null, null );
-        }
-        else{
-            ret = new Message(NetCommands.notConnected, null, null, new ErrorMessage("Not connected"));
-        }
-        return ret;
     }
 
     private synchronized void connectSocket(){
@@ -81,6 +86,7 @@ public class ClientNetworkManager {
                 connected = false;
                 SocketAddress socketAddress = new InetSocketAddress(SERVER_IP, SERVER_PORT);
                 socket.connect(socketAddress, 2000);
+                System.out.println("CONNECTED_______________________________________");
                 connected = (socket.isConnected() && !socket.isClosed());
                 System.out.println(connected);
                 setupThreads();
@@ -91,40 +97,61 @@ public class ClientNetworkManager {
                     System.out.println("SHOULD NEVER HAPPEN! thread interrupted trying to connect");
                 }
                 socket = new Socket();
-                System.out.println("ERRROOROOROROROOROR");
+                System.out.println("Socket could not connect.");
                 System.out.println(e.getMessage());
                 System.out.println(e);
             }
         }
     }
 
+    /*
 
+    public void connectAndCheckStatus(){
 
-    private boolean setupSocket() {
+        Message connectionStatus;
+        int iteration = 0;
+        if(socket.isClosed()){
+            setupSocket();
+        }
 
-            socket = new Socket();
-            try {
-                socket.bind(new InetSocketAddress(SERVER_IP, SERVER_PORT));
-            } catch (IOException e){
-                System.out.println("Error setting up socket!");
-            }
-
-            return (socket.isConnected() && !socket.isClosed());
-
+        while (!connected && iteration < 3) {
+            connectSocket();
+            iteration++;
+        }
+        if(connected){
+            connectionStatus = new Message(NetCommands.connected, null, null );
+        }
+        else{
+            connectionStatus = new Message(NetCommands.notConnected, null, null, new ErrorMessage("Not connected"));
+        }
+        model.notify(connectionStatus);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+     */
 
 
     public void disconnect() {
 
-            inputThread.interrupt();
-            outputThread.interrupt();
+        inputThread.interrupt();
+        outputThread.interrupt();
 
-            try {
-                socket.close();
-                connected = false;
-            } catch (IOException e){
-                System.out.println("ERROR CLOSING SOCKET");
-            }
+        try {
+            socket.close();
+            connected = false;
+        } catch (IOException e){
+            System.out.println("ERROR CLOSING SOCKET");
+        }
     }
 
     private void setupThreads(){

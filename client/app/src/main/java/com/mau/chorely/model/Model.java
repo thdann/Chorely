@@ -74,17 +74,10 @@ public class Model implements NetworkListener{
         modelThread.interrupt();
     }
 
-    /**
-     * Getter for the ErrorMessage created in the case of NetCommands.internalClientError
-     * @return ErrorMessage
-     */
-    public synchronized ErrorMessage getErrorMessage(){
-        // FIXME: 2020-03-28 Det kan bli problem med att klassen bara håller ett ErrorMessage, om det är flera trådar som släpps vid internalClientError
-        ErrorMessage ret = errorMessage;
-        errorMessage = null;
-        return ret;
-    }
 
+    public boolean isConnected(){
+        return network.isConnected();
+    }
 
     /**
      * Callback method for any request that doesn't require a response.
@@ -111,6 +104,7 @@ public class Model implements NetworkListener{
         public void run() {
 
             network = new ClientNetworkManager(model);
+            BridgeInstances.getPresenter().updateCurrent();
 
             while (!Thread.interrupted()){
                 try {
@@ -119,7 +113,6 @@ public class Model implements NetworkListener{
                     NetCommands command = curWorkingOn.getCommand();
                     switch (command) {
                         case connectionStatus:
-                            network.connectAndCheckStatus();
                             break;
                         case register:
                             storage.updateData("/user.cho", curWorkingOn.getCommand());

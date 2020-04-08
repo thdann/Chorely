@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.mau.chorely.R;
+import com.mau.chorely.activities.interfaces.UpdatableActivity;
 import com.mau.chorely.model.Model;
 import com.mau.chorely.activities.utils.BridgeInstances;
 
@@ -15,7 +16,7 @@ import shared.transferable.NetCommands;
 import shared.transferable.GenericID;
 import shared.transferable.TransferList;
 
-public class ConnectActivity extends AppCompatActivity {
+public class ConnectActivity extends AppCompatActivity  implements UpdatableActivity {
     TextView status;
 
     @Override
@@ -27,9 +28,25 @@ public class ConnectActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         setContentView(R.layout.activity_connect2);
-        new Connect().execute(NetCommands.connectionStatus);
+        BridgeInstances.getModel(); // startar modellen.
+        //new Connect().execute(NetCommands.connectionStatus);
         status = findViewById(R.id.textView2);
     }
+
+    @Override
+    public void UpdateActivity() {
+        if(BridgeInstances.getModel().isConnected()){
+            Intent intent = new Intent(ConnectActivity.this, MainActivity.class);
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    public void doToast(String message) {
+
+    }
+
+    /*
 
     private class Connect extends AsyncTask<NetCommands, Void , NetCommands>{
 
@@ -38,15 +55,14 @@ public class ConnectActivity extends AppCompatActivity {
             NetCommands command = netCommands[0];
             Model model = BridgeInstances.getModel();
             TransferList transferees = new TransferList(command, new GenericID());
-            
+
         }
 
         @Override
         protected void onPostExecute(NetCommands netCommand) {
            switch (netCommand){
                case connected:
-                   Intent intent = new Intent(ConnectActivity.this, MainActivity.class);
-                   startActivity(intent);
+
                    break;
                case notConnected:
                    status.setText(R.string.retrying);
@@ -55,4 +71,6 @@ public class ConnectActivity extends AppCompatActivity {
            }
         }
     }
+
+     */
 }
