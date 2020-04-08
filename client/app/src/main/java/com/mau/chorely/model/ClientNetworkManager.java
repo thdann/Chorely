@@ -36,7 +36,7 @@ public class ClientNetworkManager {
         this.model = model;
         //setupSocket();
         //connect();
-      
+
     }
 /*
     public void sendData(Message data){
