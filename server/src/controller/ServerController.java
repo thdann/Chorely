@@ -98,14 +98,20 @@ public class ServerController implements ClientListener {
      */
 
     public void registerNewGroup(Group group) {
-        registeredGroups.addGroup(group);
-        ArrayList<User> members = group.getUsers();
-        GenericID groupID = group.getGroupID();
-        for (User u : members) {
-            u.addGroupMembership(groupID);
-        }
-    }
+        Message reply = null;
 
+        if (registeredGroups.groupIdAvailable(group.getGroupID())) {
+            registeredGroups.writeGroupToFile(group);
+            ArrayList<User> members = group.getUsers();
+            GenericID groupID = group.getGroupID();
+            for (User u : members) {
+                u.addGroupMembership(groupID);
+            }
+            //TODO: skicka tillbaka ett svar till klienten med message att newGroupOk
+        }
+
+
+    }
 
     public void sendReply(Message reply) {
         ClientHandler client = onlineClients.get(reply.getUser());
@@ -140,4 +146,5 @@ public class ServerController implements ClientListener {
         }
 
     }
+    
 }
