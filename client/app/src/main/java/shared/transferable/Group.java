@@ -1,6 +1,11 @@
 package shared.transferable;
 
-
+/**
+ * Group is a class that represent a group in the application.
+ * version 2.0 2020-04-08
+ *
+ * @autor Timothy Denison and Emma Svensson.
+ */
 
 import java.util.ArrayList;
 
@@ -9,6 +14,9 @@ public class Group implements Transferable {
     private String description;
     private ArrayList<User> users = new ArrayList<>();
     private GenericID groupID = new GenericID();
+    private ArrayList<Chore> chores = new ArrayList<>();
+    private ArrayList<Reward> rewards = new ArrayList<>();
+
 
     private Group(){}
     public Group (String groupName){
