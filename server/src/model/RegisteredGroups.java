@@ -1,84 +1,71 @@
 package model;
 
+import shared.transferable.GenericID;
 import shared.transferable.Group;
-import shared.transferable.User;
 
 import java.io.*;
-import java.util.ArrayList;
 
 /**
- * RegisteredGroups contains all the registered groups by reading and writing to a file stored on the server.
+ * RegisteredGroups handles all registered groups by reading and writing each Group object to a
+ * separate file stored on the server.
  * version 1.0 2020-04-08
  *
  * @author Theresa Dannberg
  */
 
+//TODO vilka olika scenarion kan hända som vi måste ha metoder för här???
+
 public class RegisteredGroups {
 
-    private String filename;
-    private ArrayList<Group> registeredGroups;
+    private String filePath;
+    private File directory;
+
+    /**
+     * Constructor
+     */
 
     public RegisteredGroups() {
-        this.filename = "files/registeredGroups.dat";
+        this.filePath = "files/groups/";
+        directory = new File(filePath);
 
-        File savedUsers = new File(filename);
-        if (savedUsers.exists()) {
-            readGroupsFromFile();
-
-        } else {
-            registeredGroups = new ArrayList<>();
-            writeGroupsToFile();
-
-        }
     }
 
-    public void addGroup(Group newGroup) {
-        registeredGroups.add(newGroup);
-    }
+    /**
+     * Saves a Group object to its own file on the server
+     *
+     * @param group the Group object to be saved to file
+     */
 
-    public void readGroupsFromFile() {
-        try (ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filename)))) {
-            registeredGroups = (ArrayList<Group>) ois.readObject();
-
-        } catch (IOException | ClassNotFoundException e) {
-            e.getMessage();
-
-        }
-    }
-
-    public void writeGroupsToFile() {
+    public void writeGroupToFile(Group group) {
+        String filename = String.format("%s%s.dat", filePath, group.getGroupID());
         try (ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filename)))) {
-            oos.writeObject(registeredGroups);
+            oos.writeObject(group);
             oos.flush();
+            System.out.println("write group to file " + filename);
 
         } catch (IOException e) {
             e.getMessage();
 
         }
+
     }
 
-
-    /**
-     * Searches through all registered groups and returns all the groups that
-     * the specified user is a member of.
-     * @param user the user whos groups are asked for.
-     * @return an ArrayList with the name of the requested groups.
-     */
-
-    public ArrayList<String> getGroupsByUser(User user) {
-        ArrayList<String> groupsOfUser = new ArrayList<>();
-        for (Group group : registeredGroups) {
-            ArrayList<User> users = group.getUsers();
-            for (User u : users) {
-                if (u.getUsername().equals(user.getUsername())) {
-                    groupsOfUser.add(group.getName());
-                }
-            }
+    public boolean groupIdAvailable(GenericID newGroupId) {
+        File file = new File(filePath + newGroupId + ".dat");
+        System.out.println(file.getPath());
+        if (file.exists()) {
+            return false;
         }
 
-        return groupsOfUser;
+        return true;
 
     }
 
+    public void loopRegisteredGroups() {
+        for (File file : directory.listFiles()) {
+            System.out.println(file.getName());
+        }
+
+    }
 
 }

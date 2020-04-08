@@ -5,9 +5,9 @@ import shared.transferable.User;
 import java.io.*;
 
 /**
- * RegisteredUser contains all the registered users by reading and writing each User object to a
+ * RegisteredUser handles all registered users by reading and writing each User object to a
  * separate file stored on the server.
- * version 1.0 2020-04-06
+ * version 2.0 2020-04-08
  *
  * @author Theresa Dannberg
  */
@@ -26,17 +26,17 @@ public class RegisteredUsers {
     }
 
     /**
-     * Saves the User object to a separate file on the server
+     * Saves a User object to its own file on the server.
      *
-     * @param user
+     * @param user the User object to be saved to file
      */
 
     public void writeUserToFile(User user) {
-        String filename1 = String.format("%s%s.dat", filePath, user.getUsername());
-        try (ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filename1)))) {
+        String filename = String.format("%s%s.dat", filePath, user.getUsername());
+        try (ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filename)))) {
             oos.writeObject(user);
             oos.flush();
-            System.out.println(filename1);
+            System.out.println("write user to file " + filename);
 
         } catch (IOException e) {
             e.getMessage();
@@ -45,13 +45,20 @@ public class RegisteredUsers {
 
     }
 
+    /**
+     * Updates the directory with the new updated user.
+     *
+     * @param user is the new updated version of the User object to be saved to file.
+     */
+
     public void updateUser(User user) {
         File file = new File(filePath + user.getUsername() + ".dat");
-        System.out.println(file.getPath());
+        System.out.println("updatemetoden " + file.getPath());
         if (file.exists()) {
             file.delete();
         }
 
+        writeUserToFile(user);
 
     }
 
@@ -70,29 +77,6 @@ public class RegisteredUsers {
         }
 
         return true;
-
-    }
-
-    public void loopRegisteredUsers(File dir) {
-
-        if (dir.isDirectory()) {
-            for (File file1 : dir.listFiles()) {
-                System.out.println(file1);
-            }
-        }
-
-    }
-
-
-    //TODO För testning endast, ta bort sen...
-    public static void main(String[] args) {
-        RegisteredUsers prog = new RegisteredUsers();
-        prog.updateUser(new User("Theresa", "pass"));
-
-
-//        File file = new File("files/users/");
-//        prog.loopRegisteredUsers(file);
-
 
     }
 
