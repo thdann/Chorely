@@ -7,10 +7,13 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * ClientHandler
  * version 2.0 2020-03-23
+ *
  * @autor Angelica Asplund, Emma Svensson and Theresa Dannberg
  */
 
@@ -20,11 +23,13 @@ public class ClientHandler {
     private InputThread inputThread;
     private OutputThread outputThread;
     private ServerController controller;
+    private LinkedBlockingQueue<ArrayList<Transferable>> outgoingMessages;
 
 
     public ClientHandler(Socket socket, ServerController controller) {
-        this.controller=controller;
+        this.controller = controller;
         this.socket = socket;
+        outgoingMessages = new LinkedBlockingQueue<>();
         inputThread = new InputThread();
         outputThread = new OutputThread();
         outputThread.start();
@@ -32,6 +37,10 @@ public class ClientHandler {
         Thread inputThread = new Thread(this.inputThread);
         inputThread.start();
 
+    }
+
+    public void addToOutgoingMessages(ArrayList<Transferable> reply) {
+        outgoingMessages.add(reply);
     }
 
     /**
@@ -49,23 +58,23 @@ public class ClientHandler {
                 e.printStackTrace();
             }
 
-           //while (true) {
-                try {
-                    System.out.println("Du har kommit hit");
-                    ArrayList<Transferable> list = (ArrayList<Transferable>) ois.readObject();
-                    controller.sendList(list);
-                    for(int i =0; i<list.size(); i++){
+            //while (true) {
+            try {
+                System.out.println("Du har kommit hit");
+                ArrayList<Transferable> list = (ArrayList<Transferable>) ois.readObject();
+                controller.sendList(list);
+                for (int i = 0; i < list.size(); i++) {
 
-                        System.out.println(list.get(i));
-                    }
-
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
+                    System.out.println(list.get(i));
                 }
-           // }
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            // }
 
 
         }
@@ -82,10 +91,17 @@ public class ClientHandler {
             //Sätt upp ObjectOutputStream från socket
             try {
                 oos = new ObjectOutputStream(socket.getOutputStream());
-            } catch (IOException e) {
+                oos.writeObject(outgoingMessages.take());
+                oos.flush();
+                System.out.println("skickat svar till klienten");
+
+            } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
+
             }
+
         }
+
     }
 
 }
