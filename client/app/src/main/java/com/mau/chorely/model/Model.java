@@ -29,6 +29,7 @@ import com.mau.chorely.model.persistentStorage.PersistentStorage;
 import com.mau.chorely.model.utils.InvalidRequestIDException;
 import com.mau.chorely.model.utils.ResponseHandler;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -38,6 +39,7 @@ public class Model implements NetworkListener{
     public static final int COMMAND_ELEMENT = 0;
     public static final int ID_ELEMENT = 1;
     private LinkedBlockingDeque<Message> taskToHandle = new LinkedBlockingDeque<>();
+    private volatile boolean isLoggedIn = false;
     private ClientNetworkManager network;
     private Thread modelThread = new Thread(new ModelThread());
     private ErrorMessage errorMessage;
@@ -55,6 +57,9 @@ public class Model implements NetworkListener{
         return null;
     }
 
+    public boolean isLoggedIn(){
+        return true;//isLoggedIn;
+    }
 
 
     public boolean isConnected(){
@@ -97,9 +102,9 @@ public class Model implements NetworkListener{
                         case connectionStatus:
                             break;
                         case register:
-
                             break;
                         case registrationOk:
+                            isLoggedIn = true;
                             BridgeInstances.getPresenter().updateCurrent();
                             break;
                         case internalClientError:
