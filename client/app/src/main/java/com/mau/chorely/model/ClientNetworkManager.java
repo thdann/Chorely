@@ -27,14 +27,25 @@ public class ClientNetworkManager {
     private volatile boolean connected = false;
     private LinkedBlockingDeque<Message> outBoundQueue = new LinkedBlockingDeque<>();
     private NetworkListener model;
+    private ConnectionHandler connectionHandler = new ConnectionHandler();
 
     public ClientNetworkManager(NetworkListener model) {
         this.model = model;
-        Thread thread = new Thread(new ConnectionHandler());
+        Thread thread = new Thread(connectionHandler);
         thread.start();
     }
 
     private class ConnectionHandler implements Runnable {
+        private synchronized void sleepConnectionHandler(){
+            try {
+                wait();
+            } catch (InterruptedException e){} // ignore
+        }
+
+        public synchronized void wakeConnectionHandler(){
+            notifyAll();
+        }
+
         @Override
         public void run() {
             while (true) {
@@ -101,7 +112,7 @@ public class ClientNetworkManager {
                         socket.close();
                     } catch (IOException ignore) {
                     }
-
+                    connectionHandler.wakeConnectionHandler();
                     // todo: Notify model of connection failure.
                 }
             }
