@@ -1,5 +1,6 @@
 package controller;
 
+import shared.transferable.Message;
 import shared.transferable.Transferable;
 import shared.transferable.User;
 
@@ -24,7 +25,7 @@ public class ClientHandler {
     private InputThread inputThread;
     private OutputThread outputThread;
     private ServerController controller;
-    private LinkedBlockingQueue<ArrayList<Transferable>> outgoingMessages;
+    private LinkedBlockingQueue<Message> outgoingMessages;
     private boolean onlineClient = false;
 
 
@@ -41,7 +42,7 @@ public class ClientHandler {
 
     }
 
-    public void addToOutgoingMessages(ArrayList<Transferable> reply) {
+    public void addToOutgoingMessages(Message reply) {
         outgoingMessages.add(reply);
     }
 
@@ -63,14 +64,14 @@ public class ClientHandler {
             //while (true) {
             try {
                 System.out.println("Du har kommit hit");
-                ArrayList<Transferable> list = (ArrayList<Transferable>) ois.readObject();
-                controller.addOnlineClient((User) list.get(1), ClientHandler.this);
+                Message msg = (Message) ois.readObject();
+                controller.addOnlineClient(msg.getUser(), ClientHandler.this);
                 onlineClient = true;
-                controller.sendList(list);
-                for (int i = 0; i < list.size(); i++) {
-
-                    System.out.println(list.get(i));
-                }
+                controller.sendMessage(msg);
+//                for (int i = 0; i < list.size(); i++) {
+//
+//                    System.out.println(list.get(i));
+//                }
 
 
             } catch (IOException e) {

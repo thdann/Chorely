@@ -12,6 +12,7 @@ package controller;
 
 import model.RegisteredUsers;
 
+import shared.transferable.Message;
 import shared.transferable.NetCommands;
 import shared.transferable.Transferable;
 import shared.transferable.User;
@@ -19,19 +20,19 @@ import shared.transferable.User;
 
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class ServerController implements ClientListener {
 
     private RegisteredUsers registeredUsers;
     private ServerNetwork network;
-    private LinkedBlockingDeque<ArrayList<Transferable>> clientTaskBuffer; //TODO: här läggs alla inkommande arraylists från klienterna.
+    private LinkedBlockingQueue<Message> clientTaskBuffer; //TODO: här läggs alla inkommande arraylists från klienterna.
     private BetterNameComingSoon betterNameComingSoon;
     private ConcurrentHashMap<User, ClientHandler> onlineClients = new ConcurrentHashMap<>();
 
     public ServerController() {
         registeredUsers = new RegisteredUsers();
-        clientTaskBuffer = new LinkedBlockingDeque<>();
+        clientTaskBuffer = new LinkedBlockingQueue<>();
         network = new ServerNetwork(this, 6583);
         betterNameComingSoon = new BetterNameComingSoon();
         Thread t1 = new Thread(betterNameComingSoon);
@@ -40,24 +41,24 @@ public class ServerController implements ClientListener {
     }
 
     @Override
-    public void sendList(ArrayList<Transferable> list) {
+    public void sendMessage(Message msg) {
         //TODO: lägg in listan i en buffer så att controllern kan hantera listan sen i egen tråd.
-        clientTaskBuffer.add(list);
+        clientTaskBuffer.add(msg);
     }
 
-    public void addOnlineClient(User user, ClientHandler client){
+    public void addOnlineClient(User user, ClientHandler client) {
         onlineClients.put(user, client);
     }
 
-    public void removeOnlineClient(User user){
+    public void removeOnlineClient(User user) {
         onlineClients.remove(user);
     }
 
 
-    public void handleClientTask(ArrayList<Transferable> list) {
+    public void handleClientTask(Message msg) {
 
-        NetCommands command = (NetCommands) list.get(0);
-        User user = (User) list.get(1);
+        NetCommands command = msg.getCommand();
+        User user = msg.getUser();
 
         // TODO:  1. Plocka ut första "uppgiften" från clientTask
         // TODO: 2. Plocka ut tex position[0]  (om där är enumet)
@@ -85,11 +86,8 @@ public class ServerController implements ClientListener {
                 registeredUsers.addRegisteredUser(user);  //3 förutsatt att ovan är ok - lägg till new user i registeredUsers
                 //Skicka meddelande till klienten att användaren är registerad ok. Tillfällig lista som lägger till kommando på plats 0 och user på plats 1
 
-                ArrayList<Transferable> reply = new ArrayList<>();
-                reply.add(NetCommands.registrationOk);
-                reply.add(user);
+                Message reply = new Message(NetCommands.registrationOk, user, new ArrayList<>());
                 sendReply(reply);
-
             }
         } else {
             //skicka meddelande till klienten att användarnamnet är upptaget.
@@ -97,11 +95,10 @@ public class ServerController implements ClientListener {
 
     }
 
-    public void sendReply(ArrayList<Transferable> reply) {
-        ClientHandler client = onlineClients.get((User)reply.get(1));
+    public void sendReply(Message reply) {
+        ClientHandler client = onlineClients.get(reply.getUser());
         client.addToOutgoingMessages(reply);
     }
-
 
     public void addRegisteredUser(User newUser) {
         registeredUsers.addRegisteredUser(newUser);
@@ -124,12 +121,9 @@ public class ServerController implements ClientListener {
         public void run() {
             ArrayList<Transferable> list;
             while (true) {
-
                 try {
-                    list = clientTaskBuffer.take();
-                    handleClientTask(list);
-
-
+                    Message message = clientTaskBuffer.take();
+                    handleClientTask(message);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

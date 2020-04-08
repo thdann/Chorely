@@ -8,12 +8,13 @@ package controller;
 
 
 
+import shared.transferable.Message;
 import shared.transferable.Transferable;
 
 import java.util.ArrayList;
 
 public interface ClientListener {
 
-    void sendList(ArrayList<Transferable> message);
+    void sendMessage(Message message);
 
 }
