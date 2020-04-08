@@ -31,6 +31,10 @@ public class ClientNetworkManager {
         thread.start();
     }
 
+    public void sendMessage(Message msg) {
+        outBoundQueue.add(msg);
+    }
+
     private class ConnectionHandler implements Runnable {
         private synchronized void sleepConnectionHandler() {
             try {
