@@ -9,6 +9,7 @@
 package com.mau.chorely.model;
 
 import shared.transferable.Message;
+import shared.transferable.NetCommands;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -55,7 +56,7 @@ public class ClientNetworkManager {
                         Thread inputThread = new Thread(new InputHandler(socket, input, outputThread));
                         inputThread.start();
                         connected = true;
-                        // todo: notify model that we're connected.
+                        model.handleTask(new Message(NetCommands.connected, null, null));
                     } catch (IOException e1) {
                         // if we get here connection has failed to be established and we need to retry.
                         try {
@@ -64,11 +65,8 @@ public class ClientNetworkManager {
                             Thread.currentThread().interrupt();
                         }
                     }
-                } else if (connected) {
-                    // We are connected, sleep for 500 ms and then check connected status.
-                    sleepConnectionHandler();
                 } else {
-                    throw new RuntimeException("It's a bug to be here..");
+                    sleepConnectionHandler();
                 }
             }
         }
@@ -89,7 +87,7 @@ public class ClientNetworkManager {
         public void run() {
             while (true) {
                 try {
-                    model.notify((Message) input.readObject());
+                    model.handleTask((Message) input.readObject());
                 } catch (IOException e) {
                     connected = false;
                     // Interrupt the output thread in case it's waiting on an empty outBoundQueue.
@@ -105,7 +103,7 @@ public class ClientNetworkManager {
                     } catch (IOException ignore) {
                     }
                     connectionHandler.wakeConnectionHandler();
-                    // todo: Notify model of connection failure.
+                    model.handleTask(new Message(NetCommands.connectionFailed, null, null));
                 }
             }
         }

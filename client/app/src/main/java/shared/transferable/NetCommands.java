@@ -8,6 +8,7 @@ public enum NetCommands implements Transferable {
     connectionStatus,
     notConnected,
     connected,
+    connectionFailed,
     requestUserGroups,
     userHasNoGroup,
     userHasGroupUpdate;
