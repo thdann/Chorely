@@ -70,9 +70,14 @@ public class ServerController implements ClientListener {
     public void registerUser(User user) {
         //1 kontroll användarnamn: får inte vara tomt, får inte vara ett namn som finns redan
         if (registeredUsers.userNameAvailable(user.getUsername())) {
-            if (user.getPassword() != "") {         //2 kontroll password: får inte vara tomt/Null?
+            if (user.getPassword() != "") {         //2 kontroll password: får inte vara tomt/Null? Kollas väl i klienten?
                 registeredUsers.addRegisteredUser(user);  //3 förutsatt att ovan är ok - lägg till new user i registeredUsers
-                //Skicka meddelande till klienten att användaren är registerad ok.
+                //Skicka meddelande till klienten att användaren är registerad ok. Tillfällig lista som lägger till kommando på plats 0 och user på plats 1
+
+                ArrayList<Transferable> reply = new ArrayList<>();
+                reply.add(NetCommands.registrationOk);
+                reply.add(user);
+                sendReply(reply);
 
             }
         } else {
@@ -81,6 +86,9 @@ public class ServerController implements ClientListener {
 
     }
 
+    public void sendReply(ArrayList<Transferable> reply) {
+
+    }
 
 
     public void addRegisteredUser(User newUser) {

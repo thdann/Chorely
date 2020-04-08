@@ -127,8 +127,8 @@ public class RegisteredUsers {
         test.writeUsersToFile();
         test.readUsersFromFile();
 //        test.printUsers();
-        System.out.println(test.checkIfExistingUser("Theresa"));
-        System.out.println(test.checkIfExistingUser("Therese"));
+//        System.out.println(test.checkIfExistingUser("Theresa"));
+//        System.out.println(test.checkIfExistingUser("Therese"));
 
     }
 
