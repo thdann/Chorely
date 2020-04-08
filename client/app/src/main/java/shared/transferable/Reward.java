@@ -17,5 +17,22 @@ public class Reward implements Transferable {
         this.rewardPrice = rewardPrice;
     }
 
+    public Reward(String name,int rewardPrice, String description) {
+        this.name = name;
+        this.rewardPrice = rewardPrice;
+        this.description = description;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getRewardPrice() {
+        return rewardPrice;
+    }
+
+    public String getDescription() {
+        return description;
+    }
     
 }
