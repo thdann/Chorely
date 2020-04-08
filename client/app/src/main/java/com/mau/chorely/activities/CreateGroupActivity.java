@@ -54,7 +54,6 @@ public class CreateGroupActivity extends AppCompatActivity implements UpdatableA
     @Override
     protected void onStart() {
         super.onStart();
-        new GetGroups().execute(NetCommands.requestUserGroups);
         BridgeInstances.getPresenter().register(this);
     }
 
@@ -86,7 +85,7 @@ public class CreateGroupActivity extends AppCompatActivity implements UpdatableA
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                new GetGroups().execute(NetCommands.userHasGroupUpdate);
+                //TODO update
             }
         });
     }
@@ -104,7 +103,7 @@ public class CreateGroupActivity extends AppCompatActivity implements UpdatableA
         }
     }
 
-
+/*
 
 
     private class GetGroups extends AsyncTask<NetCommands, Void, NetCommands> {
@@ -135,5 +134,8 @@ public class CreateGroupActivity extends AppCompatActivity implements UpdatableA
 
 
 
+
+
+ */
 
 }
