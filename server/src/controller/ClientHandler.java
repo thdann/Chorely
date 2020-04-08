@@ -1,6 +1,7 @@
 package controller;
 
 import shared.transferable.Transferable;
+import shared.transferable.User;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -24,6 +25,7 @@ public class ClientHandler {
     private OutputThread outputThread;
     private ServerController controller;
     private LinkedBlockingQueue<ArrayList<Transferable>> outgoingMessages;
+    private boolean onlineClient = false;
 
 
     public ClientHandler(Socket socket, ServerController controller) {
@@ -62,6 +64,8 @@ public class ClientHandler {
             try {
                 System.out.println("Du har kommit hit");
                 ArrayList<Transferable> list = (ArrayList<Transferable>) ois.readObject();
+                controller.addOnlineClient((User) list.get(1), ClientHandler.this);
+                onlineClient = true;
                 controller.sendList(list);
                 for (int i = 0; i < list.size(); i++) {
 

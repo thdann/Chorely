@@ -99,7 +99,7 @@ public class ServerController implements ClientListener {
 
     public void sendReply(ArrayList<Transferable> reply) {
         ClientHandler client = onlineClients.get((User)reply.get(1));
-        //client.send(reply);
+        client.addToOutgoingMessages(reply);
     }
 
 
