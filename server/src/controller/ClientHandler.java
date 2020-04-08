@@ -61,33 +61,40 @@ public class ClientHandler {
                 e.printStackTrace();
             }
 
-            //while (true) {
+
             try {
-                System.out.println("Du har kommit hit");
-                Message msg = (Message) ois.readObject();
-                controller.addOnlineClient(msg.getUser(), ClientHandler.this);
-                onlineClient = true;
-                controller.sendMessage(msg);
-//                for (int i = 0; i < list.size(); i++) {
-//
-//                    System.out.println(list.get(i));
-//                }
 
+                while (true) {
+                    try {
+                        System.out.println("Du har kommit hit");
+                        Message msg = (Message) ois.readObject();
+                        controller.addOnlineClient(msg.getUser(), ClientHandler.this);
+                        onlineClient = true;
+                        controller.sendMessage(msg);
+                        //                for (int i = 0; i < list.size(); i++) {
+                        //
+                        //                    System.out.println(list.get(i));
+                        //                }
 
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
             } catch (IOException e) {
                 e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+
+                //TODO uppdatera hasmap, avregistrera klient.
+                outputThread.interrupt();
             }
-            // }
-
-
         }
+
+
     }
 
     /**
      * The inner class OutputThread sets up an OutputStream
      */
+
 
     private class OutputThread extends Thread {
         ObjectOutputStream oos;
@@ -96,17 +103,15 @@ public class ClientHandler {
             //Sätt upp ObjectOutputStream från socket
             try {
                 oos = new ObjectOutputStream(socket.getOutputStream());
+                //loop
                 oos.writeObject(outgoingMessages.take());
                 oos.flush();
                 System.out.println("skickat svar till klienten");
-
+                //loop
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
 
             }
-
         }
-
     }
-
 }

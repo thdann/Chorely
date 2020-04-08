@@ -18,6 +18,7 @@ package com.mau.chorely.model;
 
 import shared.transferable.ErrorMessage;
 import shared.transferable.Group;
+import shared.transferable.Message;
 import shared.transferable.NetCommands;
 import shared.transferable.TransferList;
 import shared.transferable.Transferable;
@@ -36,7 +37,7 @@ public class Model implements NetworkListener{
 
     public static final int COMMAND_ELEMENT = 0;
     public static final int ID_ELEMENT = 1;
-    private LinkedBlockingDeque<ArrayList<Transferable>> taskToHandle = new LinkedBlockingDeque<>();
+    private LinkedBlockingDeque<Message> taskToHandle = new LinkedBlockingDeque<>();
     private ClientNetworkManager network;
     private Thread modelThread = new Thread(new ModelThread());
     private ErrorMessage errorMessage;
@@ -104,9 +105,9 @@ public class Model implements NetworkListener{
      */
 
     @Override
-    public  void notify(ArrayList<Transferable> transferred) {
+    public  void notify(Message msg) {
         try {
-            taskToHandle.put(transferred);
+            taskToHandle.put(msg);
 
         } catch (InterruptedException e){
             System.out.println("Error in model callback" + e.getMessage());
@@ -120,7 +121,7 @@ public class Model implements NetworkListener{
      * @param transferred Arraylist with a NetCommand on index 0. Typically sent from an activity.
      * @return The method returns the response command, set by handleResponse.
      */
-    public synchronized NetCommands notifyForResponse(ArrayList<Transferable> transferred){
+    public synchronized NetCommands notifyForResponse(Message transferred){
         try {
             taskToHandle.put(transferred);
             ResponseHandler threadLockObject = new ResponseHandler();
@@ -145,14 +146,15 @@ public class Model implements NetworkListener{
 
             while (!Thread.interrupted()){
                 try {
-                    ArrayList<Transferable> curWorkingOn = taskToHandle.take();
-                    System.out.println(curWorkingOn.get(Model.COMMAND_ELEMENT));
-                    switch ((NetCommands) curWorkingOn.get(Model.COMMAND_ELEMENT)) {
+                    Message curWorkingOn = taskToHandle.take();
+                    System.out.println(curWorkingOn.getCommand());
+                    NetCommands command = curWorkingOn.getCommand();
+                    switch (command) {
                         case connectionStatus:
                             ResponseHandler.handleResponse(network.connectAndCheckStatus((TransferList)curWorkingOn));
                             break;
                         case register:
-                            storage.updateData("/user.cho", curWorkingOn.get(Model.COMMAND_ELEMENT));
+                            storage.updateData("/user.cho", curWorkingOn.getCommand());
                             network.sendData(curWorkingOn);
                             break;
                         case registrationOk:
@@ -162,7 +164,7 @@ public class Model implements NetworkListener{
                             ResponseHandler.handleResponse(curWorkingOn);
                             break;
                         default:
-                            System.out.println("Unrecognized command: " + (curWorkingOn.get(Model.COMMAND_ELEMENT).toString()));
+                            System.out.println("Unrecognized command: " + command);
                             BridgeInstances.getPresenter().toastCurrent("Hejsan!!!!");
                             ResponseHandler.handleResponse(curWorkingOn);
                     }
