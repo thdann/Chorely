@@ -38,6 +38,12 @@ public class ConnectActivity extends AppCompatActivity  implements UpdatableActi
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        BridgeInstances.getPresenter().deregisterForUpdates(this);
+    }
+
+    @Override
     public void UpdateActivity() {
         if(BridgeInstances.getModel().isConnected()){
             runOnUiThread(new Runnable() {
