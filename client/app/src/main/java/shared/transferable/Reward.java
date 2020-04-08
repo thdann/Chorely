@@ -34,5 +34,5 @@ public class Reward implements Transferable {
     public String getDescription() {
         return description;
     }
-    
+
 }
