@@ -82,31 +82,36 @@ public class ClientHandler {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+
+                //TODO uppdatera hasmap, avregistrera klient.
+                outputThread.interrupt();
             }
         }
 
-        /**
-         * The inner class OutputThread sets up an OutputStream
-         */
-
-        private class OutputThread extends Thread {
-            ObjectOutputStream oos;
-
-            public void run() {
-                //Sätt upp ObjectOutputStream från socket
-                try {
-                    oos = new ObjectOutputStream(socket.getOutputStream());
-                    oos.writeObject(outgoingMessages.take());
-                    oos.flush();
-                    System.out.println("skickat svar till klienten");
-
-                } catch (IOException | InterruptedException e) {
-                    e.printStackTrace();
-
-                }
-
-            }
-
-        }
 
     }
+
+    /**
+     * The inner class OutputThread sets up an OutputStream
+     */
+
+
+    private class OutputThread extends Thread {
+        ObjectOutputStream oos;
+
+        public void run() {
+            //Sätt upp ObjectOutputStream från socket
+            try {
+                oos = new ObjectOutputStream(socket.getOutputStream());
+                //loop
+                oos.writeObject(outgoingMessages.take());
+                oos.flush();
+                System.out.println("skickat svar till klienten");
+                //loop
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+
+            }
+        }
+    }
+}
