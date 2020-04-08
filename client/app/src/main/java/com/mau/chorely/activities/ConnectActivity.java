@@ -22,22 +22,34 @@ public class ConnectActivity extends AppCompatActivity  implements UpdatableActi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        BridgeInstances.getModel(); // startar modellen.
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+
         setContentView(R.layout.activity_connect2);
-        BridgeInstances.getModel(); // startar modellen.
-        //new Connect().execute(NetCommands.connectionStatus);
         status = findViewById(R.id.textView2);
+        BridgeInstances.getPresenter().register(this);
     }
 
     @Override
     public void UpdateActivity() {
         if(BridgeInstances.getModel().isConnected()){
-            Intent intent = new Intent(ConnectActivity.this, MainActivity.class);
-            startActivity(intent);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (BridgeInstances.getModel().isConnected()) {
+                        Intent intent = new Intent(ConnectActivity.this, MainActivity.class);
+                        startActivity(intent);
+                    }
+                    else{
+
+                    }
+                }
+            });
         }
     }
 
