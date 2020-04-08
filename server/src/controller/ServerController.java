@@ -18,6 +18,7 @@ import shared.transferable.User;
 
 
 import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingDeque;
 
 public class ServerController implements ClientListener {
@@ -26,6 +27,7 @@ public class ServerController implements ClientListener {
     private ServerNetwork network;
     private LinkedBlockingDeque<ArrayList<Transferable>> clientTaskBuffer; //TODO: här läggs alla inkommande arraylists från klienterna.
     private BetterNameComingSoon betterNameComingSoon;
+    private ConcurrentHashMap<User, ClientHandler> onlineClients = new ConcurrentHashMap<>();
 
     public ServerController() {
         registeredUsers = new RegisteredUsers();
@@ -42,6 +44,15 @@ public class ServerController implements ClientListener {
         //TODO: lägg in listan i en buffer så att controllern kan hantera listan sen i egen tråd.
         clientTaskBuffer.add(list);
     }
+
+    public void addOnlineClient(User user, ClientHandler client){
+        onlineClients.put(user, client);
+    }
+
+    public void removeOnlineClient(User user){
+        onlineClients.remove(user);
+    }
+
 
     public void handleClientTask(ArrayList<Transferable> list) {
 
@@ -87,7 +98,8 @@ public class ServerController implements ClientListener {
     }
 
     public void sendReply(ArrayList<Transferable> reply) {
-
+        ClientHandler client = onlineClients.get((User)reply.get(1));
+        //client.send(reply);
     }
 
 
