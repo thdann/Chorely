@@ -11,6 +11,7 @@ import java.util.ArrayList;
  */
 
 public interface ClientListener {
+
     void sendList(ArrayList<Transferable> message);
 
 }
