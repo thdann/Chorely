@@ -10,21 +10,21 @@ package controller;
  */
 
 
+import model.RegisteredGroups;
 import model.RegisteredUsers;
 
-import shared.transferable.Message;
-import shared.transferable.NetCommands;
-import shared.transferable.Transferable;
-import shared.transferable.User;
+import shared.transferable.*;
 
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class ServerController implements ClientListener {
 
     private RegisteredUsers registeredUsers;
+    private RegisteredGroups registeredGroups;
     private ServerNetwork network;
     private LinkedBlockingQueue<Message> clientTaskBuffer; //TODO: här läggs alla inkommande arraylists från klienterna.
     private BetterNameComingSoon betterNameComingSoon;
@@ -32,6 +32,7 @@ public class ServerController implements ClientListener {
 
     public ServerController() {
         registeredUsers = new RegisteredUsers();
+        registeredGroups = new RegisteredGroups();
         clientTaskBuffer = new LinkedBlockingQueue<>();
         network = new ServerNetwork(this, 6583);
         betterNameComingSoon = new BetterNameComingSoon();
@@ -42,8 +43,8 @@ public class ServerController implements ClientListener {
 
     @Override
     public void sendMessage(Message msg) {
-        //TODO: lägg in listan i en buffer så att controllern kan hantera listan sen i egen tråd.
         clientTaskBuffer.add(msg);
+
     }
 
     public void addOnlineClient(User user, ClientHandler client) {
@@ -54,24 +55,17 @@ public class ServerController implements ClientListener {
         onlineClients.remove(user);
     }
 
-
     public void handleClientTask(Message msg) {
 
         NetCommands command = msg.getCommand();
         User user = msg.getUser();
 
-        // TODO:  1. Plocka ut första "uppgiften" från clientTask
-        // TODO: 2. Plocka ut tex position[0]  (om där är enumet)
-
-
-        // TODO: 3. Skicka in enumet i en switch sats som kontrollerar vilket enum där är
-        // TODO: 4. En metod per enum, namnen ska vara talande för vad som händer i de olika scenarion
-        // TODO: 5. Skriv metoderna för de olika situationerna.
-
         switch (command) {
             case register:
                 registerUser(user);
-                //TODO: metodnamnfördetta(); ska skicka tillbaka registrationOk eller registrationDenied, detta räcker för första sprinten...
+                break;
+            case registerNewGroup:
+                registerNewGroup((Group) msg.getData());
                 break;
             default:
                 //TODO:  kod för default case. Vad kan man skriva här?
@@ -80,20 +74,39 @@ public class ServerController implements ClientListener {
     }
 
     public void registerUser(User user) {
-        //1 kontroll användarnamn: får inte vara tomt, får inte vara ett namn som finns redan
-        if (registeredUsers.userNameAvailable(user.getUsername())) {
-            if (user.getPassword() != "") {         //2 kontroll password: får inte vara tomt/Null? Kollas väl i klienten?
-                registeredUsers.addRegisteredUser(user);  //3 förutsatt att ovan är ok - lägg till new user i registeredUsers
-                //Skicka meddelande till klienten att användaren är registerad ok. Tillfällig lista som lägger till kommando på plats 0 och user på plats 1
+        Message reply = null;
 
-                Message reply = new Message(NetCommands.registrationOk, user, new ArrayList<>());
+        if (registeredUsers.userNameAvailable(user.getUsername())) {
+            if (user.getPassword() != "") {
+                registeredUsers.addRegisteredUser(user);
+
+                reply = new Message(NetCommands.registrationOk, user, new ArrayList<>());
                 sendReply(reply);
+
             }
         } else {
-            //skicka meddelande till klienten att användarnamnet är upptaget.
+            ErrorMessage errorMessage = new ErrorMessage("Användarnamnet är upptaget, välj ett annat.");
+            reply = new Message(NetCommands.registrationDenied, user, errorMessage);
+
         }
 
     }
+
+    /**
+     * Registers a new group to the server and updates all the members of that group with the new group membership
+     *
+     * @param group the new group that was created
+     */
+
+    public void registerNewGroup(Group group) {
+        registeredGroups.addGroup(group);
+        ArrayList<User> members = group.getUsers();
+        GenericID groupID = group.getGroupID();
+        for (User u : members) {
+            u.addGroupMembership(groupID);
+        }
+    }
+
 
     public void sendReply(Message reply) {
         ClientHandler client = onlineClients.get(reply.getUser());

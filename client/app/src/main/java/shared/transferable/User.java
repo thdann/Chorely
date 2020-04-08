@@ -6,12 +6,12 @@ import java.util.ArrayList;
 public class User implements Transferable {
     private final String username;
     private final String password;
-    private ArrayList<String> groups; //lista med gruppID som användaren är medlem i
+    private ArrayList<GenericID> groups;
 
     public User(String username, String password) {
         this.username = username;
         this.password = password;
-        groups = new ArrayList<String>();
+        groups = new ArrayList<GenericID>();
     }
 
     public String getUsername() {
@@ -20,6 +20,10 @@ public class User implements Transferable {
 
     public String getPassword() {
         return password;
+    }
+
+    public void addGroupMembership(GenericID newGroup) {
+        groups.add(newGroup);
     }
 
     @Override
@@ -45,4 +49,5 @@ public class User implements Transferable {
             return hashString.hashCode() == objHashString.hashCode();
         }
     }
+
 }

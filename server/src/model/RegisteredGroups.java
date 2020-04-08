@@ -1,6 +1,7 @@
 package model;
 
 import shared.transferable.Group;
+import shared.transferable.User;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -57,6 +58,27 @@ public class RegisteredGroups {
     }
 
 
+    /**
+     * Searches through all registered groups and returns all the groups that
+     * the specified user is a member of.
+     * @param user the user whos groups are asked for.
+     * @return an ArrayList with the name of the requested groups.
+     */
+
+    public ArrayList<String> getGroupsByUser(User user) {
+        ArrayList<String> groupsOfUser = new ArrayList<>();
+        for (Group group : registeredGroups) {
+            ArrayList<User> users = group.getUsers();
+            for (User u : users) {
+                if (u.getUsername().equals(user.getUsername())) {
+                    groupsOfUser.add(group.getName());
+                }
+            }
+        }
+
+        return groupsOfUser;
+
+    }
 
 
 }

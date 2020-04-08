@@ -27,15 +27,17 @@ public class RegisteredUsers {
 
         File savedUsers = new File(filename);
         if (savedUsers.exists()) {
-            readUsersFromFile();
+            readAllUsersFromFile();
 
         } else {
             registeredUsers = new ArrayList<>();
-            writeUsersToFile();
+            writeAllUsersToFile();
 
         }
 
     }
+
+
 
 
     public void addTestUsers() {
@@ -75,7 +77,7 @@ public class RegisteredUsers {
      * TODO: no need for comment?
      */
 
-    public void readUsersFromFile() {
+    public void readAllUsersFromFile() {
         try (ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filename)))) {
             registeredUsers = (ArrayList<User>) ois.readObject();
 
@@ -90,7 +92,7 @@ public class RegisteredUsers {
      * TODO: no need for comment?
      */
 
-    public void writeUsersToFile() {
+    public void writeAllUsersToFile() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filename)))) {
             oos.writeObject(registeredUsers);
             oos.flush();
@@ -102,8 +104,14 @@ public class RegisteredUsers {
 
     }
 
+    public void writeNewUserToFile() {
+
+    }
+
+
     /**
      * Compares the username of a new user to already registered users.
+     *
      * @param newUsername the requested username of a new user.
      * @return true if username is available and false if it already taken.
      */
@@ -116,6 +124,9 @@ public class RegisteredUsers {
         }
         return true;
 
+    }
+
+    public void updateGroups() {
     }
 
 
