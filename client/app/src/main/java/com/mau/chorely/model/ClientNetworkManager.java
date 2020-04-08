@@ -34,15 +34,12 @@ public class ClientNetworkManager {
 
     public ClientNetworkManager(NetworkListener model){
         this.model = model;
-        setupSocket();
-        connect();
         //setupSocket();
+        //connect();
+      
     }
-
+/*
     public void sendData(Message data){
-        if((inputThread == null || outputThread == null)){
-
-        }
         try {
             outBoundQueue.put(data);
         } catch (InterruptedException e){

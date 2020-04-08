@@ -45,38 +45,20 @@ public class Model implements NetworkListener{
     private Model model;
     public Model(){
         System.out.println("Model created");
-        //network = new ClientNetworkManager(this);
+        network = new ClientNetworkManager(this);
         modelThread.start();
         model = this;
     }
 
 
-    /** TODO släng skiten
-     * Overridden error task method, to take exception instead of string.
-     * @param exception Error message.
-     */
-    private void modelError(Exception exception){
-       ErrorMessage errorMessage = new ErrorMessage(exception);
-       ArrayList<Transferable> errorList = new ArrayList<>();
-       errorList.add(NetCommands.internalClientError);
-       errorList.add(errorMessage);
-       //notify(errorList);
-
-
-    }
-
     public Group[] getGroups(){
         return null;
     }
 
-    public void stop(){
-        network.disconnect();
-        modelThread.interrupt();
-    }
 
 
     public boolean isConnected(){
-        return network.isConnected();
+        return true; //network.isConnected();
     }
 
     /**
@@ -115,8 +97,7 @@ public class Model implements NetworkListener{
                         case connectionStatus:
                             break;
                         case register:
-                            storage.updateData("/user.cho", curWorkingOn.getCommand());
-                            network.sendData(curWorkingOn);
+
                             break;
                         case registrationOk:
                             BridgeInstances.getPresenter().updateCurrent();
