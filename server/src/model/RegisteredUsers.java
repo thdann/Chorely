@@ -49,17 +49,17 @@ public class RegisteredUsers {
 
     }
 
-    public void printUsers() {
-        if (registeredUsers.size() == 0) {
-            System.out.println("Listan är tom på användare");
-        } else {
-            for (User u : registeredUsers) {
-                System.out.printf("Username: %s \tPassword: %s\n", u.getUsername(), u.getPassword());
-            }
-
-        }
-
-    }
+//    public void printUsers() {
+//        if (registeredUsers.size() == 0) {
+//            System.out.println("Listan är tom på användare");
+//        } else {
+//            for (User u : registeredUsers) {
+//                System.out.printf("Username: %s \tPassword: %s\n", u.getUsername(), u.getPassword());
+//            }
+//
+//        }
+//
+//    }
 
     /**
      * TODO: no need for comment?
@@ -119,17 +119,17 @@ public class RegisteredUsers {
     }
 
 
-    public static void main(String[] args) {
-        RegisteredUsers test = new RegisteredUsers();
-//        test.printUsers();
+//    public static void main(String[] args) {
+//        RegisteredUsers test = new RegisteredUsers();
+////        test.printUsers();
+////        test.readUsersFromFile();
+//        test.addTestUsers();
+//        test.writeUsersToFile();
 //        test.readUsersFromFile();
-        test.addTestUsers();
-        test.writeUsersToFile();
-        test.readUsersFromFile();
-//        test.printUsers();
-//        System.out.println(test.checkIfExistingUser("Theresa"));
-//        System.out.println(test.checkIfExistingUser("Therese"));
-
-    }
+////        test.printUsers();
+////        System.out.println(test.checkIfExistingUser("Theresa"));
+////        System.out.println(test.checkIfExistingUser("Therese"));
+//
+//    }
 
 }
