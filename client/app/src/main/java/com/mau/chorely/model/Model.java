@@ -121,7 +121,7 @@ public class Model implements NetworkListener{
      * @param transferred Arraylist with a NetCommand on index 0. Typically sent from an activity.
      * @return The method returns the response command, set by handleResponse.
      */
-    public synchronized NetCommands notifyForResponse(ArrayList<Transferable> transferred){
+    public synchronized NetCommands notifyForResponse(Message transferred){
         try {
             taskToHandle.put(transferred);
             ResponseHandler threadLockObject = new ResponseHandler();
@@ -146,14 +146,15 @@ public class Model implements NetworkListener{
 
             while (!Thread.interrupted()){
                 try {
-                    ArrayList<Transferable> curWorkingOn = taskToHandle.take();
-                    System.out.println(curWorkingOn.get(Model.COMMAND_ELEMENT));
-                    switch ((NetCommands) curWorkingOn.get(Model.COMMAND_ELEMENT)) {
+                    Message curWorkingOn = taskToHandle.take();
+                    System.out.println(curWorkingOn.getCommand());
+                    NetCommands command = curWorkingOn.getCommand();
+                    switch (command) {
                         case connectionStatus:
                             ResponseHandler.handleResponse(network.connectAndCheckStatus((TransferList)curWorkingOn));
                             break;
                         case register:
-                            storage.updateData("/user.cho", curWorkingOn.get(Model.COMMAND_ELEMENT));
+                            storage.updateData("/user.cho", curWorkingOn.getCommand());
                             network.sendData(curWorkingOn);
                             break;
                         case registrationOk:
@@ -163,7 +164,7 @@ public class Model implements NetworkListener{
                             ResponseHandler.handleResponse(curWorkingOn);
                             break;
                         default:
-                            System.out.println("Unrecognized command: " + (curWorkingOn.get(Model.COMMAND_ELEMENT).toString()));
+                            System.out.println("Unrecognized command: " + command);
                             BridgeInstances.getPresenter().toastCurrent("Hejsan!!!!");
                             ResponseHandler.handleResponse(curWorkingOn);
                     }
