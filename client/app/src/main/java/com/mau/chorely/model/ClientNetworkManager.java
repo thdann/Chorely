@@ -36,13 +36,14 @@ public class ClientNetworkManager {
     }
 
     private class ConnectionHandler implements Runnable {
-        private synchronized void sleepConnectionHandler(){
+        private synchronized void sleepConnectionHandler() {
             try {
                 wait();
-            } catch (InterruptedException e){} // ignore
+            } catch (InterruptedException e) {
+            } // ignore
         }
 
-        public synchronized void wakeConnectionHandler(){
+        public synchronized void wakeConnectionHandler() {
             notifyAll();
         }
 
@@ -69,12 +70,8 @@ public class ClientNetworkManager {
                         }
                     }
                 } else if (connected) {
-                    try {
-                        // We are connected, sleep for 500 ms and then check connected status.
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        Thread.currentThread().interrupt();
-                    }
+                    // We are connected, sleep for 500 ms and then check connected status.
+                    sleepConnectionHandler();
                 } else {
                     throw new RuntimeException("It's a bug to be here..");
                 }
