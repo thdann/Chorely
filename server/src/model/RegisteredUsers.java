@@ -3,10 +3,10 @@ package model;
 import shared.transferable.User;
 
 import java.io.*;
-import java.util.ArrayList;
 
 /**
- * RegisteredUser contains all the registered users by reading and writing to a file stored on the server.
+ * RegisteredUser contains all the registered users by reading and writing each User object to a
+ * separate file stored on the server.
  * version 1.0 2020-04-06
  *
  * @author Theresa Dannberg
@@ -14,88 +14,29 @@ import java.util.ArrayList;
 
 public class RegisteredUsers {
 
-    private String filename;
-    private ArrayList<User> registeredUsers;
+    private String filePath;
 
     /**
-     * The constructor sets the path to the file with registered users.
-     * If the file doesn´t already exist it creates it.
+     * Constructor
      */
 
     public RegisteredUsers() {
-        this.filename = "files/registeredUsers.dat";
-
-        File savedUsers = new File(filename);
-        if (savedUsers.exists()) {
-            readAllUsersFromFile();
-
-        } else {
-            registeredUsers = new ArrayList<>();
-            writeAllUsersToFile();
-
-        }
-
-    }
-
-
-
-
-    public void addTestUsers() {
-        registeredUsers.clear();
-        registeredUsers.add(new User("Theresa", "mittPassword"));
-        registeredUsers.add(new User("Emma", "emmasPassword"));
-        registeredUsers.add(new User("Angelica", "angelicasPassword"));
-        registeredUsers.add(new User("Tim", "timsPassword"));
-        registeredUsers.add(new User("Fredrik", "fredrikPassword"));
-        System.out.printf("När det tillagt %d användare", registeredUsers.size());
-
-    }
-
-//    public void printUsers() {
-//        if (registeredUsers.size() == 0) {
-//            System.out.println("Listan är tom på användare");
-//        } else {
-//            for (User u : registeredUsers) {
-//                System.out.printf("Username: %s \tPassword: %s\n", u.getUsername(), u.getPassword());
-//            }
-//
-//        }
-//
-//    }
-
-    /**
-     * TODO: no need for comment?
-     */
-
-    public void addRegisteredUser(User newUser) {
-        registeredUsers.add(newUser);
-
-    }
-
-
-    /**
-     * TODO: no need for comment?
-     */
-
-    public void readAllUsersFromFile() {
-        try (ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filename)))) {
-            registeredUsers = (ArrayList<User>) ois.readObject();
-
-        } catch (IOException | ClassNotFoundException e) {
-            e.getMessage();
-
-        }
+        this.filePath = "files/users/";
 
     }
 
     /**
-     * TODO: no need for comment?
+     * Saves the User object to a separate file on the server
+     *
+     * @param user
      */
 
-    public void writeAllUsersToFile() {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filename)))) {
-            oos.writeObject(registeredUsers);
+    public void writeUserToFile(User user) {
+        String filename1 = String.format("%s%s.dat", filePath, user.getUsername());
+        try (ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filename1)))) {
+            oos.writeObject(user);
             oos.flush();
+            System.out.println(filename1);
 
         } catch (IOException e) {
             e.getMessage();
@@ -104,10 +45,15 @@ public class RegisteredUsers {
 
     }
 
-    public void writeNewUserToFile() {
+    public void updateUser(User user) {
+        File file = new File(filePath + user.getUsername() + ".dat");
+        System.out.println(file.getPath());
+        if (file.exists()) {
+            file.delete();
+        }
+
 
     }
-
 
     /**
      * Compares the username of a new user to already registered users.
@@ -117,30 +63,38 @@ public class RegisteredUsers {
      */
 
     public boolean userNameAvailable(String newUsername) {
-        for (User u : registeredUsers) {
-            if (u.getUsername().equals(newUsername)) {
-                return false;
-            }
+        File file = new File(filePath + newUsername + ".dat");
+        System.out.println(file.getPath());
+        if (file.exists()) {
+            return false;
         }
+
         return true;
 
     }
 
-    public void updateGroups() {
+    public void loopRegisteredUsers(File dir) {
+
+        if (dir.isDirectory()) {
+            for (File file1 : dir.listFiles()) {
+                System.out.println(file1);
+            }
+        }
+
     }
 
 
-//    public static void main(String[] args) {
-//        RegisteredUsers test = new RegisteredUsers();
-////        test.printUsers();
-////        test.readUsersFromFile();
-//        test.addTestUsers();
-//        test.writeUsersToFile();
-//        test.readUsersFromFile();
-////        test.printUsers();
-////        System.out.println(test.checkIfExistingUser("Theresa"));
-////        System.out.println(test.checkIfExistingUser("Therese"));
-//
-//    }
+    //TODO För testning endast, ta bort sen...
+    public static void main(String[] args) {
+        RegisteredUsers prog = new RegisteredUsers();
+        prog.updateUser(new User("Theresa", "pass"));
+
+
+//        File file = new File("files/users/");
+//        prog.loopRegisteredUsers(file);
+
+
+    }
+
 
 }

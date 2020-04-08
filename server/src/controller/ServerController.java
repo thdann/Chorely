@@ -17,7 +17,6 @@ import shared.transferable.*;
 
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -78,7 +77,7 @@ public class ServerController implements ClientListener {
 
         if (registeredUsers.userNameAvailable(user.getUsername())) {
             if (user.getPassword() != "") {
-                registeredUsers.addRegisteredUser(user);
+                registeredUsers.writeUserToFile(user);
 
                 reply = new Message(NetCommands.registrationOk, user, new ArrayList<>());
                 sendReply(reply);
@@ -113,15 +112,10 @@ public class ServerController implements ClientListener {
         client.addToOutgoingMessages(reply);
     }
 
-    public void addRegisteredUser(User newUser) {
-        registeredUsers.addRegisteredUser(newUser);
-    }
-
     public static void main(String[] args) {
         ServerController prog = new ServerController();
         //TODO: Sätt upp servertråd (extenda thread) Eller se till att main fortsätter köra...
     }
-
 
     private class BetterNameComingSoon implements Runnable { //TODO: Kom på bättre namn för klassen.
 
