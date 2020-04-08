@@ -50,19 +50,6 @@ public class Model implements NetworkListener{
         model = this;
     }
 
-    /**
-     * Method to compile an error task for the main thread.
-     * @param message String message.
-     */
-
-    //TODO släng skiten
-    public void modelError(String message){
-       ErrorMessage errorMessage = new ErrorMessage(message);
-       ArrayList<Transferable> errorList = new ArrayList<>();
-       errorList.add(NetCommands.internalClientError);
-       errorList.add(errorMessage);
-       notify(errorList);
-    }
 
     /** TODO släng skiten
      * Overridden error task method, to take exception instead of string.
@@ -101,7 +88,7 @@ public class Model implements NetworkListener{
 
     /**
      * Callback method for any request that doesn't require a response.
-      * @param transferred Arraylist containing NetCommand, and data.
+      * @param msg Message
      */
 
     @Override
@@ -113,25 +100,6 @@ public class Model implements NetworkListener{
             System.out.println("Error in model callback" + e.getMessage());
         }
     }
-
-    /**
-     * The method is used from an activity, whenever a response to a request is required.
-     * The thread is then blocked until a response has been received.
-     *
-     * @param transferred Arraylist with a NetCommand on index 0. Typically sent from an activity.
-     * @return The method returns the response command, set by handleResponse.
-     */
-    public synchronized NetCommands notifyForResponse(Message transferred){
-        try {
-            taskToHandle.put(transferred);
-            ResponseHandler threadLockObject = new ResponseHandler();
-            return threadLockObject.waitForResponse(transferred); //Blocks the thread until notified.
-        } catch (InterruptedException e){
-            System.out.println("Exception putting in notifyForResult" + e.getMessage());
-            return NetCommands.internalClientError;
-        }
-    }
-
 
 
     /**
@@ -151,27 +119,25 @@ public class Model implements NetworkListener{
                     NetCommands command = curWorkingOn.getCommand();
                     switch (command) {
                         case connectionStatus:
-                            ResponseHandler.handleResponse(network.connectAndCheckStatus((TransferList)curWorkingOn));
+                            network.connectAndCheckStatus();
                             break;
                         case register:
                             storage.updateData("/user.cho", curWorkingOn.getCommand());
                             network.sendData(curWorkingOn);
                             break;
                         case registrationOk:
-                            ResponseHandler.handleResponse(curWorkingOn);
+                            BridgeInstances.getPresenter().updateCurrent();
                             break;
                         case internalClientError:
-                            ResponseHandler.handleResponse(curWorkingOn);
+                            BridgeInstances.getPresenter().toastCurrent("Error.");
                             break;
                         default:
                             System.out.println("Unrecognized command: " + command);
                             BridgeInstances.getPresenter().toastCurrent("Hejsan!!!!");
-                            ResponseHandler.handleResponse(curWorkingOn);
+
                     }
                 } catch (InterruptedException e){
                     System.out.println("Thread interrupted in main model queue");
-                } catch (InvalidRequestIDException e){
-                    modelError(e);
                 }
             }
         }

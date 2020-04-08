@@ -7,10 +7,10 @@
 
 package com.mau.chorely.model;
 
+import shared.transferable.ErrorMessage;
+import shared.transferable.Message;
 import shared.transferable.NetCommands;
-import shared.transferable.GenericID;
-import shared.transferable.TransferList;
-import shared.transferable.Transferable;
+
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -18,7 +18,7 @@ import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
-import java.util.ArrayList;
+
 import java.util.concurrent.LinkedBlockingDeque;
 
 public class ClientNetworkManager {
@@ -29,7 +29,7 @@ public class ClientNetworkManager {
     private static Thread inputThread;
     private static Thread outputThread;
     private static volatile boolean connected = false;
-    private LinkedBlockingDeque<ArrayList<Transferable>> outBoundQueue = new LinkedBlockingDeque<>();
+    private LinkedBlockingDeque<Message> outBoundQueue = new LinkedBlockingDeque<>();
     private NetworkListener model;
 
     public ClientNetworkManager(NetworkListener model){
@@ -37,7 +37,7 @@ public class ClientNetworkManager {
         setupSocket();
     }
 
-    public void sendData(ArrayList<Transferable> data){
+    public void sendData(Message data){
         if((inputThread == null || outputThread == null)){
 
         }
@@ -53,13 +53,10 @@ public class ClientNetworkManager {
         return connected;
     }
 
-    public TransferList connectAndCheckStatus(TransferList list){
+    public Message connectAndCheckStatus(){
 
-        GenericID id = (GenericID)list.get(Model.ID_ELEMENT);
-        TransferList ret;
+        Message ret;
         int iteration = 0;
-
-
         if(socket.isClosed()){
             setupSocket();
         }
@@ -69,10 +66,10 @@ public class ClientNetworkManager {
             iteration++;
         }
         if(connected){
-            ret = new TransferList(NetCommands.connected, id);
+            ret = new Message(NetCommands.connected, null, null );
         }
         else{
-            ret = new TransferList(NetCommands.notConnected, id);
+            ret = new Message(NetCommands.notConnected, null, null, new ErrorMessage("Not connected"));
         }
         return ret;
     }
@@ -144,7 +141,7 @@ public class ClientNetworkManager {
                 try (ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream())){
                     while (!Thread.interrupted()) {
                         try {
-                            model.notify((ArrayList<Transferable>) inputStream.readObject());
+                            model.notify((Message) inputStream.readObject());
                         } catch (ClassNotFoundException e){
                             System.out.println("Error reading object from stream" + e.getMessage());
                         } catch (IOException e){

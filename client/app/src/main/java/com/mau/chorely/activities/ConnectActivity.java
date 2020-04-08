@@ -38,7 +38,7 @@ public class ConnectActivity extends AppCompatActivity {
             NetCommands command = netCommands[0];
             Model model = BridgeInstances.getModel();
             TransferList transferees = new TransferList(command, new GenericID());
-            return model.notifyForResponse(transferees);
+            
         }
 
         @Override
