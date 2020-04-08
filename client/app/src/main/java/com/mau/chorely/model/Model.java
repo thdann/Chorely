@@ -40,6 +40,7 @@ public class Model implements NetworkListener{
     public static final int ID_ELEMENT = 1;
     private LinkedBlockingDeque<Message> taskToHandle = new LinkedBlockingDeque<>();
     private volatile boolean isLoggedIn = false;
+    private volatile boolean isConnected = false;
     private ClientNetworkManager network;
     private Thread modelThread = new Thread(new ModelThread());
     private ErrorMessage errorMessage;
@@ -58,12 +59,12 @@ public class Model implements NetworkListener{
     }
 
     public boolean isLoggedIn(){
-        return true;//isLoggedIn;
+        return isLoggedIn;
     }
 
 
     public boolean isConnected(){
-        return true; //network.isConnected();
+        return isConnected;
     }
 
     /**
@@ -97,17 +98,30 @@ public class Model implements NetworkListener{
                     System.out.println(curWorkingOn.getCommand());
                     NetCommands command = curWorkingOn.getCommand();
                     switch (command) {
-                        case connectionStatus:
-                            break;
+
                         case register:
+                            network.sendMessage(curWorkingOn);
                             break;
+
                         case registrationOk:
                             isLoggedIn = true;
                             BridgeInstances.getPresenter().updateCurrent();
                             break;
+
                         case internalClientError:
                             BridgeInstances.getPresenter().toastCurrent("Error.");
                             break;
+
+                        case connectionFailed:
+                            isConnected = false;
+                            BridgeInstances.getPresenter().updateCurrent();
+                            break;
+                            
+                        case connected:
+                            isConnected = true;
+                            BridgeInstances.getPresenter().updateCurrent();
+                            break;
+
                         default:
                             System.out.println("Unrecognized command: " + command);
                             BridgeInstances.getPresenter().toastCurrent("Hejsan!!!!");
