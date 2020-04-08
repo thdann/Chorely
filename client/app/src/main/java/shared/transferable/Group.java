@@ -54,6 +54,14 @@ public class Group implements Transferable {
         users.remove(user);
     }
 
+    public void AddChore(Chore chore) {
+        chores.add(chore);
+    }
+
+    public void deleteChore(Chore chore) {
+        chores.remove(chore);
+    }
+
     @Override
     public boolean equals(Object obj) {
         if(obj instanceof Group)
