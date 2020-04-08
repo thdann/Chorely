@@ -51,7 +51,6 @@ public class ClientHandler {
         ObjectInputStream ois;
 
         public void run() {
-            //Sätt upp ObjectInputStream från socket
             try {
                 ois = new ObjectInputStream(socket.getInputStream());
             } catch (IOException e) {
