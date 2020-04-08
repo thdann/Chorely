@@ -75,7 +75,6 @@ public class Model implements NetworkListener{
     public void handleTask(Message msg) {
         try {
             taskToHandle.put(msg);
-
         } catch (InterruptedException e){
             System.out.println("Error in model callback" + e.getMessage());
         }
@@ -91,7 +90,6 @@ public class Model implements NetworkListener{
         public void run() {
 
             network = new ClientNetworkManager(model);
-            BridgeInstances.getPresenter().updateCurrent();
 
             while (!Thread.interrupted()){
                 try {
