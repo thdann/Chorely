@@ -10,11 +10,13 @@ package com.mau.chorely.model;
 
 import shared.transferable.Message;
 import shared.transferable.NetCommands;
+import shared.transferable.Transferable;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingDeque;
 
 public class ClientNetworkManager {
@@ -60,7 +62,7 @@ public class ClientNetworkManager {
                         Thread inputThread = new Thread(new InputHandler(socket, input, outputThread));
                         inputThread.start();
                         connected = true;
-                        model.handleTask(new Message(NetCommands.connected, null, null));
+                        model.handleTask(new Message(NetCommands.connected, null, new ArrayList<Transferable>()));
                     } catch (IOException e1) {
                         // if we get here connection has failed to be established and we need to retry.
                         try {
@@ -107,7 +109,7 @@ public class ClientNetworkManager {
                     } catch (IOException ignore) {
                     }
                     connectionHandler.wakeConnectionHandler();
-                    model.handleTask(new Message(NetCommands.connectionFailed, null, null));
+                    model.handleTask(new Message(NetCommands.connectionFailed, null, new ArrayList<Transferable>()));
                 }
             }
         }
