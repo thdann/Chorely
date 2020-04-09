@@ -26,7 +26,7 @@ public class ServerController implements ClientListener {
     private RegisteredGroups registeredGroups;
     private ServerNetwork network;
     private LinkedBlockingQueue<Message> clientTaskBuffer; //TODO: här läggs alla inkommande arraylists från klienterna.
-    private BetterNameComingSoon betterNameComingSoon;
+    private MessageHandler messageHandler;
     private ConcurrentHashMap<User, ClientHandler> onlineClients = new ConcurrentHashMap<>();
 
     public ServerController() {
@@ -34,8 +34,8 @@ public class ServerController implements ClientListener {
         registeredGroups = new RegisteredGroups();
         clientTaskBuffer = new LinkedBlockingQueue<>();
         network = new ServerNetwork(this, 6583);
-        betterNameComingSoon = new BetterNameComingSoon();
-        Thread t1 = new Thread(betterNameComingSoon);
+        messageHandler = new MessageHandler();
+        Thread t1 = new Thread(messageHandler);
         t1.start();
 
     }
@@ -54,8 +54,14 @@ public class ServerController implements ClientListener {
         onlineClients.remove(user);
     }
 
+    public void sendReply(Message reply) {
+        ClientHandler client = onlineClients.get(reply.getUser());
+        client.addToOutgoingMessages(reply);
+    }
+
     public void handleClientTask(Message msg) {
 
+        //TODO: tanke - ska vi skicka replymeddelanden härifrån istället för själva metoden? För här finns ju redan usern som ska ha svaret?
         NetCommands command = msg.getCommand();
         User user = msg.getUser();
 
@@ -64,13 +70,25 @@ public class ServerController implements ClientListener {
                 registerUser(user);
                 break;
             case registerNewGroup:
-                registerNewGroup((Group) msg.getData());
+                registerNewGroup(user, msg.getGroup());
+                break;
+            case addNewChore:
+                addNewChore(msg.getGroup(), (Chore) msg.getData());
+                break;
+            case addNewReward:
+                addNewReward(msg.getGroup(), (Reward) msg.getData());
                 break;
             default:
                 //TODO:  kod för default case. Vad kan man skriva här?
                 break;
         }
     }
+
+    /**
+     * Adds the incoming user to RegisteredUsers
+     *
+     * @param user the new user
+     */
 
     public void registerUser(User user) {
         Message reply = null;
@@ -80,7 +98,6 @@ public class ServerController implements ClientListener {
                 registeredUsers.writeUserToFile(user);
 
                 reply = new Message(NetCommands.registrationOk, user, new ArrayList<>());
-                sendReply(reply);
 
             }
         } else {
@@ -88,6 +105,8 @@ public class ServerController implements ClientListener {
             reply = new Message(NetCommands.registrationDenied, user, errorMessage);
 
         }
+
+        sendReply(reply);
 
     }
 
@@ -97,7 +116,7 @@ public class ServerController implements ClientListener {
      * @param group the new group that was created
      */
 
-    public void registerNewGroup(Group group) {
+    public void registerNewGroup(User user, Group group) {
         Message reply = null;
 
         if (registeredGroups.groupIdAvailable(group.getGroupID())) {
@@ -107,29 +126,39 @@ public class ServerController implements ClientListener {
             for (User u : members) {
                 u.addGroupMembership(groupID);
             }
-            //TODO: skicka tillbaka ett svar till klienten med message att newGroupOk
-        }
+            reply = new Message(NetCommands.newGroupOk, user, new ArrayList<>());
 
-
-    }
-
-    public void sendReply(Message reply) {
-        ClientHandler client = onlineClients.get(reply.getUser());
-        client.addToOutgoingMessages(reply);
-    }
-
-    public static void main(String[] args) {
-        ServerController prog = new ServerController();
-        //TODO: Sätt upp servertråd (extenda thread) Eller se till att main fortsätter köra...
-    }
-
-    private class BetterNameComingSoon implements Runnable { //TODO: Kom på bättre namn för klassen.
-
-        public BetterNameComingSoon() {
-
+        } else {
+            ErrorMessage errorMessage = new ErrorMessage("Vad kan gå fel vid skapande av grupp?"); //FixMe: felmeddelandetext?
+            reply = new Message(NetCommands.newGroupDenied, user, errorMessage);
 
         }
 
+        sendReply(reply);
+
+    }
+
+    //TODO: skicka svar till klienten
+    public void addNewChore(Group group, Chore chore) {
+        group.addChore(chore);
+        registeredGroups.updateGroup(group);
+    }
+
+    //TODO: skicka svar till klienten
+    public void addNewReward(Group group, Reward reward) {
+        group.addReward(reward);
+        registeredGroups.updateGroup(group);
+    }
+
+    /**
+     * Inner class MessageHandler handles the incoming messages from the client one at a time.
+     */
+
+    private class MessageHandler implements Runnable {
+
+        public MessageHandler() {
+
+        }
 
         public void run() {
             ArrayList<Transferable> list;
@@ -141,10 +170,10 @@ public class ServerController implements ClientListener {
                     e.printStackTrace();
                 }
 
-
             }
+
         }
 
     }
-    
+
 }

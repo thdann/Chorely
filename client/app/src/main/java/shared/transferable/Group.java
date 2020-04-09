@@ -18,22 +18,24 @@ public class Group implements Transferable {
     private ArrayList<Reward> rewards = new ArrayList<>();
 
 
-    private Group(){}
-    public Group (String groupName){
+    private Group() {
+    }
+
+    public Group(String groupName) {
         this.name = groupName;
     }
 
-    public Group (String groupName, String description){
+    public Group(String groupName, String description) {
         this.name = groupName;
         this.description = description;
     }
 
-    public Group (String groupName, User user){
+    public Group(String groupName, User user) {
         this.name = groupName;
         users.add(user);
     }
 
-    public String getDescription(){
+    public String getDescription() {
         return description;
     }
 
@@ -44,28 +46,26 @@ public class Group implements Transferable {
     public String getName() {
         return name;
     }
+
     public ArrayList<User> getUsers() {
         return users;
     }
-    public void AddUser(User user){
+
+    public void AddUser(User user) {
         users.add(user);
     }
-    public void deleteUser(User user){
+
+    public void deleteUser(User user) {
         users.remove(user);
     }
 
-    public void AddChore(Chore chore) {
-        chores.add(chore);
-    }
 
-    public void deleteChore(Chore chore) {
-        chores.remove(chore);
     }
 
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof Group)
-            return groupID.equals(((Group)obj).getGroupID());
+        if (obj instanceof Group)
+            return groupID.equals(((Group) obj).getGroupID());
 
         else
             return false;
