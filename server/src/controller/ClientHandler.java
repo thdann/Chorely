@@ -84,7 +84,11 @@ public class ClientHandler {
                     }
                 }
             } catch (IOException e) {
-                controller.removeOnlineClient(clientUser);
+                if(clientUser != null) {
+                    // only removes client from online user -hashmap if it has been registered.
+                    controller.removeOnlineClient(clientUser);
+                }
+                // Interrupts output thread waiting in queue.
                 outputThread.interrupt();
             }
         }
