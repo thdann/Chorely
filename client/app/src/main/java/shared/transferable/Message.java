@@ -5,6 +5,7 @@ import java.util.List;
 public class Message implements Transferable {
     private NetCommands command;
     private User user;
+    private Group group;
     private List<Transferable> data;
     private ErrorMessage errorMessage;
 
@@ -33,6 +34,10 @@ public class Message implements Transferable {
 
     public User getUser() {
         return user;
+    }
+
+    public Group getGroup() {
+        return group;
     }
 
     public ErrorMessage getErrorMessage() {
