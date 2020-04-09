@@ -59,6 +59,36 @@ public class Group implements Transferable {
         users.remove(user);
     }
 
+    public void addChore(Chore chore){
+        chores.add(chore);
+    }
+    public void deleteChore(Chore chore){
+        chores.remove(chore);
+    }
+
+    public Chore getSingleChore(int index){
+        return chores.get(index);
+    }
+
+    public ArrayList<Chore> getChores(){
+        return chores;
+    }
+
+    public void addReward(Reward reward){
+        rewards.add(reward);
+    }
+
+    public void deleteReward(Reward reward){
+        rewards.remove(reward);
+    }
+
+    public Reward getSingleReward(int index){
+        return rewards.get(index);
+    }
+
+    public ArrayList<Reward> getRewards(){
+        return rewards;
+    }
 
 
 
