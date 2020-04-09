@@ -2,6 +2,7 @@ package model;
 
 import shared.transferable.GenericID;
 import shared.transferable.Group;
+import shared.transferable.User;
 
 import java.io.*;
 
@@ -50,6 +51,30 @@ public class RegisteredGroups {
 
     }
 
+    /**
+     * Updates the directory with the new updated group.
+     *
+     * @param group is the new updated version of the Group object to be saved to file.
+     */
+
+    public void updateGroup(Group group) {
+        File file = new File(filePath + group.getGroupID() + ".dat");
+        System.out.println("updatemetoden " + file.getPath());
+        if (file.exists()) {
+            file.delete();
+        }
+
+        writeGroupToFile(group);
+
+    }
+
+    /**
+     * Compares the groupID of a new group to already registered groups.
+     *
+     * @param newGroupId the requested groupID of a new group.
+     * @return true if groupID is available and false if it already exists.
+     */
+
     public boolean groupIdAvailable(GenericID newGroupId) {
         File file = new File(filePath + newGroupId + ".dat");
         System.out.println(file.getPath());
@@ -61,6 +86,7 @@ public class RegisteredGroups {
 
     }
 
+    //TODO: obs ej klar med denna, vet inte riktigt vad vi ska med den till?
     public void loopRegisteredGroups() {
         for (File file : directory.listFiles()) {
             System.out.println(file.getName());
