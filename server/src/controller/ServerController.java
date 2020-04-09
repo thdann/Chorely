@@ -62,6 +62,7 @@ public class ServerController implements ClientListener {
     public void handleClientTask(Message msg) {
 
         //TODO: tanke - ska vi skicka replymeddelanden härifrån istället för själva metoden? För här finns ju redan usern som ska ha svaret?
+
         NetCommands command = msg.getCommand();
         User user = msg.getUser();
 
@@ -108,7 +109,7 @@ public class ServerController implements ClientListener {
         }
 
         sendReply(reply);
-
+        onlineClients.get(request.getUser()).throwOut();
     }
 
 

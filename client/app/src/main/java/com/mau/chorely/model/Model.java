@@ -16,10 +16,13 @@
 package com.mau.chorely.model;
 
 
+import android.widget.Toast;
+
 import shared.transferable.ErrorMessage;
 import shared.transferable.Group;
 import shared.transferable.Message;
 import shared.transferable.NetCommands;
+import shared.transferable.User;
 
 import com.mau.chorely.activities.utils.BridgeInstances;
 import com.mau.chorely.model.persistentStorage.PersistentStorage;
@@ -46,6 +49,9 @@ public class Model implements NetworkListener{
         model = this;
     }
 
+    public User getUser(){
+        return null;
+    }
 
     public Group[] getGroups(){
         return null;
@@ -75,6 +81,8 @@ public class Model implements NetworkListener{
     }
 
 
+
+
     /**
      * Main model thread. Contains switch statement to handle all NetCommands
      */
@@ -88,12 +96,13 @@ public class Model implements NetworkListener{
 
             while (!Thread.interrupted()){
                 try {
+                    System.out.println("Model is blocking for new message");
                     Message curWorkingOn = taskToHandle.take();
                     System.out.println(curWorkingOn.getCommand());
                     NetCommands command = curWorkingOn.getCommand();
                     switch (command) {
 
-                        case register:
+                        case registerUser:
                             network.sendMessage(curWorkingOn);
                             break;
 
@@ -109,6 +118,7 @@ public class Model implements NetworkListener{
                         case connectionFailed:
                             isConnected = false;
                             BridgeInstances.getPresenter().updateCurrent();
+                            BridgeInstances.getPresenter().toastCurrent("Reconnecting to server.");
 
                             break;
 
@@ -117,6 +127,10 @@ public class Model implements NetworkListener{
                             BridgeInstances.getPresenter().updateCurrent();
                             break;
 
+                        case registrationDenied:
+                            BridgeInstances.getPresenter().updateCurrent();
+                            BridgeInstances.getPresenter().toastCurrent(curWorkingOn.getErrorMessage().getMessage());
+                            break;
                         default:
                             System.out.println("Unrecognized command: " + command);
                             BridgeInstances.getPresenter().toastCurrent("Hejsan!!!!");

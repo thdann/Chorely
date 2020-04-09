@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import com.mau.chorely.R;
 import com.mau.chorely.activities.interfaces.UpdatableActivity;
@@ -33,12 +34,25 @@ public class MainActivity extends AppCompatActivity implements UpdatableActivity
 
     @Override
     public void UpdateActivity() {
+        if(BridgeInstances.getModel().isConnected()){
 
+        }
+        else{
+            Intent intent = new Intent(this, ConnectActivity.class);
+            startActivity(intent);
+        }
     }
 
     @Override
-    public void doToast(String message) {
+    public void doToast(final String message) {
 
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
+                toast.show();
+            }
+        });
     }
 
     public void register(View view) {

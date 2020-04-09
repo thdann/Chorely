@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.mau.chorely.R;
 import com.mau.chorely.activities.interfaces.UpdatableActivity;
@@ -57,7 +58,7 @@ public class RegisterActivity extends AppCompatActivity implements UpdatableActi
         User userToRegister = new User(username, password);
         System.out.println(userToRegister);
 
-        Message registerMsg = new Message(NetCommands.register, userToRegister, new ArrayList<Transferable>());
+        Message registerMsg = new Message(NetCommands.registerUser, userToRegister, new ArrayList<Transferable>());
         BridgeInstances.getModel().handleTask(registerMsg);
 
         user.setVisibility(View.INVISIBLE);
@@ -78,18 +79,37 @@ public class RegisterActivity extends AppCompatActivity implements UpdatableActi
             @Override
             public void run() {
                 if(BridgeInstances.getModel().isConnected()){
-                    Intent intent = new Intent(RegisterActivity.this, CreateGroupActivity.class);
-                    startActivity(intent);
+                    if(BridgeInstances.getModel().isLoggedIn()) {
+                        Intent intent = new Intent(RegisterActivity.this, CreateGroupActivity.class);
+                        startActivity(intent);
+                    }
+                    else {
+                        findViewById(R.id.username).setVisibility(View.VISIBLE);
+                        findViewById(R.id.password).setVisibility(View.VISIBLE);
+                        findViewById(R.id.register).setVisibility(View.VISIBLE);
+                        gifImageViewWorking.setVisibility(View.INVISIBLE);
+                        ((EditText)findViewById(R.id.username)).setText("");
+                        ((EditText)findViewById(R.id.password)).setText("");
+                    }
                 }
                 else{
-                    System.out.println("CLIENT NOT CONNECTED");
+                    Intent intent = new Intent(getApplicationContext(), ConnectActivity.class);
+                    startActivity(intent);
                 }
             }
         });
     }
 
     @Override
-    public void doToast(String message) {
+    public void doToast(final String message) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
+                toast.show();
+            }
+        });
+
 
     }
 
