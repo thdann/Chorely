@@ -59,12 +59,7 @@ public class Group implements Transferable {
         users.remove(user);
     }
 
-    public void addChore(Chore newChore) {
-        chores.add(newChore);
-    }
 
-    public void addReward(Reward newReward) {
-        rewards.add(newReward);
     }
 
     @Override

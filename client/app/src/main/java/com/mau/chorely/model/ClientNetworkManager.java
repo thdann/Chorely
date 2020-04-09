@@ -1,187 +1,167 @@
 /**
  * This is the client class for networking.
- * @version 1.0
- * @author Timothy Denison
+ *
+ * @version 2.0
+ * @author Timothy Denison, Fredrik Jeppsson
  */
 
 
 package com.mau.chorely.model;
 
+import shared.transferable.Message;
 import shared.transferable.NetCommands;
-import shared.transferable.GenericID;
-import shared.transferable.TransferList;
 import shared.transferable.Transferable;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.net.SocketAddress;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.concurrent.LinkedBlockingDeque;
 
 public class ClientNetworkManager {
     private static final int SERVER_PORT = 6583;
-    private static final String SERVER_IP ="10.0.2.2";
-
-    private Socket socket;
-    private static Thread inputThread;
-    private static Thread outputThread;
-    private static volatile boolean connected = false;
-    private LinkedBlockingDeque<ArrayList<Transferable>> outBoundQueue = new LinkedBlockingDeque<>();
+    private static final String SERVER_IP = "10.0.2.2";
+    private volatile boolean connected = false;
+    private LinkedBlockingDeque<Message> outBoundQueue = new LinkedBlockingDeque<>();
     private NetworkListener model;
+    private ConnectionHandler connectionHandler = new ConnectionHandler();
 
-    public ClientNetworkManager(NetworkListener model){
+    public ClientNetworkManager(NetworkListener model) {
         this.model = model;
-        setupSocket();
+        Thread thread = new Thread(connectionHandler);
+        thread.start();
     }
 
-    public void sendData(ArrayList<Transferable> data){
-        if((inputThread == null || outputThread == null)){
-
-        }
-        try {
-            outBoundQueue.put(data);
-        } catch (InterruptedException e){
-            // TODO: 2020-03-24 Varför måste tråden blocka när den lägger data i kön? evt byta typ av kö.
-            System.out.println("Error putting data in outboundqueue" + e.getMessage());
-        }
+    public void sendMessage(Message msg) {
+        outBoundQueue.add(msg);
     }
 
-    public boolean isConnected(){
-        return connected;
-    }
-
-    public TransferList connectAndCheckStatus(TransferList list){
-
-        GenericID id = (GenericID)list.get(Model.ID_ELEMENT);
-        TransferList ret;
-        int iteration = 0;
-
-
-        if(socket.isClosed()){
-            setupSocket();
-        }
-
-        while (!connected && iteration < 3) {
-            connectSocket();
-            iteration++;
-        }
-        if(connected){
-            ret = new TransferList(NetCommands.connected, id);
-        }
-        else{
-            ret = new TransferList(NetCommands.notConnected, id);
-        }
-        return ret;
-    }
-
-    private synchronized void connectSocket(){
-        if(!connected){
-            socket = new Socket();
+    private class ConnectionHandler implements Runnable {
+        private synchronized void sleepConnectionHandler() {
             try {
-                connected = false;
-                SocketAddress socketAddress = new InetSocketAddress(SERVER_IP, SERVER_PORT);
-                socket.connect(socketAddress, 2000);
-                connected = (socket.isConnected() && !socket.isClosed());
-                System.out.println(connected);
-                setupThreads();
-            } catch (IOException e){
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException intExept){
-                    System.out.println("SHOULD NEVER HAPPEN! thread interrupted trying to connect");
-                }
-                socket = new Socket();
-                System.out.println("ERRROOROOROROROOROR");
-                System.out.println(e.getMessage());
-                System.out.println(e);
+                wait();
+            } catch (InterruptedException ignore) {
             }
         }
-    }
 
-
-
-    private boolean setupSocket() {
-
-            socket = new Socket();
-            try {
-                socket.bind(new InetSocketAddress(SERVER_IP, SERVER_PORT));
-            } catch (IOException e){
-                System.out.println("Error setting up socket!");
-            }
-
-            return (socket.isConnected() && !socket.isClosed());
-
-    }
-
-
-    public void disconnect() {
-
-            inputThread.interrupt();
-            outputThread.interrupt();
-
-            try {
-                socket.close();
-                connected = false;
-            } catch (IOException e){
-                System.out.println("ERROR CLOSING SOCKET");
-            }
-    }
-
-    private void setupThreads(){
-        outputThread = new Thread(new OutputThread());
-        inputThread = new Thread(new InputThread());
-        outputThread.start();
-        inputThread.start();
-    }
-
-    private class InputThread implements Runnable{
+        synchronized void wakeConnectionHandler() {
+            notifyAll();
+        }
 
         @Override
         public void run() {
-                try (ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream())){
-                    while (!Thread.interrupted()) {
+            while (true) {
+                if (!connected) {
+                    try {
+                        Socket socket = new Socket(SERVER_IP, SERVER_PORT);
+                        System.out.println(new Date() + " Network: established socket...");
+                        ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
+                        ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
+                        Thread outputThread = new Thread(new OutputHandler(socket, output));
+                        outputThread.start();
+                        Thread inputThread = new Thread(new InputHandler(socket, input, outputThread));
+                        inputThread.start();
+                        connected = true;
+                        model.handleTask(new Message(NetCommands.connected, null, new ArrayList<Transferable>()));
+                    } catch (IOException e1) {
+                        // This exception happens if the socket has failed to connect.
+                        System.out.println(new Date() + " Network: failed to connect...");
                         try {
-                            model.notify((ArrayList<Transferable>) inputStream.readObject());
-                        } catch (ClassNotFoundException e){
-                            System.out.println("Error reading object from stream" + e.getMessage());
-                        } catch (IOException e){
-                            System.out.println("Error reading object from stream" + e.getMessage());
-                            disconnect();
-                            break;
+                            Thread.sleep(500);
+                        } catch (InterruptedException e2) {
+                            Thread.currentThread().interrupt();
                         }
                     }
+                } else {
+                    sleepConnectionHandler();
                 }
-                catch (IOException e){
-                    System.out.println("Error setting up inputStream" + e.getMessage());
-                }
-                disconnect();
             }
         }
-
-
-    private class OutputThread implements Runnable {
-        @Override
-        public void run() {
-            try(ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream())){
-                while(!Thread.interrupted()) {
-                    try {
-                        outputStream.writeObject(outBoundQueue.take());
-                        outputStream.flush();
-                    } catch (IOException | InterruptedException e){
-                        System.out.println("Error writing to outputStream" + e.getMessage());
-                        break;
-                    }
-                }
-            }
-            catch(IOException e){
-                System.out.println("Error setting up outputStream" + e.getMessage());
-            }
-            disconnect();
-        }
-
     }
 
+    private class InputHandler implements Runnable {
+        private final ObjectInputStream input;
+        private final Thread outputThread;
+        private final Socket socket;
+
+        InputHandler(Socket socket, ObjectInputStream input, Thread outputThread) {
+            this.socket = socket;
+            this.input = input;
+            this.outputThread = outputThread;
+        }
+
+        @Override
+        public void run() {
+            try {
+                while (!Thread.currentThread().isInterrupted()) {
+                    model.handleTask((Message) input.readObject());
+                }
+            } catch (IOException e) {
+                // When the connection fails, readObject() will throw an IOException, breaking
+                // us out of the while loop.
+                System.out.println(new Date() + "Network: closed input handler with IOException.");
+            } catch (ClassNotFoundException e) {
+                // We should only get here if we have a bug in the program that makes
+                // serialization of Message fail.
+                throw new RuntimeException(e);
+            } finally {
+                try {
+                    socket.close();
+                } catch (IOException ignore) {
+                    // Socket might already have been closed by the OutputHandler.
+                }
+                connected = false;
+                // Interrupt the output thread in case it's waiting on an empty outBoundQueue.
+                outputThread.interrupt();
+                // Wake up the ConnectionHandler to notify it of connection failure and to initiate
+                // reconnection attempts.
+                connectionHandler.wakeConnectionHandler();
+                // Notify the model class of connection failure.
+                model.handleTask(new Message(NetCommands.connectionFailed, null, new ArrayList<Transferable>()));
+            }
+        }
+    }
+
+
+    private class OutputHandler implements Runnable {
+        private final Socket socket;
+        private final ObjectOutputStream output;
+
+        OutputHandler(Socket socket, ObjectOutputStream output) {
+            this.socket = socket;
+            this.output = output;
+        }
+
+        @Override
+        public void run() {
+            Message msg = null;
+            try {
+                while (!Thread.currentThread().isInterrupted()) {
+                    msg = outBoundQueue.take();
+                    output.writeObject(msg);
+                    output.flush();
+                }
+            } catch (IOException e) {
+                System.out.println(new Date() + " Network: closed output handler with IOException.");
+                // If IOException happens, we've taken a Message from the output queue and
+                // tried to send it with writeObject. In that case we need to put it back
+                // at the front of the output queue before terminating the thread.
+                outBoundQueue.addFirst(msg);
+            } catch (InterruptedException e) {
+                System.out.println(new Date() + " Network: closed output handler with InterruptedException.");
+                // This interrupted exception happens if another thread interrupts this thread
+                // while the output queue is waiting.
+            } finally {
+                try {
+                    socket.close();
+                } catch (IOException ignore) {
+                    // Socket might already have been closed by the InputHandler.
+                }
+                connected = false;
+            }
+        }
+    }
 }
+
