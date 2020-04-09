@@ -1,8 +1,8 @@
 /**
  * This is the client class for networking.
  *
- * @version 1.0
- * @author Timothy Denison
+ * @version 2.0
+ * @author Timothy Denison, Fredrik Jeppsson
  */
 
 
@@ -17,6 +17,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.concurrent.LinkedBlockingDeque;
 
 public class ClientNetworkManager {
@@ -55,6 +56,7 @@ public class ClientNetworkManager {
                 if (!connected) {
                     try {
                         Socket socket = new Socket(SERVER_IP, SERVER_PORT);
+                        System.out.println(new Date() + " Network: established socket...");
                         ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
                         ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
                         Thread outputThread = new Thread(new OutputHandler(socket, output));
@@ -64,7 +66,8 @@ public class ClientNetworkManager {
                         connected = true;
                         model.handleTask(new Message(NetCommands.connected, null, new ArrayList<Transferable>()));
                     } catch (IOException e1) {
-                        // if we get here connection has failed to be established and we need to retry.
+                        // This exception happens if the socket has failed to connect.
+                        System.out.println(new Date() + " Network: failed to connect...");
                         try {
                             Thread.sleep(500);
                         } catch (InterruptedException e2) {
@@ -83,7 +86,7 @@ public class ClientNetworkManager {
         private final Thread outputThread;
         private final Socket socket;
 
-        public InputHandler(Socket socket, ObjectInputStream input, Thread outputThread) {
+        InputHandler(Socket socket, ObjectInputStream input, Thread outputThread) {
             this.socket = socket;
             this.input = input;
             this.outputThread = outputThread;
@@ -91,26 +94,32 @@ public class ClientNetworkManager {
 
         @Override
         public void run() {
-            while (true) {
-                try {
+            try {
+                while (!Thread.currentThread().isInterrupted()) {
                     model.handleTask((Message) input.readObject());
-                } catch (IOException e) {
-                    break;
-                } catch (ClassNotFoundException e) {
-                    // We should only be here if we have a bug in the program that makes
-                    // serialization of Message fail.
-                    throw new RuntimeException(e);
-                } finally {
-                    try {
-                        socket.close();
-                    } catch (IOException ignore) {
-                    }
-                    connected = false;
-                    // Interrupt the output thread in case it's waiting on an empty outBoundQueue.
-                    outputThread.interrupt();
-                    connectionHandler.wakeConnectionHandler();
-                    model.handleTask(new Message(NetCommands.connectionFailed, null, new ArrayList<Transferable>()));
                 }
+            } catch (IOException e) {
+                // When the connection fails, readObject() will throw an IOException, breaking
+                // us out of the while loop.
+                System.out.println(new Date() + "Network: closed input handler with IOException.");
+            } catch (ClassNotFoundException e) {
+                // We should only get here if we have a bug in the program that makes
+                // serialization of Message fail.
+                throw new RuntimeException(e);
+            } finally {
+                try {
+                    socket.close();
+                } catch (IOException ignore) {
+                    // Socket might already have been closed by the OutputHandler.
+                }
+                connected = false;
+                // Interrupt the output thread in case it's waiting on an empty outBoundQueue.
+                outputThread.interrupt();
+                // Wake up the ConnectionHandler to notify it of connection failure and to initiate
+                // reconnection attempts.
+                connectionHandler.wakeConnectionHandler();
+                // Notify the model class of connection failure.
+                model.handleTask(new Message(NetCommands.connectionFailed, null, new ArrayList<Transferable>()));
             }
         }
     }
@@ -120,7 +129,7 @@ public class ClientNetworkManager {
         private final Socket socket;
         private final ObjectOutputStream output;
 
-        public OutputHandler(Socket socket, ObjectOutputStream output) {
+        OutputHandler(Socket socket, ObjectOutputStream output) {
             this.socket = socket;
             this.output = output;
         }
@@ -128,28 +137,29 @@ public class ClientNetworkManager {
         @Override
         public void run() {
             Message msg = null;
-            while (true) {
-                try {
+            try {
+                while (!Thread.currentThread().isInterrupted()) {
                     msg = outBoundQueue.take();
                     output.writeObject(msg);
                     output.flush();
-                } catch (IOException e1) {
-                    // If IOException happens, we've taken a Message from the output queue and
-                    // tried to send it with writeObject. In that case we need to put it back
-                    // on the output queue before terminating the thread.
-                    outBoundQueue.addFirst(msg);
-                    break;
-                } catch (InterruptedException e2) {
-                    // This interrupted exception happens if another thread interrupts this thread
-                    // while the output queue is waiting.
-                    break;
-                } finally {
-                    try {
-                        socket.close();
-                    } catch (IOException ignore) {
-                    }
-                    connected = false;
                 }
+            } catch (IOException e) {
+                System.out.println(new Date() + " Network: closed output handler with IOException.");
+                // If IOException happens, we've taken a Message from the output queue and
+                // tried to send it with writeObject. In that case we need to put it back
+                // at the front of the output queue before terminating the thread.
+                outBoundQueue.addFirst(msg);
+            } catch (InterruptedException e) {
+                System.out.println(new Date() + " Network: closed output handler with InterruptedException.");
+                // This interrupted exception happens if another thread interrupts this thread
+                // while the output queue is waiting.
+            } finally {
+                try {
+                    socket.close();
+                } catch (IOException ignore) {
+                    // Socket might already have been closed by the InputHandler.
+                }
+                connected = false;
             }
         }
     }
