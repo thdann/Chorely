@@ -60,7 +60,7 @@ public class Group implements Transferable {
     }
 
 
-    }
+
 
     @Override
     public boolean equals(Object obj) {
