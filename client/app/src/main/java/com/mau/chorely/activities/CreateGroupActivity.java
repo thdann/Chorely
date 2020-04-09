@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.View;
+import android.widget.Toast;
 
 import com.mau.chorely.R;
 import com.mau.chorely.activities.interfaces.UpdatableActivity;
@@ -22,6 +24,7 @@ import shared.transferable.Message;
 import shared.transferable.NetCommands;
 import shared.transferable.GenericID;
 import shared.transferable.TransferList;
+import shared.transferable.Transferable;
 
 public class CreateGroupActivity extends AppCompatActivity implements UpdatableActivity {
     private RecyclerView mRecyclerView;
@@ -37,13 +40,23 @@ public class CreateGroupActivity extends AppCompatActivity implements UpdatableA
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_group);
         buildRecyclerView();
+        mRecyclerView.setVisibility(View.INVISIBLE);
+
+    }
+
+    private void addGroupToRecyclerView(Group group){
+
+
 
     }
 
     private void buildRecyclerView(){
-        groupList.add(new ListItem(R.drawable.ic_group_black_24dp, "Blabla", "Blaaaslfkasflkasfadssss"));
-        groupList.add(new ListItem(R.drawable.ic_group_black_24dp, "Blabla", "asdasdasd"));
-        groupList.add(new ListItem(R.drawable.ic_group_black_24dp, "Blabla", "Blaaaslfkasflkasf"));
+
+        groupList.add(new ListItem(R.drawable.ic_group_black_24dp, "Blabla", "Blaaaslfka\nflkasfadssss" , 3));
+        groupList.add(new ListItem(R.drawable.ic_group_black_24dp, "Blabla", "asdasdasd", 3));
+        groupList.add(new ListItem(R.drawable.ic_group_black_24dp, "Blabla", "Blaaaslfkasflkasf", 13));
+
+
         mRecyclerView = findViewById(R.id.recyclerViewGroups);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
@@ -53,9 +66,11 @@ public class CreateGroupActivity extends AppCompatActivity implements UpdatableA
         mAdapter.setOnItemClickListener(new RecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-
-                //Message message = new Message();
-
+                ArrayList<Transferable> sendList = new ArrayList<>();
+                sendList.add(updatedGroups.get(position));
+                Message message = new Message(NetCommands.addUserToGroup, BridgeInstances.getModel().getUser(),sendList);
+                BridgeInstances.getModel().handleTask(message);
+                mRecyclerView.setVisibility(View.INVISIBLE);
 
             }
         });
@@ -87,7 +102,8 @@ public class CreateGroupActivity extends AppCompatActivity implements UpdatableA
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                // TODO: 2020-04-07 Implementera toasts
+                Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
+                toast.show();
             }
         });
     }
@@ -105,7 +121,7 @@ public class CreateGroupActivity extends AppCompatActivity implements UpdatableA
     private void updateGroups(Group[] updatedGroups){
         if(updatedGroups != null){
             for (Group group : updatedGroups){
-                groupList.add(new ListItem(R.drawable.ic_group_black_24dp, group.getName(), group.getDescription()));
+                groupList.add(new ListItem(R.drawable.ic_group_black_24dp, group.getName(), group.getDescription(), group.getUsers().size()));
                 //TODO lägg till textfält för användare i xml-fil för recyclerciew.
                 // ta ut alla users och lägg till namn.
                 // kanske aktiviteten måste hålla en kopia av arrayen med grupper, för att möjliggöra

@@ -48,6 +48,11 @@ public class ClientHandler {
         outgoingMessages.add(reply);
     }
 
+    public void throwOut(){
+        controller.removeOnlineClient(clientUser);
+        this.clientUser = null;
+    }
+
     /**
      * The inner class InputThread sets up an InputStream to receive messages from connected client
      */

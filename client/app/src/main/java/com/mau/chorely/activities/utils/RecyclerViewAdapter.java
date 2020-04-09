@@ -27,14 +27,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     public static class RecyclerViewHolder extends RecyclerView.ViewHolder{
         private ImageView mImageView;
-        private TextView mTextView1;
-        private TextView mTextView2;
+        private TextView textViewTitle;
+        private TextView textViewDetails;
+        private TextView textViewMembersNum;
 
         private RecyclerViewHolder(@NonNull View itemView, final OnItemClickListener listener) {
             super(itemView);
             mImageView = itemView.findViewById(R.id.imageViewGroupList);
-            mTextView1 = itemView.findViewById(R.id.textViewGroupCard1);
-            mTextView2 = itemView.findViewById(R.id.textViewGroupCard2);
+            textViewTitle = itemView.findViewById(R.id.textViewGroupTitle);
+            textViewDetails = itemView.findViewById(R.id.textViewGroupDetails);
+            textViewMembersNum = itemView.findViewById(R.id.textViewMembersNumber);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -67,8 +69,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         ListItem currentItem = mItemList.get(position);
 
         holder.mImageView.setImageResource(currentItem.getmImageResource());
-        holder.mTextView1.setText(currentItem.getText1());
-        holder.mTextView2.setText(currentItem.getText2());
+        holder.textViewTitle.setText(currentItem.getText1());
+        holder.textViewDetails.setText(currentItem.getText2());
+        holder.textViewMembersNum.setText(currentItem.getText3());
     }
 
     @Override
