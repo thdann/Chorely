@@ -30,13 +30,23 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         private TextView mTextView1;
         private TextView mTextView2;
 
-        private RecyclerViewHolder(@NonNull View itemView) {
+        private RecyclerViewHolder(@NonNull View itemView, final OnItemClickListener listener) {
             super(itemView);
             mImageView = itemView.findViewById(R.id.imageViewGroupList);
             mTextView1 = itemView.findViewById(R.id.textViewGroupCard1);
             mTextView2 = itemView.findViewById(R.id.textViewGroupCard2);
 
-
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(listener != null){
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION){
+                            listener.onItemClick(position);
+                        }
+                    }
+                }
+            });
         }
     }
 
@@ -49,7 +59,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_groups, parent, false);
-        return new RecyclerViewHolder(v);
+        return new RecyclerViewHolder(v, mListener);
     }
 
     @Override

@@ -18,15 +18,17 @@ import com.mau.chorely.activities.utils.BridgeInstances;
 import java.util.ArrayList;
 
 import shared.transferable.Group;
+import shared.transferable.Message;
 import shared.transferable.NetCommands;
 import shared.transferable.GenericID;
 import shared.transferable.TransferList;
 
 public class CreateGroupActivity extends AppCompatActivity implements UpdatableActivity {
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private RecyclerViewAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     ArrayList<ListItem> groupList = new ArrayList<>();
+    ArrayList<Group> updatedGroups = new ArrayList<>();
 
 
 
@@ -34,20 +36,30 @@ public class CreateGroupActivity extends AppCompatActivity implements UpdatableA
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_group);
+        buildRecyclerView();
 
+    }
 
-
+    private void buildRecyclerView(){
         groupList.add(new ListItem(R.drawable.ic_group_black_24dp, "Blabla", "Blaaaslfkasflkasfadssss"));
         groupList.add(new ListItem(R.drawable.ic_group_black_24dp, "Blabla", "asdasdasd"));
         groupList.add(new ListItem(R.drawable.ic_group_black_24dp, "Blabla", "Blaaaslfkasflkasf"));
-
         mRecyclerView = findViewById(R.id.recyclerViewGroups);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
         mAdapter = new RecyclerViewAdapter(groupList);
-
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
+        mAdapter.setOnItemClickListener(new RecyclerViewAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+
+                //Message message = new Message();
+
+
+            }
+        });
+
 
     }
 
