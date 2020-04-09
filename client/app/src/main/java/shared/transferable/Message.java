@@ -8,6 +8,8 @@ public class Message implements Transferable {
     private Group group;
     private List<Transferable> data;
     private ErrorMessage errorMessage;
+    private Chore chore;
+    private Reward reward;
 
     public Message(NetCommands command, User user, List<Transferable> data) {
         this.command = command;
@@ -46,5 +48,13 @@ public class Message implements Transferable {
 
     public List<Transferable> getData() {
         return data;
+    }
+
+    public Chore getChore() {
+        return chore;
+    }
+
+    public Reward getReward() {
+        return reward;
     }
 }
