@@ -36,11 +36,11 @@ public class CreateGroupActivity extends AppCompatActivity implements UpdatableA
         setContentView(R.layout.activity_create_group);
 
 
-/**
+
         groupList.add(new ListItem(R.drawable.ic_group_black_24dp, "Blabla", "Blaaaslfkasflkasfadssss"));
         groupList.add(new ListItem(R.drawable.ic_group_black_24dp, "Blabla", "asdasdasd"));
         groupList.add(new ListItem(R.drawable.ic_group_black_24dp, "Blabla", "Blaaaslfkasflkasf"));
-**/
+
         mRecyclerView = findViewById(R.id.recyclerViewGroups);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
