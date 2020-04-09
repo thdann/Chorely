@@ -15,6 +15,15 @@ import java.util.ArrayList;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.RecyclerViewHolder> {
     private ArrayList<ListItem> mItemList;
+    private OnItemClickListener mListener;
+    public interface OnItemClickListener{
+        void onItemClick(int position);
+
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener){
+        mListener = listener;
+    }
 
     public static class RecyclerViewHolder extends RecyclerView.ViewHolder{
         private ImageView mImageView;
@@ -26,6 +35,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             mImageView = itemView.findViewById(R.id.imageViewGroupList);
             mTextView1 = itemView.findViewById(R.id.textViewGroupCard1);
             mTextView2 = itemView.findViewById(R.id.textViewGroupCard2);
+
+
         }
     }
 
