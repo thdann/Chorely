@@ -4,6 +4,7 @@ package com.mau.chorely.activities;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -77,7 +78,8 @@ public class RegisterActivity extends AppCompatActivity implements UpdatableActi
             @Override
             public void run() {
                 if(BridgeInstances.getModel().isConnected()){
-
+                    Intent intent = new Intent(RegisterActivity.this, CreateGroupActivity.class);
+                    startActivity(intent);
                 }
                 else{
                     System.out.println("CLIENT NOT CONNECTED");

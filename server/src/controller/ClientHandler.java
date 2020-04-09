@@ -26,12 +26,14 @@ public class ClientHandler {
     private OutputThread outputThread;
     private ServerController controller;
     private LinkedBlockingQueue<Message> outgoingMessages;
+    private volatile User clientUser = null;
     private boolean onlineClient = false;
 
 
     public ClientHandler(Socket socket, ServerController controller) {
         this.controller = controller;
         this.socket = socket;
+
         outgoingMessages = new LinkedBlockingQueue<>();
         inputThread = new InputThread();
         outputThread = new OutputThread();
@@ -68,22 +70,25 @@ public class ClientHandler {
                     try {
                         System.out.println("Du har kommit hit");
                         Message msg = (Message) ois.readObject();
-                        controller.addOnlineClient(msg.getUser(), ClientHandler.this);
+
+                        if(clientUser == null) {
+                            controller.addOnlineClient(msg.getUser(), ClientHandler.this);
+                            clientUser = msg.getUser();
+                        }
+
                         onlineClient = true;
                         controller.sendMessage(msg);
-                        //                for (int i = 0; i < list.size(); i++) {
-                        //
-                        //                    System.out.println(list.get(i));
-                        //                }
 
                     } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
+                        System.out.println(e.getMessage());
                     }
                 }
             } catch (IOException e) {
-                e.printStackTrace();
-
-                //TODO uppdatera hasmap, avregistrera klient.
+                if(clientUser != null) {
+                    // only removes client from online user -hashmap if it has been registered.
+                    controller.removeOnlineClient(clientUser);
+                }
+                // Interrupts output thread waiting in queue.
                 outputThread.interrupt();
             }
         }
@@ -103,14 +108,14 @@ public class ClientHandler {
             //Sätt upp ObjectOutputStream från socket
             try {
                 oos = new ObjectOutputStream(socket.getOutputStream());
-                //loop
-                oos.writeObject(outgoingMessages.take());
-                oos.flush();
-                System.out.println("skickat svar till klienten");
-                //loop
-            } catch (IOException | InterruptedException e) {
-                e.printStackTrace();
+                while (true) {
+                    oos.writeObject(outgoingMessages.take());
+                    oos.flush();
+                    System.out.println("skickat svar till klienten");
 
+                }
+            } catch (IOException | InterruptedException e) {
+                System.out.println(e.getMessage());
             }
         }
     }
