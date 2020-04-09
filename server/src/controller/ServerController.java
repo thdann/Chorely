@@ -66,17 +66,17 @@ public class ServerController implements ClientListener {
         User user = msg.getUser();
 
         switch (command) {
-            case register:
-                registerUser(user);
+            case registerUser:
+                registerUser(msg);
                 break;
             case registerNewGroup:
-                registerNewGroup(user, msg.getGroup());
+                registerNewGroup(msg);
                 break;
             case addNewChore:
-                addNewChore(msg.getGroup(), (Chore) msg.getData());
+                addNewChore(msg);
                 break;
             case addNewReward:
-                addNewReward(msg.getGroup(), (Reward) msg.getData());
+                addNewReward(msg);
                 break;
             default:
                 //TODO:  kod för default case. Vad kan man skriva här?
@@ -87,50 +87,52 @@ public class ServerController implements ClientListener {
     /**
      * Adds the incoming user to RegisteredUsers
      *
-     * @param user the new user
+     * @param request
      */
 
-    public void registerUser(User user) {
+
+    public void registerUser(Message request) {
         Message reply = null;
 
-        if (registeredUsers.userNameAvailable(user.getUsername())) {
-            if (user.getPassword() != "") {
-                registeredUsers.writeUserToFile(user);
+        if (registeredUsers.userNameAvailable(request.getUser().getUsername())) {
+            if (request.getUser().getPassword() != "") {
+                registeredUsers.writeUserToFile(request.getUser());
 
-                reply = new Message(NetCommands.registrationOk, user, new ArrayList<>());
+                reply = new Message(NetCommands.registrationOk, request.getUser(), new ArrayList<>());
 
             }
         } else {
             ErrorMessage errorMessage = new ErrorMessage("Användarnamnet är upptaget, välj ett annat.");
-            reply = new Message(NetCommands.registrationDenied, user, errorMessage);
+            reply = new Message(NetCommands.registrationDenied, request.getUser(), errorMessage);
 
         }
 
         sendReply(reply);
 
     }
+
 
     /**
      * Registers a new group to the server and updates all the members of that group with the new group membership
      *
-     * @param group the new group that was created
+     * @param request
      */
 
-    public void registerNewGroup(User user, Group group) {
+    public void registerNewGroup(Message request) {
         Message reply = null;
 
-        if (registeredGroups.groupIdAvailable(group.getGroupID())) {
-            registeredGroups.writeGroupToFile(group);
-            ArrayList<User> members = group.getUsers();
-            GenericID groupID = group.getGroupID();
+        if (registeredGroups.groupIdAvailable(request.getGroup().getGroupID())) {
+            registeredGroups.writeGroupToFile(request.getGroup());
+            ArrayList<User> members = request.getGroup().getUsers();
+            GenericID groupID = request.getGroup().getGroupID();
             for (User u : members) {
                 u.addGroupMembership(groupID);
             }
-            reply = new Message(NetCommands.newGroupOk, user, new ArrayList<>());
+            reply = new Message(NetCommands.newGroupOk, request.getUser(), new ArrayList<>());
 
         } else {
             ErrorMessage errorMessage = new ErrorMessage("Vad kan gå fel vid skapande av grupp?"); //FixMe: felmeddelandetext?
-            reply = new Message(NetCommands.newGroupDenied, user, errorMessage);
+            reply = new Message(NetCommands.newGroupDenied, request.getUser(), errorMessage);
 
         }
 
@@ -139,15 +141,15 @@ public class ServerController implements ClientListener {
     }
 
     //TODO: skicka svar till klienten
-    public void addNewChore(Group group, Chore chore) {
-        group.addChore(chore);
-        registeredGroups.updateGroup(group);
+    public void addNewChore(Message request) {
+        request.getGroup().addChore(request.getChore()); //TODO: Här la jag till en getChore i Message och hämtar, FEL?
+        registeredGroups.updateGroup(request.getGroup());
     }
 
     //TODO: skicka svar till klienten
-    public void addNewReward(Group group, Reward reward) {
-        group.addReward(reward);
-        registeredGroups.updateGroup(group);
+    public void addNewReward(Message request) {
+        request.getGroup().addReward(request.getReward()); //TODO: Här la jag till en getReward i Message och hämtar, FEL?
+        registeredGroups.updateGroup(request.getGroup());
     }
 
     /**

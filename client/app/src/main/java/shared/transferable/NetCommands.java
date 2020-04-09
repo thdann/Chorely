@@ -1,7 +1,7 @@
 package shared.transferable;
 
 public enum NetCommands implements Transferable {
-    register,
+    registerUser,
     registrationOk,
     registrationDenied,
     registerNewGroup,
@@ -17,6 +17,7 @@ public enum NetCommands implements Transferable {
     connectionStatus,
     notConnected,
     connected,
+
     connectionFailed,
     requestUserGroups,
     userHasNoGroup,
