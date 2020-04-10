@@ -30,8 +30,8 @@
         android:padding="12dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
-        android:layout_marginTop="70dp"
+        android:layout_below="@id/textView"
+        android:layout_marginTop="5dp"
 
         android:scrollbars="vertical"
         android:background="@color/background"
