@@ -1,107 +1,86 @@
-/**
- * This class is a bit of a mix between a controller and a model class.
- * It will together with the different activities hold most, if not all business logic.
- * The focus of the class is to recieve requests from both the activities, and the network, in the
- * form of arraylists with a netCommand on index 0.
- *
- * When a request is made from an activity, the model will block the thread from which the request was
- * sent, until it has received a response from the network, and the data is ready to be fetched.
- *
- * There is also an unfinished implementation of error-handling, where all blocked threads will be released.
- *
- * @version 1.0
- * @author Timothy Denison
- */
 
 package com.mau.chorely.model;
 
-
-import android.widget.Toast;
-
-import shared.transferable.ErrorMessage;
 import shared.transferable.Group;
 import shared.transferable.Message;
 import shared.transferable.NetCommands;
 import shared.transferable.User;
 
 import com.mau.chorely.activities.utils.BridgeInstances;
-import com.mau.chorely.model.persistentStorage.PersistentStorage;
 
 import java.util.concurrent.LinkedBlockingDeque;
 
-
-public class Model implements NetworkListener{
-
-    public static final int COMMAND_ELEMENT = 0;
-    public static final int ID_ELEMENT = 1;
+/**
+ * This class is a bit of a mix between a controller and a model class.
+ * It will together with the different activities hold most, if not all business logic.
+ * The focus of the class is to recieve requests from both the activities, and the network, in the
+ * form of arraylists with a netCommand on index 0.
+ * <p>
+ * When a request is made from an activity, the model will block the thread from which the request was
+ * sent, until it has received a response from the network, and the data is ready to be fetched.
+ * <p>
+ * There is also an unfinished implementation of error-handling, where all blocked threads will be released.
+ *
+ * @author Timothy Denison
+ * @version 1.0
+ */
+public class Model {
     private LinkedBlockingDeque<Message> taskToHandle = new LinkedBlockingDeque<>();
     private volatile boolean isLoggedIn = false;
     private volatile boolean isConnected = false;
     private ClientNetworkManager network;
-    private Thread modelThread = new Thread(new ModelThread());
-    private ErrorMessage errorMessage;
-    private PersistentStorage storage = new PersistentStorage();
-    private Model model;
-    public Model(){
-        System.out.println("Model created");
+    private Thread modelThread = new Thread(new ModelThread()); //TODO ändra konstruktion
+
+    public Model() {
         network = new ClientNetworkManager(this);
         modelThread.start();
-        model = this;
     }
 
-    public User getUser(){
+    public User getUser() {
         return null;
     }
 
-    public Group[] getGroups(){
+    public Group[] getGroups() {
         return null;
     }
 
-    public boolean isLoggedIn(){
+    public boolean isLoggedIn() {
         return isLoggedIn;
     }
 
-
-    public boolean isConnected(){
+    public boolean isConnected() {
         return isConnected;
     }
 
     /**
      * Callback method for any request that doesn't require a response.
-      * @param msg Message
+     *
+     * @param msg Message
      */
 
-    @Override
     public void handleTask(Message msg) {
         try {
             taskToHandle.put(msg);
-        } catch (InterruptedException e){
+        } catch (InterruptedException e) {
             System.out.println("Error in model callback" + e.getMessage());
         }
     }
 
-
-
-
     /**
      * Main model thread. Contains switch statement to handle all NetCommands
      */
-
-    private class ModelThread implements Runnable{
+    private class ModelThread implements Runnable {
         @Override
         public void run() {
 
-
-
-
-            while (!Thread.interrupted()){
+            while (!Thread.interrupted()) {
                 try {
                     System.out.println("Model is blocking for new message");
                     Message curWorkingOn = taskToHandle.take();
                     System.out.println(curWorkingOn.getCommand());
                     NetCommands command = curWorkingOn.getCommand();
-                    switch (command) {
 
+                    switch (command) {
                         case registerUser:
                             network.sendMessage(curWorkingOn);
                             break;
@@ -119,7 +98,6 @@ public class Model implements NetworkListener{
                             isConnected = false;
                             BridgeInstances.getPresenter().updateCurrent();
                             BridgeInstances.getPresenter().toastCurrent("Reconnecting to server.");
-
                             break;
 
                         case connected:
@@ -131,12 +109,12 @@ public class Model implements NetworkListener{
                             BridgeInstances.getPresenter().updateCurrent();
                             BridgeInstances.getPresenter().toastCurrent(curWorkingOn.getErrorMessage().getMessage());
                             break;
+
                         default:
                             System.out.println("Unrecognized command: " + command);
                             BridgeInstances.getPresenter().toastCurrent("Hejsan!!!!");
-
                     }
-                } catch (InterruptedException e){
+                } catch (InterruptedException e) {
                     System.out.println("Thread interrupted in main model queue");
                 }
             }
