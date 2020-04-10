@@ -8,6 +8,7 @@ import shared.transferable.User;
 
 import com.mau.chorely.activities.utils.BridgeInstances;
 
+import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingDeque;
 
 /**
@@ -40,7 +41,7 @@ public class Model {
         return null;
     }
 
-    public Group[] getGroups() {
+    public ArrayList<Group> getGroups() {
         return null;
     }
 
@@ -112,7 +113,7 @@ public class Model {
 
                         default:
                             System.out.println("Unrecognized command: " + command);
-                            BridgeInstances.getPresenter().toastCurrent("Hejsan!!!!");
+                            BridgeInstances.getPresenter().toastCurrent("Unknown command: " +command);
                     }
                 } catch (InterruptedException e) {
                     System.out.println("Thread interrupted in main model queue");

@@ -1,7 +1,9 @@
 package shared.transferable;
 
+
+
 /**
- * Reward is a class that represent a reward in the application.
+ * Reward is a class that represents a reward in the application.
  * version 1.0 2020-04-08
  *
  * @autor Emma Svensson
@@ -35,4 +37,16 @@ public class Reward implements Transferable {
         return description;
     }
 
+
+
+    @Override
+    public boolean equals( Object obj) {
+        if (obj instanceof Reward){
+            return (((Reward) obj).getName().equals(name) &&
+                    ((Reward) obj).getDescription().equals(description) &&
+                    ((Reward) obj).getRewardPrice() == rewardPrice);
+        }
+        else
+            return false;
+    }
 }

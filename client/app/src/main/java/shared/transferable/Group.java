@@ -51,7 +51,7 @@ public class Group implements Transferable {
         return users;
     }
 
-    public void AddUser(User user) {
+    public void addUser(User user) {
         users.add(user);
     }
 
@@ -59,38 +59,68 @@ public class Group implements Transferable {
         users.remove(user);
     }
 
-    public void addChore(Chore chore){
+    public void addChore(Chore chore) {
         chores.add(chore);
     }
-    public void deleteChore(Chore chore){
+
+    public void deleteChore(Chore chore) {
         chores.remove(chore);
     }
 
-    public Chore getSingleChore(int index){
+    public Chore getSingleChore(int index) {
         return chores.get(index);
     }
 
-    public ArrayList<Chore> getChores(){
+    public ArrayList<Chore> getChores() {
         return chores;
     }
 
-    public void addReward(Reward reward){
+    public void addReward(Reward reward) {
         rewards.add(reward);
     }
 
-    public void deleteReward(Reward reward){
+    public void deleteReward(Reward reward) {
         rewards.remove(reward);
     }
 
-    public Reward getSingleReward(int index){
+    public Reward getSingleReward(int index) {
         return rewards.get(index);
     }
 
-    public ArrayList<Reward> getRewards(){
+    public ArrayList<Reward> getRewards() {
         return rewards;
     }
 
+    public int size() {
+        return users.size();
+    }
 
+    public boolean allIsEqual(Group group) {
+        if (group.getRewards().size() == rewards.size() && group.getChores().size() == chores.size()
+                && group.getUsers().size() == users.size()) {
+            for (int i = 0; i < chores.size(); i++) {
+                if (!group.getChores().get(i).equals(chores.get(i))) {
+                    return false;
+                }
+            }
+
+            for (int i = 0; i < rewards.size(); i++) {
+                if(!group.getRewards().get(i).equals(rewards.get(i))){
+                    return false;
+                }
+            }
+            for(int i = 0; i< users.size(); i++){
+                if(!group.getUsers().get(i).equals(users.get(i))){
+                    return false;
+                }
+            }
+            //If all of the above are true, the rest of the data is checked to be equal, and the
+            //result is returned.
+            return (group.getGroupID().equals(groupID) && group.getDescription().equals(description) &&
+                    group.getName().equals(name));
+        } else
+            return false;
+    }
 
     @Override
     public boolean equals(Object obj) {
