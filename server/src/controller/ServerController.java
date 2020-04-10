@@ -100,16 +100,15 @@ public class ServerController implements ClientListener {
                 registeredUsers.writeUserToFile(request.getUser());
 
                 reply = new Message(NetCommands.registrationOk, request.getUser(), new ArrayList<>());
-
+                sendReply(reply);
             }
         } else {
             ErrorMessage errorMessage = new ErrorMessage("Användarnamnet är upptaget, välj ett annat.");
             reply = new Message(NetCommands.registrationDenied, request.getUser(), errorMessage);
 
+            sendReply(reply);
+            onlineClients.get(request.getUser()).throwOut();
         }
-
-        sendReply(reply);
-        onlineClients.get(request.getUser()).throwOut();
     }
 
 
