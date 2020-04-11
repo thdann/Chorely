@@ -8,13 +8,21 @@ package com.mau.chorely.activities.utils;
 
 import com.mau.chorely.model.Model;
 
+import java.io.File;
+
 public class BridgeInstances {
     private static Model model;
     private static Presenter presenter;
     private BridgeInstances(){}
+
+    public static void instantiateModel(File appFilesDir){
+        model = new Model(appFilesDir);
+    }
+
     public static Model getModel(){
         if(model == null){
-            model = new Model();
+            throw new RuntimeException("Model unreferenced");
+            //model = new Model();
         }
         return model;
     }

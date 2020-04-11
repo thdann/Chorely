@@ -22,14 +22,15 @@ public class ConnectActivity extends AppCompatActivity implements UpdatableActiv
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        BridgeInstances.getPresenter().register(this);
+        BridgeInstances.instantiateModel(getFilesDir()); // startar modellen.
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        //setContentView(R.layout.create_edit_group);
         setContentView(R.layout.activity_connect2);
-        BridgeInstances.getPresenter().register(this);
-        BridgeInstances.getModel(); // startar modellen.
     }
 
     @Override
@@ -45,8 +46,12 @@ public class ConnectActivity extends AppCompatActivity implements UpdatableActiv
                 @Override
                 public void run() {
                     if (BridgeInstances.getModel().isConnected()) {
-                        Intent intent = new Intent(ConnectActivity.this, MainActivity.class);
-                        startActivity(intent);
+                        if(BridgeInstances.getModel().isLoggedIn()){
+                            startActivity(new Intent(ConnectActivity.this, CreateGroupActivity.class));
+                        } else {
+                            Intent intent = new Intent(ConnectActivity.this, MainActivity.class);
+                            startActivity(intent);
+                        }
                     }
                 }
             });

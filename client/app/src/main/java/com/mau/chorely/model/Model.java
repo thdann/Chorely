@@ -7,7 +7,9 @@ import shared.transferable.NetCommands;
 import shared.transferable.User;
 
 import com.mau.chorely.activities.utils.BridgeInstances;
+import com.mau.chorely.model.persistentStorage.PersistentStorage;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -29,12 +31,15 @@ public class Model {
     private LinkedBlockingDeque<Message> taskToHandle = new LinkedBlockingDeque<>();
     private volatile boolean isLoggedIn = false;
     private volatile boolean isConnected = false;
+    private PersistentStorage storage;
     private ClientNetworkManager network;
     private Thread modelThread = new Thread(new ModelThread()); //TODO ändra konstruktion
 
-    public Model() {
+    private Model(){};
+    public Model(File filesDir) {
         network = new ClientNetworkManager(this);
         modelThread.start();
+        storage = new PersistentStorage(filesDir);
     }
 
     public User getUser() {
@@ -46,7 +51,7 @@ public class Model {
     }
 
     public boolean isLoggedIn() {
-        return isLoggedIn;
+        return storage.getUser() != null;
     }
 
     public boolean isConnected() {
@@ -77,17 +82,18 @@ public class Model {
             while (!Thread.interrupted()) {
                 try {
                     System.out.println("Model is blocking for new message");
-                    Message curWorkingOn = taskToHandle.take();
-                    System.out.println(curWorkingOn.getCommand());
-                    NetCommands command = curWorkingOn.getCommand();
+                    Message currentTask = taskToHandle.take();
+                    System.out.println(currentTask.getCommand());
+                    NetCommands command = currentTask.getCommand();
 
                     switch (command) {
                         case registerUser:
-                            network.sendMessage(curWorkingOn);
+                            network.sendMessage(currentTask);
                             break;
 
                         case registrationOk:
                             isLoggedIn = true;
+                            storage.updateUser(currentTask.getUser());
                             BridgeInstances.getPresenter().updateCurrent();
                             break;
 
@@ -108,7 +114,7 @@ public class Model {
 
                         case registrationDenied:
                             BridgeInstances.getPresenter().updateCurrent();
-                            BridgeInstances.getPresenter().toastCurrent(curWorkingOn.getErrorMessage().getMessage());
+                            BridgeInstances.getPresenter().toastCurrent(currentTask.getErrorMessage().getMessage());
                             break;
 
                         default:

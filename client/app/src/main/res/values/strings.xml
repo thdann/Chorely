@@ -9,4 +9,9 @@
     <string name="groups">Your groups</string>
     <string name="createGroup"> Create group </string>
     <string name="connecting">Connecting</string>
+    <string name="groupName">Group name:</string>
+    <string name="groupDescription">Description: </string>
+    <string name="descriptionToolTip">Fill out a description for your group.</string>
+    <string name="saveChanges">Save</string>
+    <string name="members">Members</string>
 </resources>
