@@ -5,31 +5,21 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.View;
 import android.widget.Toast;
 
 import com.mau.chorely.R;
 import com.mau.chorely.activities.interfaces.UpdatableActivity;
-import com.mau.chorely.activities.utils.ListItem;
 import com.mau.chorely.activities.utils.RecyclerViewAdapter;
-import com.mau.chorely.model.Model;
 import com.mau.chorely.activities.utils.BridgeInstances;
 
 import java.util.ArrayList;
 
-import shared.transferable.Chore;
 import shared.transferable.Group;
-import shared.transferable.Message;
-import shared.transferable.NetCommands;
-import shared.transferable.GenericID;
-import shared.transferable.TransferList;
-import shared.transferable.Transferable;
 import shared.transferable.User;
 
-public class CreateGroupActivity extends AppCompatActivity implements UpdatableActivity {
+public class ManageGroupsActivity extends AppCompatActivity implements UpdatableActivity {
     private RecyclerView mRecyclerView;
     private RecyclerViewAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -41,7 +31,7 @@ public class CreateGroupActivity extends AppCompatActivity implements UpdatableA
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_group);
+        setContentView(R.layout.activity_manage_groups);
         buildRecyclerView();
         //mRecyclerView.setVisibility(View.INVISIBLE);
 
@@ -73,9 +63,14 @@ public class CreateGroupActivity extends AppCompatActivity implements UpdatableA
          */
 
         User user = new User("Tim", "asdasd");
+        User user2 = new User("Amders", "asdasd");
+        User user3 = new User("Nånannan", "asdasd");
         //Chore chore = new Chore("Testchore", 2);
-        Group group = new Group("Min Grupp", "Detta är min fina grupp där jag lagt mina sysslor");
+        System.out.println("Created new group");
+        final Group group = new Group("Min Grupp", "Detta är min fina grupp där jag lagt mina sysslor, så att alla andra i gruppen också kan se och ha roligt med mina sysslor");
         group.addUser(user);
+        group.addUser(user2);
+        group.addUser(user3);
         groupList.add(group);
 
 
@@ -88,11 +83,9 @@ public class CreateGroupActivity extends AppCompatActivity implements UpdatableA
         mAdapter.setOnItemClickListener(new RecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                ArrayList<Transferable> sendList = new ArrayList<>();
-                sendList.add(groupList.get(position));
-                Message message = new Message(NetCommands.addUserToGroup, BridgeInstances.getModel().getUser(),sendList);
-                BridgeInstances.getModel().handleTask(message);
-                mRecyclerView.setVisibility(View.INVISIBLE);
+                Intent intent = new Intent(ManageGroupsActivity.this, CreateEditGroupActivity.class);
+                intent.putExtra("SELECTED_GROUP", groupList.get(position));
+                startActivity(intent);
             }
         });
     }
@@ -128,7 +121,7 @@ public class CreateGroupActivity extends AppCompatActivity implements UpdatableA
 
                 }
                 else{
-                    Intent intent = new Intent(CreateGroupActivity.this, ConnectActivity.class);
+                    Intent intent = new Intent(ManageGroupsActivity.this, ConnectActivity.class);
                     startActivity(intent);
                 }
             }

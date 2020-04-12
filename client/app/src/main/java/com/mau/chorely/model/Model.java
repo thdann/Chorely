@@ -7,7 +7,9 @@ import shared.transferable.NetCommands;
 import shared.transferable.User;
 
 import com.mau.chorely.activities.utils.BridgeInstances;
+import com.mau.chorely.model.persistentStorage.PersistentStorage;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -29,12 +31,16 @@ public class Model {
     private LinkedBlockingDeque<Message> taskToHandle = new LinkedBlockingDeque<>();
     private volatile boolean isLoggedIn = false;
     private volatile boolean isConnected = false;
+    private PersistentStorage storage;
     private ClientNetworkManager network;
+    private User lastSearchedUser;
     private Thread modelThread = new Thread(new ModelThread()); //TODO ändra konstruktion
 
-    public Model() {
+    private Model(){};
+    public Model(File filesDir) {
         network = new ClientNetworkManager(this);
         modelThread.start();
+        storage = new PersistentStorage(filesDir);
     }
 
     public User getUser() {
@@ -46,11 +52,17 @@ public class Model {
     }
 
     public boolean isLoggedIn() {
-        return isLoggedIn;
+        return storage.getUser() != null;
     }
 
     public boolean isConnected() {
         return isConnected;
+    }
+
+    public User removeLastSearchedUser(){
+        User temp = lastSearchedUser;
+        lastSearchedUser = null;
+        return temp;
     }
 
     /**
@@ -77,17 +89,20 @@ public class Model {
             while (!Thread.interrupted()) {
                 try {
                     System.out.println("Model is blocking for new message");
-                    Message curWorkingOn = taskToHandle.take();
-                    System.out.println(curWorkingOn.getCommand());
-                    NetCommands command = curWorkingOn.getCommand();
+                    Message currentTask = taskToHandle.take();
+                    System.out.println(currentTask.getCommand());
+                    NetCommands command = currentTask.getCommand();
 
                     switch (command) {
+                        case searchForUser:
+                            /*Falls through*/
                         case registerUser:
-                            network.sendMessage(curWorkingOn);
+                            network.sendMessage(currentTask);
                             break;
 
                         case registrationOk:
                             isLoggedIn = true;
+                            storage.updateUser(currentTask.getUser());
                             BridgeInstances.getPresenter().updateCurrent();
                             break;
 
@@ -98,7 +113,7 @@ public class Model {
                         case connectionFailed:
                             isConnected = false;
                             BridgeInstances.getPresenter().updateCurrent();
-                            BridgeInstances.getPresenter().toastCurrent("Reconnecting to server.");
+                            BridgeInstances.getPresenter().toastCurrent("Återansluter till servern.");
                             break;
 
                         case connected:
@@ -106,9 +121,17 @@ public class Model {
                             BridgeInstances.getPresenter().updateCurrent();
                             break;
 
-                        case registrationDenied:
+                        case userExists:
+                            lastSearchedUser = (User) currentTask.getData().get(0);
                             BridgeInstances.getPresenter().updateCurrent();
-                            BridgeInstances.getPresenter().toastCurrent(curWorkingOn.getErrorMessage().getMessage());
+                            BridgeInstances.getPresenter().toastCurrent("Användare hittad!");
+                            break;
+
+                        case registrationDenied:
+                            /*Falls through*/
+                        case userDoesNotExist:
+                            BridgeInstances.getPresenter().updateCurrent();
+                            BridgeInstances.getPresenter().toastCurrent(currentTask.getErrorMessage().getMessage());
                             break;
 
                         default:
