@@ -3,19 +3,12 @@ package com.mau.chorely.activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mau.chorely.R;
 import com.mau.chorely.activities.interfaces.UpdatableActivity;
-import com.mau.chorely.model.Model;
 import com.mau.chorely.activities.utils.BridgeInstances;
-
-import shared.transferable.NetCommands;
-import shared.transferable.GenericID;
-import shared.transferable.TransferList;
 
 public class ConnectActivity extends AppCompatActivity implements UpdatableActivity {
 
@@ -47,7 +40,7 @@ public class ConnectActivity extends AppCompatActivity implements UpdatableActiv
                 public void run() {
                     if (BridgeInstances.getModel().isConnected()) {
                         if(BridgeInstances.getModel().isLoggedIn()){
-                            startActivity(new Intent(ConnectActivity.this, CreateGroupActivity.class));
+                            startActivity(new Intent(ConnectActivity.this, ManageGroupsActivity.class));
                         } else {
                             Intent intent = new Intent(ConnectActivity.this, MainActivity.class);
                             startActivity(intent);

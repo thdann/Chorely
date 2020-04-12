@@ -16,7 +16,9 @@ public class BridgeInstances {
     private BridgeInstances(){}
 
     public static void instantiateModel(File appFilesDir){
-        model = new Model(appFilesDir);
+        if(model == null) {
+            model = new Model(appFilesDir);
+        }
     }
 
     public static Model getModel(){

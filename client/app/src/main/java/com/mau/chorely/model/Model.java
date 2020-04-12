@@ -33,6 +33,7 @@ public class Model {
     private volatile boolean isConnected = false;
     private PersistentStorage storage;
     private ClientNetworkManager network;
+    private User lastSearchedUser;
     private Thread modelThread = new Thread(new ModelThread()); //TODO ändra konstruktion
 
     private Model(){};
@@ -56,6 +57,12 @@ public class Model {
 
     public boolean isConnected() {
         return isConnected;
+    }
+
+    public User removeLastSearchedUser(){
+        User temp = lastSearchedUser;
+        lastSearchedUser = null;
+        return temp;
     }
 
     /**
@@ -87,6 +94,8 @@ public class Model {
                     NetCommands command = currentTask.getCommand();
 
                     switch (command) {
+                        case searchForUser:
+                            /*Falls through*/
                         case registerUser:
                             network.sendMessage(currentTask);
                             break;
@@ -104,7 +113,7 @@ public class Model {
                         case connectionFailed:
                             isConnected = false;
                             BridgeInstances.getPresenter().updateCurrent();
-                            BridgeInstances.getPresenter().toastCurrent("Reconnecting to server.");
+                            BridgeInstances.getPresenter().toastCurrent("Återansluter till servern.");
                             break;
 
                         case connected:
@@ -112,7 +121,15 @@ public class Model {
                             BridgeInstances.getPresenter().updateCurrent();
                             break;
 
+                        case userExists:
+                            lastSearchedUser = (User) currentTask.getData().get(0);
+                            BridgeInstances.getPresenter().updateCurrent();
+                            BridgeInstances.getPresenter().toastCurrent("Användare hittad!");
+                            break;
+
                         case registrationDenied:
+                            /*Falls through*/
+                        case userDoesNotExist:
                             BridgeInstances.getPresenter().updateCurrent();
                             BridgeInstances.getPresenter().toastCurrent(currentTask.getErrorMessage().getMessage());
                             break;

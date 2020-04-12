@@ -1,4 +1,4 @@
-package com.mau.chorely.activities.fragments.CreateGroupFragment;
+package com.mau.chorely.activities.utils;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -17,9 +17,8 @@ import java.util.ArrayList;
 import shared.transferable.User;
 
 public class SpinnerAdapterMembers extends ArrayAdapter<User> {
-    SpinnerAdapterMembers(Context context, ArrayList<User> memberList){
+    public SpinnerAdapterMembers(Context context, ArrayList<User> memberList){
         super(context, 0, memberList);
-
     }
 
     private View initView(int position, @Nullable View convertView, @NonNull ViewGroup parent){

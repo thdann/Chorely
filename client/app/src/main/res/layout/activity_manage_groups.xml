@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    tools:context=".activities.CreateGroupActivity">
+    tools:context=".activities.ManageGroupsActivity">
 
 
     <TextView
@@ -25,14 +25,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.066" />
 
-    <fragment
-        android:id="@+id/create_group_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/textView"
-        android:layout_marginTop="5dp"
-
-        >
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewGroups"
@@ -44,5 +36,5 @@
         android:scrollbars="vertical"
         android:background="@color/background"
         />
-    </fragment>
+
 </RelativeLayout>

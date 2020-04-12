@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.mau.chorely.R;
+import com.mau.chorely.activities.utils.SpinnerAdapterMembers;
 
 import shared.transferable.Group;
 
