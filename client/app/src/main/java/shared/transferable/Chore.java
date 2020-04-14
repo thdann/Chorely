@@ -30,7 +30,6 @@ public class Chore implements Transferable {
     public int Score() {
         return score;
     }
-    
     public void setScore(int Score) {
         this.score = score;
     }
