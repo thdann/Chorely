@@ -17,8 +17,10 @@ public class Group implements Transferable {
     private ArrayList<Chore> chores = new ArrayList<>();
     private ArrayList<Reward> rewards = new ArrayList<>();
 
-
-    private Group() {
+    /**
+     * CreateEditGroupActivity needs to be able to create a group before name is set.
+     */
+    public Group() {
     }
 
     public Group(String groupName) {

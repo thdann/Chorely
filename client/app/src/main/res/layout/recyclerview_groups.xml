@@ -5,14 +5,14 @@
     android:padding="4dp"
     android:layout_marginTop="4dp"
     android:layout_width="match_parent"
-    android:layout_height="70dp"
+    android:layout_height="wrap_content"
     android:background="@color/btnColor"
     android:backgroundTint="@color/btnColor"
     app:cardCornerRadius="4dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_margin="4dp"
         android:background="@color/btnColor">
 
@@ -42,17 +42,15 @@
             android:layout_toEndOf="@id/imageViewGroupList"
             android:text="line2"
             android:textColor="@android:color/black"
-            android:textSize="15sp"
-            />
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/textViewMembers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@id/textViewGroupTitle"
-            android:layout_toLeftOf="@id/textViewMembersNumber"
+            android:layout_toStartOf="@id/textViewMembersNumber"
             android:layout_marginEnd="2dp"
-            android:layout_marginRight="2dp"
             android:text="Members:"
             android:textColor="@android:color/black"
             android:textSize="15sp"
@@ -70,6 +68,35 @@
             android:textColor="@android:color/black"
             android:textSize="15sp"
             android:textStyle="bold" />
+
+
+
+        <!--
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/recyclerview_groups_editButton"
+            android:background="@drawable/ic_mode_edit_black_24dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="10dp"
+            android:layout_alignBaseline="@id/textViewGroupDetails"
+            />
+
+
+        <ImageButton
+            android:id="@+id/recyclerview_groups_editButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textViewMembers"
+            android:layout_alignStart="@id/textViewMembers"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/btnColor"
+            android:src="@drawable/ic_mode_edit_black_24dp"
+             />
+             -->
+
+
     </RelativeLayout>
 
 

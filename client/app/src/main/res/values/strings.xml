@@ -10,6 +10,7 @@
     <string name="createGroup"> Skapa grupp </string>
     <string name="connecting">Ansluter</string>
     <string name="groupName">Gruppnamn:</string>
+    <string name="hintGroupName">Fyll i ett gruppnamn</string>
     <string name="groupDescription">Beskrivning </string>
     <string name="descriptionToolTip">Lägg till en beskrivning för din grupp.</string>
     <string name="saveChanges">Spara</string>
@@ -20,4 +21,5 @@
     <string name="hintSearchMember">Sök efter medlem</string>
     <string name="deleteMember">Ta bort medlem</string>
     <string name="leaveGroup">Lämna grupp</string>
+    <string name="deleteGroup">Radera grupp</string>
 </resources>
