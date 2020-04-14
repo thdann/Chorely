@@ -22,7 +22,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 
 public class ClientNetworkManager {
     private static final int SERVER_PORT = 6583;
-    private static final String SERVER_IP = "10.0.2.2";
+    private static final String SERVER_IP = "192.168.1.82";
     private volatile boolean connected = false;
     private LinkedBlockingDeque<Message> outBoundQueue = new LinkedBlockingDeque<>();
     private Model model;

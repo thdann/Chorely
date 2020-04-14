@@ -1,5 +1,6 @@
 package com.mau.chorely.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -7,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.mau.chorely.R;
@@ -33,6 +35,8 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_groups);
         buildRecyclerView();
+        updatedGroups = BridgeInstances.getModel().getGroups();
+        updateGroupsList();
         //mRecyclerView.setVisibility(View.INVISIBLE);
 
     }
@@ -41,6 +45,7 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
     protected void onStart() {
         super.onStart();
         BridgeInstances.getPresenter().register(this);
+
     }
 
     @Override
@@ -62,16 +67,7 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
         groupList.add(new ListItem(R.drawable.ic_group_black_24dp, "Blabla", "Blaaaslfkasflkasf", 13));
          */
 
-        User user = new User("Tim", "asdasd");
-        User user2 = new User("Amders", "asdasd");
-        User user3 = new User("Nånannan", "asdasd");
-        //Chore chore = new Chore("Testchore", 2);
-        System.out.println("Created new group");
-        final Group group = new Group("Min Grupp", "Detta är min fina grupp där jag lagt mina sysslor, så att alla andra i gruppen också kan se och ha roligt med mina sysslor");
-        group.addUser(user);
-        group.addUser(user2);
-        group.addUser(user3);
-        groupList.add(group);
+
 
 
         mRecyclerView = findViewById(R.id.recyclerViewGroups);
@@ -91,7 +87,14 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
     }
 
 
-
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.createGroupMenuButton){
+            startActivity(new Intent(this, CreateEditGroupActivity.class));
+        }
+        return super.onContextItemSelected(item);
+    }
 
     @Override
     public void doToast(final String message) {
@@ -104,23 +107,15 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
         });
     }
 
-    /*
-    private void addGroupToRecyclerView(Group group){
-        groupList.add(new ListItem(R.drawable.ic_group_black_24dp, group.getName(), group.getDescription() , group.size()));
-    }
-     */
-
     @Override
-    public void UpdateActivity() {
+    public void updateActivity() {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 if(BridgeInstances.getModel().isConnected()){
                      updatedGroups = BridgeInstances.getModel().getGroups();
-                     updateGroups();
-
-                }
-                else{
+                     updateGroupsList();
+                } else{
                     Intent intent = new Intent(ManageGroupsActivity.this, ConnectActivity.class);
                     startActivity(intent);
                 }
@@ -128,7 +123,7 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
         });
     }
 
-    private void updateGroups(){
+    private void updateGroupsList(){
         if(updatedGroups != null){
             for (int i = 0; i< updatedGroups.size(); i++){
                 Group group = updatedGroups.get(i);

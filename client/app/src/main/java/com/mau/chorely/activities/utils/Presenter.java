@@ -12,7 +12,7 @@ public class Presenter {
 
     public void updateCurrent(){
         for(UpdatableActivity updatable : registeredListeners){
-            updatable.UpdateActivity();
+            updatable.updateActivity();
         }
     }
 

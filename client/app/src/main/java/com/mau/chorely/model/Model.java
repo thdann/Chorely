@@ -48,7 +48,7 @@ public class Model {
     }
 
     public ArrayList<Group> getGroups() {
-        return null;
+        return storage.getGroups();
     }
 
     public boolean isLoggedIn() {
@@ -79,6 +79,15 @@ public class Model {
         }
     }
 
+    private void updateGroup (Message message){
+        if(storage.saveOrUpdateGroup((Group)message.getData().get(0))){
+            network.sendMessage(message);
+            BridgeInstances.getPresenter().updateCurrent();
+        }
+        //If not, group is already up to date.
+    }
+
+
     /**
      * Main model thread. Contains switch statement to handle all NetCommands
      */
@@ -91,6 +100,7 @@ public class Model {
                     System.out.println("Model is blocking for new message");
                     Message currentTask = taskToHandle.take();
                     System.out.println(currentTask.getCommand());
+                    BridgeInstances.getPresenter().toastCurrent(currentTask.getCommand().toString());
                     NetCommands command = currentTask.getCommand();
 
                     switch (command) {
@@ -98,6 +108,10 @@ public class Model {
                             /*Falls through*/
                         case registerUser:
                             network.sendMessage(currentTask);
+                            break;
+
+                        case updateGroup:
+                            updateGroup(currentTask);
                             break;
 
                         case registrationOk:

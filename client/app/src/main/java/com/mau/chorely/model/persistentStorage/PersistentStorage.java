@@ -13,9 +13,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.Date;
 
 
+import shared.transferable.Group;
 import shared.transferable.User;
 
 public class PersistentStorage {
@@ -58,4 +60,28 @@ public class PersistentStorage {
         // null is returned, if an exception is thrown or if there is no file saved.
         return user;
     }
+
+
+    // TODO: 2020-04-13 Ska returnera sant om ändringar gjorts. falskt om identisk grupp finns sparad
+    public boolean saveOrUpdateGroup(Group group){
+        return true;
+    }
+
+    // TODO: 2020-04-13 Implementera inläsning av användarens sparade grupper.
+    public ArrayList<Group> getGroups(){
+
+        User user = new User("Tim", "asdasd");
+        User user2 = new User("Amders", "asdasd");
+        User user3 = new User("Nånannan", "asdasd");
+        //Chore chore = new Chore("Testchore", 2);
+        System.out.println("Created new group");
+        final Group group = new Group("Min Grupp", "Detta är min fina grupp där jag lagt mina sysslor, så att alla andra i gruppen också kan se och ha roligt med mina sysslor");
+        group.addUser(user);
+        group.addUser(user2);
+        group.addUser(user3);
+        ArrayList<Group> ret = new ArrayList<>();
+        ret.add(group);
+        return ret;
+    }
+
 }
