@@ -13,8 +13,10 @@ import com.mau.chorely.R;
 
 import java.util.ArrayList;
 
+import shared.transferable.Group;
+
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.RecyclerViewHolder> {
-    private ArrayList<ListItem> mItemList;
+    private ArrayList<Group> mItemList;
     private OnItemClickListener mListener;
     public interface OnItemClickListener{
         void onItemClick(int position);
@@ -53,7 +55,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
 
-    public RecyclerViewAdapter (ArrayList<ListItem> itemList){
+    public RecyclerViewAdapter (ArrayList<Group> itemList){
         this.mItemList = itemList;
     }
 
@@ -66,12 +68,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
-        ListItem currentItem = mItemList.get(position);
+        Group currentGroup = mItemList.get(position);
+        String groupSize = "" + currentGroup.size();
 
-        holder.mImageView.setImageResource(currentItem.getmImageResource());
-        holder.textViewTitle.setText(currentItem.getText1());
-        holder.textViewDetails.setText(currentItem.getText2());
-        holder.textViewMembersNum.setText(currentItem.getText3());
+        holder.mImageView.setImageResource(R.drawable.ic_group_black_24dp);
+        holder.textViewTitle.setText(currentGroup.getName());
+        holder.textViewDetails.setText(currentGroup.getDescription());
+        holder.textViewMembersNum.setText(groupSize);
     }
 
     @Override

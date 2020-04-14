@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+   
+    >
+
+    <RelativeLayout
+        android:id="@+id/spinnerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/background"
+
+        >
+        <TextView
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:id="@+id/spinnerText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/btnColor"
+            android:text="No members"
+            android:textSize="16sp"
+            android:layout_centerHorizontal="true"
+
+            />
+        <View
+            android:id="@+id/spinnerDivider"
+            android:layout_width="25dp"
+            android:layout_height="1dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginStart="4dp"
+            android:background="@drawable/button_background"
+            android:layout_below="@+id/spinnerText"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_centerHorizontal="true"
+            />
+
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

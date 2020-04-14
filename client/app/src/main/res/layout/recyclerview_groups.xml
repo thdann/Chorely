@@ -8,13 +8,10 @@
     android:layout_height="70dp"
     android:background="@color/btnColor"
     android:backgroundTint="@color/btnColor"
-
-
     app:cardCornerRadius="4dp">
 
     <RelativeLayout
-
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
         android:background="@color/btnColor">
@@ -45,29 +42,34 @@
             android:layout_toEndOf="@id/imageViewGroupList"
             android:text="line2"
             android:textColor="@android:color/black"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            />
+
         <TextView
             android:id="@+id/textViewMembers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="170dp"
-            android:layout_toEndOf="@id/textViewGroupTitle"
-            android:layout_alignParentTop = "true"
+            android:layout_alignBaseline="@id/textViewGroupTitle"
+            android:layout_toLeftOf="@id/textViewMembersNumber"
+            android:layout_marginEnd="2dp"
+            android:layout_marginRight="2dp"
             android:text="Members:"
             android:textColor="@android:color/black"
             android:textSize="15sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/textViewMembersNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
-            android:layout_toEndOf="@id/textViewMembers"
+            android:layout_marginEnd="5dp"
+            android:layout_alignBaseline="@id/textViewMembers"
+            android:layout_alignParentEnd="true"
             android:text="2"
             android:textColor="@android:color/black"
-            android:textStyle="bold"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:textStyle="bold" />
     </RelativeLayout>
 
 

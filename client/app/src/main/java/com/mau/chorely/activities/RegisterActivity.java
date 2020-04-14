@@ -80,7 +80,7 @@ public class RegisterActivity extends AppCompatActivity implements UpdatableActi
             public void run() {
                 if(BridgeInstances.getModel().isConnected()){
                     if(BridgeInstances.getModel().isLoggedIn()) {
-                        Intent intent = new Intent(RegisterActivity.this, CreateGroupActivity.class);
+                        Intent intent = new Intent(RegisterActivity.this, ManageGroupsActivity.class);
                         startActivity(intent);
                     }
                     else {

@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:background="@color/background"
+    android:paddingTop="4dp"
+    android:paddingLeft="4dp"
+    >
+
+    <TextView
+        android:id="@+id/edit_group_name_marker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="29dp"
+        android:text="@string/groupName"
+        android:textColor="@color/btnColor"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBaseline_toBaselineOf="@id/edit_group_current_name"
+        app:layout_constraintEnd_toStartOf="@+id/edit_group_current_name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/edit_group_current_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="PlaceHolder"
+        android:textColor="@color/btnColor"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/edit_group_edit_name_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/background"
+        android:src="@drawable/edit_button_icon"
+        app:layout_constraintStart_toEndOf="@+id/edit_group_current_name"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_group_current_name"
+        android:layout_marginStart="4dp"
+        />
+
+
+    <!-- End of group name field -->
+    <View
+        android:id="@+id/edit_group_divider1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/button_background"
+        app:layout_constraintBottom_toTopOf="@+id/edit_group_description_marker"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_group_current_name"
+
+        />
+
+    <TextView
+        android:id="@+id/edit_group_description_marker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/groupDescription"
+        android:textColor="@color/btnColor"
+        android:textSize="20sp"
+        android:textStyle="bold"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_group_divider1"
+
+
+        />
+
+    <EditText
+        android:id="@+id/edit_group_edit_description_text"
+        android:padding="4dp"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/edittext_background"
+        android:ems="10"
+        android:gravity="bottom"
+        android:hint="@string/descriptionToolTip"
+        android:inputType="textMultiLine"
+        android:textColor="@color/btnColor"
+        android:textColorHint="@color/btnColor"
+        app:layout_constraintEnd_toStartOf="@id/edit_group_edit_description_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_group_description_marker"
+        />
+
+
+    <ImageButton
+        android:id="@+id/edit_group_edit_description_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/background"
+        android:src="@drawable/edit_button_icon"
+        app:layout_constraintStart_toEndOf="@+id/edit_group_edit_description_text"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_group_edit_description_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="12dp"
+        android:layout_marginStart="4dp"
+        />
+
+    <!-- End of description field-->
+    <View
+        android:id="@+id/edit_group_divider2"
+        android:layout_width="409dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/button_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_group_edit_description_text" />
+
+    <Button
+        android:id="@+id/edit_group_save_changes"
+        android:layout_width="70dp"
+        android:layout_height="22dp"
+        android:background="@drawable/button_background"
+        android:text="@string/saveChanges"
+        app:layout_constraintBaseline_toBaselineOf="@id/edit_group_current_name"
+        app:layout_constraintStart_toEndOf="@id/edit_group_edit_name_button"
+        android:layout_marginStart="15dp"
+        />
+
+    <TextView
+        android:id="@+id/edit_group_textViewMembers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/btnColor"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_group_divider2"
+        android:text="@string/members"/>
+
+    <Spinner
+        android:id="@+id/spinnerMembers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/edit_group_textViewMembers"
+        android:layout_marginTop="1.5dp"
+        app:layout_constrainedWidth="true"
+        android:layout_marginStart="4dp"
+        app:layout_constraintTop_toTopOf="@id/edit_group_textViewMembers"
+        android:backgroundTint="@color/btnColor"
+        />
+
+    <ImageButton
+
+
+        android:id="@+id/edit_group_deleteMemberButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/delete_icon"
+        android:layout_marginStart="25dp"
+        android:background="@color/background"
+        android:layout_centerVertical="true"
+        app:layout_constraintTop_toTopOf="@id/spinnerMembers"
+        app:layout_constraintStart_toEndOf="@id/spinnerMembers"
+        android:onClick="removeMemberFromGroup"
+        />
+
+
+
+
+    <TextView
+        android:id="@+id/edit_group_textViewAddMembers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/btnColor"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_group_textViewMembers"
+        android:text="@string/textAddMembers"/>
+
+    <RelativeLayout
+        android:id="@+id/edit_group_searchBarMembers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingEnd="4dp"
+        android:background="@drawable/edittext_background"
+        app:layout_constraintStart_toEndOf="@id/edit_group_textViewMembers"
+        app:layout_constraintTop_toTopOf="@id/edit_group_textViewAddMembers"
+        >
+
+    <EditText
+        android:id="@+id/edit_group_memberSearchText"
+        android:padding="0dp"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:hint="@string/hintSearchMember"
+        android:textColorHint="@color/btnColor"
+        android:backgroundTint="@color/backgroundLight"
+        android:textColor="@color/btnColor"
+
+        />
+
+    <ImageButton
+
+
+        android:id="@+id/edit_group_searchMemberButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/search_button_icon"
+        android:layout_toEndOf="@id/edit_group_memberSearchText"
+        android:layout_marginStart="4dp"
+        android:background="@color/backgroundLight"
+        android:layout_centerVertical="true"
+        app:layout_constraintStart_toEndOf="@id/edit_group_memberSearchText"
+        android:onClick="searchForMember"
+        />
+
+        <pl.droidsonroids.gif.GifImageView
+            android:visibility="invisible"
+            android:id="@+id/edit_group_memberSearchWorkingGif"
+            android:padding="0dp"
+            android:layout_marginStart="4dp"
+            android:layout_toRightOf="@+id/edit_group_memberSearchText"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/loading"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+        <ImageButton
+            android:visibility="invisible"
+            android:id="@+id/edit_group_memberSearchCancelButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/cancel_icon"
+            android:layout_toEndOf="@id/edit_group_memberSearchText"
+            android:layout_marginStart="4dp"
+            android:background="@color/backgroundLight"
+            android:layout_centerVertical="true"
+            app:layout_constraintStart_toEndOf="@id/edit_group_memberSearchText"
+
+            />
+
+    </RelativeLayout>
+
+    <ImageButton
+
+        android:visibility="invisible"
+        android:id="@+id/edit_group_addMemberButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/add_user_icon"
+        android:layout_marginStart="10dp"
+        android:background="@color/background"
+        android:layout_marginTop="2dp"
+        app:layout_constraintTop_toTopOf="@id/edit_group_searchBarMembers"
+        app:layout_constraintStart_toEndOf="@id/edit_group_searchBarMembers"
+        />
+
+
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

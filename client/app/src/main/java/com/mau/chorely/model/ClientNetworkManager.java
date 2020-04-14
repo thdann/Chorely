@@ -23,10 +23,10 @@ public class ClientNetworkManager {
     private static final String SERVER_IP = "10.0.2.2";
     private volatile boolean connected = false;
     private LinkedBlockingDeque<Message> outBoundQueue = new LinkedBlockingDeque<>();
-    private NetworkListener model;
+    private Model model;
     private ConnectionHandler connectionHandler = new ConnectionHandler();
 
-    public ClientNetworkManager(NetworkListener model) {
+    public ClientNetworkManager(Model model) {
         this.model = model;
         Thread thread = new Thread(connectionHandler);
         thread.start();
