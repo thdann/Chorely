@@ -17,6 +17,7 @@ import shared.transferable.*;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -59,6 +60,22 @@ public class ServerController implements ClientListener {
         client.addToOutgoingMessages(reply);
     }
 
+    public void sendReplyToGroup(GenericID groupId){
+
+    }
+
+    public void notifyGroupChanges(Group group){
+    ArrayList<User> members = group.getUsers();
+    ArrayList<Transferable> data = new ArrayList<>();
+    data.add(group);
+
+        for (User u : members){
+        Message message = new Message(NetCommands.updateGroup,u,data);
+            sendReply(message);
+        }
+
+    }
+
     public void handleClientTask(Message msg) {
 
         //TODO: tanke - ska vi skicka replymeddelanden härifrån istället för själva metoden? För här finns ju redan usern som ska ha svaret?
@@ -74,10 +91,10 @@ public class ServerController implements ClientListener {
                 updateGroup(msg);
                 break;
             case addNewChore:
-                addNewChore(msg);
+              //  addNewChore(msg);
                 break;
             case addNewReward:
-                addNewReward(msg);
+               // addNewReward(msg);
                 break;
             default:
                 //TODO:  kod för default case. Vad kan man skriva här?
@@ -120,27 +137,32 @@ public class ServerController implements ClientListener {
 
     public void updateGroup (Message request) {
         Message reply = null;
+        Group group = (Group) request.getData().get(0);
 
-        if (registeredGroups.groupIdAvailable(request.getGroup().getGroupID())) {
-            registeredGroups.updateGroup(request.getGroup());
-            ArrayList<User> members = request.getGroup().getUsers();
-            GenericID groupID = request.getGroup().getGroupID();
+        if (registeredGroups.groupIdAvailable(group.getGroupID()))
+        {
+            registeredGroups.updateGroup(group);
+            ArrayList<User> members = group.getUsers();
+            GenericID groupID = group.getGroupID();
             for (User u : members) {
                 u.addGroupMembership(groupID);
             }
             reply = new Message(NetCommands.newGroupOk, request.getUser(), new ArrayList<>());
+            sendReply(reply);
+            notifyGroupChanges(group);
 
-        } else {
+        } else{
             ErrorMessage errorMessage = new ErrorMessage("Vad kan gå fel vid skapande av grupp?"); //FixMe: felmeddelandetext?
             reply = new Message(NetCommands.newGroupDenied, request.getUser(), errorMessage);
-
+            sendReply(reply);
         }
 
-        sendReply(reply);
+
+
 
     }
 
-    //TODO: skicka svar till klienten
+  /*  //TODO: skicka svar till klienten
     public void addNewChore(Message request) {
         request.getGroup().addChore(request.getChore()); //TODO: Här la jag till en getChore i Message och hämtar, FEL?
         registeredGroups.updateGroup(request.getGroup());
@@ -151,7 +173,7 @@ public class ServerController implements ClientListener {
         request.getGroup().addReward(request.getReward()); //TODO: Här la jag till en getReward i Message och hämtar, FEL?
         registeredGroups.updateGroup(request.getGroup());
     }
-
+*/
     /**
      * Inner class MessageHandler handles the incoming messages from the client one at a time.
      */
