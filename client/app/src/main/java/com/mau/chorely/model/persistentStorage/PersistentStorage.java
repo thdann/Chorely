@@ -25,11 +25,13 @@ public class PersistentStorage {
     private static final String USER_FILE_NAME = "/user.cho";
     private static File userFile;
     private static File groupDir;
+    private Group testGroup;
 
     public PersistentStorage(File filesDir) {
         this.filesDir = filesDir;
         userFile = new File(filesDir.getAbsolutePath() + USER_FILE_NAME);
     }
+
 
     public void updateUser(User user) {
         if (userFile.exists()) {
@@ -63,6 +65,7 @@ public class PersistentStorage {
 
 
     // TODO: 2020-04-13 Ska returnera sant om ändringar gjorts. falskt om identisk grupp finns sparad
+    // TODO: 2020-04-15 om ändring görs ska även det sparade user objektet ändras för att inehålla den nya gruppen
     public boolean saveOrUpdateGroup(Group group){
         return true;
     }
@@ -70,18 +73,7 @@ public class PersistentStorage {
     // TODO: 2020-04-13 Implementera inläsning av användarens sparade grupper.
     public ArrayList<Group> getGroups(){
 
-        User user = new User("Tim", "asdasd");
-        User user2 = new User("Amders", "asdasd");
-        User user3 = new User("Nånannan", "asdasd");
-        //Chore chore = new Chore("Testchore", 2);
-        System.out.println("Created new group");
-        final Group group = new Group("Min Grupp", "Detta är min fina grupp där jag lagt mina sysslor, så att alla andra i gruppen också kan se och ha roligt med mina sysslor");
-        group.addUser(user);
-        group.addUser(user2);
-        group.addUser(user3);
-        ArrayList<Group> ret = new ArrayList<>();
-        ret.add(group);
-        return ret;
+        return null;
     }
 
 }

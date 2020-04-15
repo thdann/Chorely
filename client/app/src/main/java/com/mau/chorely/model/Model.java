@@ -44,7 +44,7 @@ public class Model {
     }
 
     public User getUser() {
-        return null;
+        return storage.getUser();
     }
 
     public ArrayList<Group> getGroups() {
@@ -81,13 +81,19 @@ public class Model {
 
     private void updateGroup (Message message){
         if(storage.saveOrUpdateGroup((Group)message.getData().get(0))){
+            message.setCommand(NetCommands.updateGroup);
             network.sendMessage(message);
             BridgeInstances.getPresenter().updateCurrent();
         }
         //If not, group is already up to date.
     }
 
-
+    private void createGroup(Message message){
+        if(storage.saveOrUpdateGroup((Group)message.getData().get(0))){
+            network.sendMessage(message);
+            BridgeInstances.getPresenter().updateCurrent();
+        }
+    }
     /**
      * Main model thread. Contains switch statement to handle all NetCommands
      */
@@ -100,7 +106,6 @@ public class Model {
                     System.out.println("Model is blocking for new message");
                     Message currentTask = taskToHandle.take();
                     System.out.println(currentTask.getCommand());
-                    BridgeInstances.getPresenter().toastCurrent(currentTask.getCommand().toString());
                     NetCommands command = currentTask.getCommand();
 
                     switch (command) {
@@ -110,7 +115,7 @@ public class Model {
                             network.sendMessage(currentTask);
                             break;
 
-                        case updateGroup:
+                        case clientInternalGroupUpdate:
                             updateGroup(currentTask);
                             break;
 
@@ -139,6 +144,10 @@ public class Model {
                             lastSearchedUser = (User) currentTask.getData().get(0);
                             BridgeInstances.getPresenter().updateCurrent();
                             BridgeInstances.getPresenter().toastCurrent("Användare hittad!");
+                            break;
+
+                        case registerNewGroup:
+                            createGroup(currentTask);
                             break;
 
                         case registrationDenied:

@@ -21,6 +21,11 @@ public class GenericID implements Transferable, Comparable<GenericID> {
     }
 
     @Override
+    public String toString() {
+        return id.toString();
+    }
+
+    @Override
     public boolean equals(Object obj) {
         return id.equals(((GenericID)obj).getId());
     }

@@ -35,6 +35,7 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
     private Group selectedGroup;
     private SpinnerAdapterMembers spinnerAdapter;
     private User lastSearchedUser;
+    private boolean newGroup = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +48,7 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
         super.onStart();
         BridgeInstances.getPresenter().register(this);
         Bundle bundle = getIntent().getExtras();
-        if(bundle != null){
+        if (bundle != null) {
             selectedGroup = (Group) bundle.get("SELECTED_GROUP");
         }
         initActivity();
@@ -71,8 +72,8 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
             @Override
             public void run() {
                 Model model = BridgeInstances.getModel();
-                if(model.isConnected()){
-                    if(lastSearchedUser == null) {
+                if (model.isConnected()) {
+                    if (lastSearchedUser == null) {
                         lastSearchedUser = model.removeLastSearchedUser();
                         if (lastSearchedUser != null) {
                             findViewById(R.id.edit_group_memberSearchCancelButton).setVisibility(View.VISIBLE);
@@ -89,7 +90,7 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
                             findViewById(R.id.edit_group_memberSearchText).setFocusableInTouchMode(true);
                         }
                     }
-                } else{
+                } else {
                     startActivity(new Intent(CreateEditGroupActivity.this, ConnectActivity.class));
                 }
             }
@@ -110,69 +111,81 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        if(id == R.id.edit_group_menu_saveChanges){
+        if (id == R.id.edit_group_menu_saveChanges) {
             saveGroup();
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void initSpinner(){
+    private void initSpinner() {
         Spinner memberSpinner = findViewById(R.id.spinnerMembers);
         spinnerAdapter = new SpinnerAdapterMembers(this, selectedGroup.getUsers());
         memberSpinner.setAdapter(spinnerAdapter);
     }
 
-    private void initActivity(){
-        if(selectedGroup != null) {
-            EditText groupName = (EditText)findViewById(R.id.edit_group_current_name);
+    private void initActivity() {
+        if (selectedGroup != null) {
+            EditText groupName = (EditText) findViewById(R.id.edit_group_current_name);
             groupName.setText(selectedGroup.getName());
             groupName.setFocusable(false);
             groupName.setFocusableInTouchMode(false);
-            EditText groupDescription = (EditText)findViewById(R.id.edit_group_edit_description_text);
+            EditText groupDescription = (EditText) findViewById(R.id.edit_group_edit_description_text);
             groupDescription.setText(selectedGroup.getDescription());
             groupDescription.setFocusable(false);
             if (spinnerAdapter == null) {
                 initSpinner();
             }
-        } else{
+        } else {
             findViewById(R.id.edit_group_edit_name_button).setVisibility(View.INVISIBLE);
             findViewById(R.id.edit_group_edit_description_button).setVisibility(View.INVISIBLE);
             selectedGroup = new Group();
+            newGroup = true;
+            selectedGroup.addUser(BridgeInstances.getModel().getUser());
             initSpinner();
         }
     }
 
-    public void saveGroup(){
-        Model model = BridgeInstances.getModel();
-        ArrayList<Transferable> data = new ArrayList<>();
-        data.add(selectedGroup);
-        Message message = new Message(NetCommands.updateGroup, model.getUser(), data);
-        model.handleTask(message);
-        finish();
+    public void saveGroup() {
+        String groupName = ((EditText) findViewById(R.id.edit_group_current_name)).getText().toString();
+        String groupDescription = ((EditText) findViewById(R.id.edit_group_edit_description_text)).getText().toString();
+        if (!groupName.equals("")) {
+            if (!groupDescription.equals("")) {
+                NetCommands command;
+                if(newGroup){
+                    command = NetCommands.registerNewGroup;
+                } else{
+                    command = NetCommands.clientInternalGroupUpdate;
+                }
+                Model model = BridgeInstances.getModel();
+                ArrayList<Transferable> data = new ArrayList<>();
+                data.add(selectedGroup);
+                Message message = new Message(command, model.getUser(), data);
+                model.handleTask(message);
+                newGroup = false;
+                finish();
+            } else {
+                doToast("Fyll i beskrivning till din grupp.");
+            }
+        } else {
+            doToast("Fyll i ett namn till gruppen.");
+        }
     }
 
-    public void removeMemberFromGroup(View view){
+    public void removeMemberFromGroup(View view) {
         // TODO: 2020-04-12 POPUP DIALOG ask for confirmation?
-        if(spinnerAdapter.getCount() > 0) {
+        if (spinnerAdapter.getCount() > 0) {
             int selectedUserIndex = ((Spinner) findViewById(R.id.spinnerMembers)).getSelectedItemPosition();
-            User removedUser = selectedGroup.getUsers().remove(selectedUserIndex);
-            Model model = BridgeInstances.getModel();
-            ArrayList<Transferable> data = new ArrayList<>();
-            data.add(removedUser);
-            data.add(selectedGroup.getGroupID());
-            Message message = new Message(NetCommands.removeUserFromGroup, model.getUser(), data);
-            model.handleTask(message);
+            selectedGroup.getUsers().remove(selectedUserIndex);
             spinnerAdapter.notifyDataSetChanged();
-        }
-        else{
+        } else {
             Toast.makeText(this, "Det finns ingen användare att ta bort.",
                     Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void searchForMember(View view){
+    public void searchForMember(View view) {
         String searchString = ((EditText)findViewById(R.id.edit_group_memberSearchText)).getText().toString();
-        if(!searchString.equals("")) {
+        if (!searchString.equals("")) {
             findViewById(R.id.edit_group_searchMemberButton).setVisibility(View.INVISIBLE);
             findViewById(R.id.edit_group_memberSearchWorkingGif).setVisibility(View.VISIBLE);
             Model model = BridgeInstances.getModel();
@@ -181,37 +194,37 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
             data.add(user);
             Message message = new Message(NetCommands.searchForUser, model.getUser(), data);
             model.handleTask(message);
-        } else{
+        } else {
             Toast.makeText(this, "Du har inte fyllt i något användarnamn", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void cancelFoundMember(View view){
+    public void cancelFoundMember(View view) {
         lastSearchedUser = null;
         findViewById(R.id.edit_group_memberSearchCancelButton).setVisibility(View.INVISIBLE);
         findViewById(R.id.edit_group_addMemberButton).setVisibility(View.INVISIBLE);
         findViewById(R.id.edit_group_memberSearchWorkingGif).setVisibility(View.INVISIBLE);
         findViewById(R.id.edit_group_searchMemberButton).setVisibility(View.VISIBLE);
         findViewById(R.id.edit_group_memberSearchText).setFocusable(true);
-        ((EditText)findViewById(R.id.edit_group_memberSearchText)).setText("");
+        ((EditText) findViewById(R.id.edit_group_memberSearchText)).setText("");
 
     }
 
-    public void addMember(View view){
+    public void addMember(View view) {
         selectedGroup.addUser(lastSearchedUser);
         spinnerAdapter.notifyDataSetChanged();
         cancelFoundMember(null);
     }
 
 
-    public void editGroupName(View view){
+    public void editGroupName(View view) {
         EditText groupName = findViewById(R.id.edit_group_current_name);
         groupName.setFocusableInTouchMode(true);
         groupName.setFocusable(true);
         groupName.requestFocus();
     }
 
-    public void editGroupDescription(View view){
+    public void editGroupDescription(View view) {
         EditText groupDescription = findViewById(R.id.edit_group_edit_description_text);
         groupDescription.setFocusableInTouchMode(true);
         groupDescription.setFocusable(true);
