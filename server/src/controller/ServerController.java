@@ -17,7 +17,6 @@ import shared.transferable.*;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -38,7 +37,6 @@ public class ServerController implements ClientListener {
         messageHandler = new MessageHandler();
         Thread t1 = new Thread(messageHandler);
         t1.start();
-
     }
 
     @Override
@@ -57,23 +55,20 @@ public class ServerController implements ClientListener {
 
     public void sendReply(Message reply) {
         ClientHandler client = onlineClients.get(reply.getUser());
-        client.addToOutgoingMessages(reply);
+        if (client != null) {
+            client.addToOutgoingMessages(reply);
+        }
     }
 
-    public void sendReplyToGroup(GenericID groupId){
+    public void notifyGroupChanges(Group group) {
+        ArrayList<User> members = group.getUsers();
+        ArrayList<Transferable> data = new ArrayList<>();
+        data.add(group);
 
-    }
-
-    public void notifyGroupChanges(Group group){
-    ArrayList<User> members = group.getUsers();
-    ArrayList<Transferable> data = new ArrayList<>();
-    data.add(group);
-
-        for (User u : members){
-        Message message = new Message(NetCommands.updateGroup,u,data);
+        for (User u : members) {
+            Message message = new Message(NetCommands.updateGroup, u, data);
             sendReply(message);
         }
-
     }
 
     public void handleClientTask(Message msg) {
@@ -88,14 +83,17 @@ public class ServerController implements ClientListener {
                 registerUser(msg);
                 break;
             case registerNewGroup:
+                registerNewGroup(msg);
+                break;
+            case updateGroup:
                 updateGroup(msg);
                 break;
-            case addNewChore:
-              //  addNewChore(msg);
-                break;
-            case addNewReward:
-               // addNewReward(msg);
-                break;
+//            case addNewChore:
+//                  addNewChore(msg);
+//                break;
+//            case addNewReward:
+//                 addNewReward(msg);
+//                break;
             default:
                 //TODO:  kod för default case. Vad kan man skriva här?
                 break;
@@ -115,7 +113,6 @@ public class ServerController implements ClientListener {
         if (registeredUsers.userNameAvailable(request.getUser().getUsername())) {
             if (request.getUser().getPassword() != "") {
                 registeredUsers.writeUserToFile(request.getUser());
-
                 reply = new Message(NetCommands.registrationOk, request.getUser(), new ArrayList<>());
                 sendReply(reply);
             }
@@ -135,31 +132,32 @@ public class ServerController implements ClientListener {
      * @param request
      */
 
-    public void updateGroup (Message request) {
+    public void registerNewGroup(Message request) {
         Message reply = null;
         Group group = (Group) request.getData().get(0);
 
-        if (registeredGroups.groupIdAvailable(group.getGroupID()))
-        {
+        if (registeredGroups.groupIdAvailable(group.getGroupID())) {
             registeredGroups.updateGroup(group);
             ArrayList<User> members = group.getUsers();
             GenericID groupID = group.getGroupID();
             for (User u : members) {
                 u.addGroupMembership(groupID);
+                registeredUsers.updateUser(u);
             }
             reply = new Message(NetCommands.newGroupOk, request.getUser(), new ArrayList<>());
             sendReply(reply);
             notifyGroupChanges(group);
-
-        } else{
-            ErrorMessage errorMessage = new ErrorMessage("Vad kan gå fel vid skapande av grupp?"); //FixMe: felmeddelandetext?
+        } else {
+            ErrorMessage errorMessage = new ErrorMessage("Registrering av grupp misslyckades.");
             reply = new Message(NetCommands.newGroupDenied, request.getUser(), errorMessage);
             sendReply(reply);
         }
+    }
 
-
-
-
+    public void updateGroup(Message request) {
+        Group group = (Group) request.getData().get(0);
+        registeredGroups.updateGroup(group);
+        notifyGroupChanges(group);
     }
 
   /*  //TODO: skicka svar till klienten
@@ -174,6 +172,7 @@ public class ServerController implements ClientListener {
         registeredGroups.updateGroup(request.getGroup());
     }
 */
+
     /**
      * Inner class MessageHandler handles the incoming messages from the client one at a time.
      */
