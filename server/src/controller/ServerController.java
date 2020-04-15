@@ -71,7 +71,7 @@ public class ServerController implements ClientListener {
                 registerUser(msg);
                 break;
             case registerNewGroup:
-                registerNewGroup(msg);
+                updateGroup(msg);
                 break;
             case addNewChore:
                 addNewChore(msg);
@@ -118,11 +118,11 @@ public class ServerController implements ClientListener {
      * @param request
      */
 
-    public void registerNewGroup(Message request) {
+    public void updateGroup (Message request) {
         Message reply = null;
 
         if (registeredGroups.groupIdAvailable(request.getGroup().getGroupID())) {
-            registeredGroups.writeGroupToFile(request.getGroup());
+            registeredGroups.updateGroup(request.getGroup());
             ArrayList<User> members = request.getGroup().getUsers();
             GenericID groupID = request.getGroup().getGroupID();
             for (User u : members) {
