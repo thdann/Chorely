@@ -74,14 +74,15 @@ public class RegisterActivity extends AppCompatActivity implements UpdatableActi
     }
 
     @Override
-    public void UpdateActivity() {
+    public void updateActivity() {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 if(BridgeInstances.getModel().isConnected()){
                     if(BridgeInstances.getModel().isLoggedIn()) {
-                        Intent intent = new Intent(RegisterActivity.this, CreateGroupActivity.class);
+                        Intent intent = new Intent(RegisterActivity.this, ManageGroupsActivity.class);
                         startActivity(intent);
+                        finish();
                     }
                     else {
                         findViewById(R.id.username).setVisibility(View.VISIBLE);

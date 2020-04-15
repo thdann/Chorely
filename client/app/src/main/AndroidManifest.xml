@@ -12,21 +12,26 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.ConnectActivity"
-            android:label="@string/connecting">
+        <activity android:name=".activities.CreateEditGroupActivity"></activity>
+        <activity
+            android:name=".activities.ConnectActivity"
+            android:label="@string/app_name">
+
+        </activity>
+        <activity
+            android:name=".activities.ManageGroupsActivity"
+            android:label="@string/label_groups" />
+        <activity
+            android:name=".activities.RegisterActivity"
+            android:label="@string/register_title"
+            android:parentActivityName=".activities.MainActivity" />
+        <activity
+            android:name=".activities.MainActivity"
+            android:label="@string/label_welcome">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity android:name=".activities.CreateGroupActivity"
-            android:label="@string/label_groups"/>
-        <activity android:name=".activities.RegisterActivity"
-            android:parentActivityName=".activities.MainActivity"
-            android:label="@string/register_title"/>
-        <activity android:name=".activities.MainActivity"
-            android:label="@string/label_welcome">
         </activity>
     </application>
 

@@ -1,11 +1,3 @@
-/**
- * This is the client class for networking.
- *
- * @version 2.0
- * @author Timothy Denison, Fredrik Jeppsson
- */
-
-
 package com.mau.chorely.model;
 
 import shared.transferable.Message;
@@ -20,15 +12,21 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.LinkedBlockingDeque;
 
+/**
+ * This is the client class for networking.
+ *
+ * @author Fredrik Jeppsson
+ * @version 2.0
+ */
 public class ClientNetworkManager {
     private static final int SERVER_PORT = 6583;
     private static final String SERVER_IP = "10.0.2.2";
     private volatile boolean connected = false;
     private LinkedBlockingDeque<Message> outBoundQueue = new LinkedBlockingDeque<>();
-    private NetworkListener model;
+    private Model model;
     private ConnectionHandler connectionHandler = new ConnectionHandler();
 
-    public ClientNetworkManager(NetworkListener model) {
+    public ClientNetworkManager(Model model) {
         this.model = model;
         Thread thread = new Thread(connectionHandler);
         thread.start();
@@ -99,8 +97,6 @@ public class ClientNetworkManager {
                     model.handleTask((Message) input.readObject());
                 }
             } catch (IOException e) {
-                // When the connection fails, readObject() will throw an IOException, breaking
-                // us out of the while loop.
                 System.out.println(new Date() + "Network: closed input handler with IOException.");
             } catch (ClassNotFoundException e) {
                 // We should only get here if we have a bug in the program that makes
@@ -123,7 +119,6 @@ public class ClientNetworkManager {
             }
         }
     }
-
 
     private class OutputHandler implements Runnable {
         private final Socket socket;
