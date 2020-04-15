@@ -38,6 +38,9 @@ public class RegisteredGroups {
      */
 
     public void writeGroupToFile(Group group) {
+        // todo: filename is incorrect.
+        // group.getGroupID returns a string on this format:
+        // shared.transferable.GenericID@d223774f
         String filename = String.format("%s%s.dat", filePath, group.getGroupID());
         try (ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filename)))) {
             oos.writeObject(group);

@@ -37,7 +37,6 @@ public class ServerController implements ClientListener {
         messageHandler = new MessageHandler();
         Thread t1 = new Thread(messageHandler);
         t1.start();
-
     }
 
     @Override
@@ -56,7 +55,20 @@ public class ServerController implements ClientListener {
 
     public void sendReply(Message reply) {
         ClientHandler client = onlineClients.get(reply.getUser());
-        client.addToOutgoingMessages(reply);
+        if (client != null) {
+            client.addToOutgoingMessages(reply);
+        }
+    }
+
+    public void notifyGroupChanges(Group group) {
+        ArrayList<User> members = group.getUsers();
+        ArrayList<Transferable> data = new ArrayList<>();
+        data.add(group);
+
+        for (User u : members) {
+            Message message = new Message(NetCommands.updateGroup, u, data);
+            sendReply(message);
+        }
     }
 
     public void handleClientTask(Message msg) {
@@ -73,12 +85,15 @@ public class ServerController implements ClientListener {
             case registerNewGroup:
                 registerNewGroup(msg);
                 break;
-            case addNewChore:
-                addNewChore(msg);
+            case updateGroup:
+                updateGroup(msg);
                 break;
-            case addNewReward:
-                addNewReward(msg);
-                break;
+//            case addNewChore:
+//                  addNewChore(msg);
+//                break;
+//            case addNewReward:
+//                 addNewReward(msg);
+//                break;
             default:
                 //TODO:  kod för default case. Vad kan man skriva här?
                 break;
@@ -98,7 +113,6 @@ public class ServerController implements ClientListener {
         if (registeredUsers.userNameAvailable(request.getUser().getUsername())) {
             if (request.getUser().getPassword() != "") {
                 registeredUsers.writeUserToFile(request.getUser());
-
                 reply = new Message(NetCommands.registrationOk, request.getUser(), new ArrayList<>());
                 sendReply(reply);
             }
@@ -120,27 +134,33 @@ public class ServerController implements ClientListener {
 
     public void registerNewGroup(Message request) {
         Message reply = null;
+        Group group = (Group) request.getData().get(0);
 
-        if (registeredGroups.groupIdAvailable(request.getGroup().getGroupID())) {
-            registeredGroups.writeGroupToFile(request.getGroup());
-            ArrayList<User> members = request.getGroup().getUsers();
-            GenericID groupID = request.getGroup().getGroupID();
+        if (registeredGroups.groupIdAvailable(group.getGroupID())) {
+            registeredGroups.updateGroup(group);
+            ArrayList<User> members = group.getUsers();
+            GenericID groupID = group.getGroupID();
             for (User u : members) {
                 u.addGroupMembership(groupID);
+                registeredUsers.updateUser(u);
             }
             reply = new Message(NetCommands.newGroupOk, request.getUser(), new ArrayList<>());
-
+            sendReply(reply);
+            notifyGroupChanges(group);
         } else {
-            ErrorMessage errorMessage = new ErrorMessage("Vad kan gå fel vid skapande av grupp?"); //FixMe: felmeddelandetext?
+            ErrorMessage errorMessage = new ErrorMessage("Registrering av grupp misslyckades.");
             reply = new Message(NetCommands.newGroupDenied, request.getUser(), errorMessage);
-
+            sendReply(reply);
         }
-
-        sendReply(reply);
-
     }
 
-    //TODO: skicka svar till klienten
+    public void updateGroup(Message request) {
+        Group group = (Group) request.getData().get(0);
+        registeredGroups.updateGroup(group);
+        notifyGroupChanges(group);
+    }
+
+  /*  //TODO: skicka svar till klienten
     public void addNewChore(Message request) {
         request.getGroup().addChore(request.getChore()); //TODO: Här la jag till en getChore i Message och hämtar, FEL?
         registeredGroups.updateGroup(request.getGroup());
@@ -151,6 +171,7 @@ public class ServerController implements ClientListener {
         request.getGroup().addReward(request.getReward()); //TODO: Här la jag till en getReward i Message och hämtar, FEL?
         registeredGroups.updateGroup(request.getGroup());
     }
+*/
 
     /**
      * Inner class MessageHandler handles the incoming messages from the client one at a time.
