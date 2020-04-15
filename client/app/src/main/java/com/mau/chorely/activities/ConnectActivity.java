@@ -15,14 +15,12 @@ public class ConnectActivity extends AppCompatActivity implements UpdatableActiv
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         BridgeInstances.getPresenter().register(this);
-        //setContentView(R.layout.create_edit_group);
         setContentView(R.layout.activity_connect2);
         updateActivity();
     }

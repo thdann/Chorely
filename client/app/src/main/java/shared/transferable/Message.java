@@ -28,6 +28,10 @@ public class Message implements Transferable {
         this.errorMessage = errorMessage;
     }
 
+    public void setCommand(NetCommands command){
+        this.command = command;
+    }
+
     public NetCommands getCommand() {
         return command;
     }
