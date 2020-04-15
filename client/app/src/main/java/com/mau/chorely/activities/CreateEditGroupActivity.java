@@ -40,8 +40,6 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_edit_group);
-
-
     }
 
     @Override
@@ -81,12 +79,14 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
                             findViewById(R.id.edit_group_addMemberButton).setVisibility(View.VISIBLE);
                             findViewById(R.id.edit_group_memberSearchWorkingGif).setVisibility(View.INVISIBLE);
                             findViewById(R.id.edit_group_memberSearchText).setFocusable(false);
+                            findViewById(R.id.edit_group_memberSearchText).setFocusableInTouchMode(false);
                         } else {
                             findViewById(R.id.edit_group_memberSearchCancelButton).setVisibility(View.INVISIBLE);
                             findViewById(R.id.edit_group_addMemberButton).setVisibility(View.INVISIBLE);
                             findViewById(R.id.edit_group_memberSearchWorkingGif).setVisibility(View.INVISIBLE);
                             findViewById(R.id.edit_group_searchMemberButton).setVisibility(View.VISIBLE);
                             findViewById(R.id.edit_group_memberSearchText).setFocusable(true);
+                            findViewById(R.id.edit_group_memberSearchText).setFocusableInTouchMode(true);
                         }
                     }
                 } else{
@@ -105,7 +105,6 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
                 Toast.makeText(CreateEditGroupActivity.this, message, Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
     @Override
@@ -124,13 +123,11 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
     }
 
     private void initActivity(){
-
         if(selectedGroup != null) {
             EditText groupName = (EditText)findViewById(R.id.edit_group_current_name);
             groupName.setText(selectedGroup.getName());
             groupName.setFocusable(false);
             groupName.setFocusableInTouchMode(false);
-
             EditText groupDescription = (EditText)findViewById(R.id.edit_group_edit_description_text);
             groupDescription.setText(selectedGroup.getDescription());
             groupDescription.setFocusable(false);
@@ -220,7 +217,4 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
         groupDescription.setFocusable(true);
         groupDescription.requestFocus();
     }
-
-
-
 }
