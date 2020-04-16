@@ -8,6 +8,10 @@ public class Message implements Transferable {
     private List<Transferable> data;
     private ErrorMessage errorMessage;
 
+    public Message(NetCommands command, User user) {
+        this.command = command;
+        this.user = user;
+    }
 
     public Message(NetCommands command, User user, List<Transferable> data) {
         this.command = command;
