@@ -17,15 +17,9 @@ import java.util.concurrent.LinkedBlockingDeque;
  * This class is a bit of a mix between a controller and a model class.
  * It will together with the different activities hold most, if not all business logic.
  * The focus of the class is to recieve requests from both the activities, and the network, in the
- * form of arraylists with a netCommand on index 0.
- * <p>
- * When a request is made from an activity, the model will block the thread from which the request was
- * sent, until it has received a response from the network, and the data is ready to be fetched.
- * <p>
- * There is also an unfinished implementation of error-handling, where all blocked threads will be released.
- *
+ * form of messages.
  * @author Timothy Denison
- * @version 1.0
+ * @version 2.0
  */
 public class Model {
     private LinkedBlockingDeque<Message> taskToHandle = new LinkedBlockingDeque<>();
@@ -43,14 +37,26 @@ public class Model {
         storage = new PersistentStorage(filesDir);
     }
 
+    /**
+     * Getter to get the stored client user.
+     * @return current user.
+     */
     public User getUser() {
         return storage.getUser();
     }
 
+    /**
+     * Getter to get all stored groups.
+     * @return arraylist of groups.
+     */
     public ArrayList<Group> getGroups() {
         return storage.getGroups();
     }
 
+    /**
+     * Method checks if there is a stored user on the client.
+     * @return true if there is a stored user.
+     */
     public boolean isLoggedIn() {
         return storage.getUser() != null;
     }
@@ -59,6 +65,10 @@ public class Model {
         return isConnected;
     }
 
+    /**
+     * This method returns a reference to the last searched user, and sets it to null.
+     * @return last searched User.
+     */
     public User removeLastSearchedUser(){
         User temp = lastSearchedUser;
         lastSearchedUser = null;
@@ -66,9 +76,8 @@ public class Model {
     }
 
     /**
-     * Callback method for any request that doesn't require a response.
-     *
-     * @param msg Message
+     * Callback method. Puts the message in a queue to be handled by the model thread.
+     * @param msg this is the task to handle, complete with a command, and data.
      */
 
     public void handleTask(Message msg) {
@@ -79,6 +88,10 @@ public class Model {
         }
     }
 
+    /**
+     * This method handles updates to existing groups on the client side.
+     * @param message message containing the group to update.
+     */
     private void updateGroup (Message message){
         if(storage.saveOrUpdateGroup((Group)message.getData().get(0))){
             message.setCommand(NetCommands.updateGroup);
@@ -88,6 +101,10 @@ public class Model {
         //If not, group is already up to date.
     }
 
+    /**
+     * This method handles creation of new groups on the client side.
+     * @param message message containing the new group.
+     */
     private void createGroup(Message message){
         if(storage.saveOrUpdateGroup((Group)message.getData().get(0))){
             network.sendMessage(message);
@@ -95,7 +112,8 @@ public class Model {
         }
     }
     /**
-     * Main model thread. Contains switch statement to handle all NetCommands
+     * Main model thread. This contains the main switch statement of the client, and all tasks
+     * are diverted throughout the application.
      */
     private class ModelThread implements Runnable {
         @Override

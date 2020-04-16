@@ -19,8 +19,11 @@ import com.mau.chorely.activities.utils.BridgeInstances;
 import java.util.ArrayList;
 
 import shared.transferable.Group;
-import shared.transferable.User;
 
+/**
+ * This is the activity to overview current groups and initiate creation of new ones.
+ * @author Timothy Denison
+ */
 public class ManageGroupsActivity extends AppCompatActivity implements UpdatableActivity {
     private RecyclerView mRecyclerView;
     private RecyclerViewAdapter mAdapter;
@@ -37,7 +40,6 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
         buildRecyclerView();
         updatedGroups = BridgeInstances.getModel().getGroups();
         updateGroupsList();
-        //mRecyclerView.setVisibility(View.INVISIBLE);
 
     }
 
@@ -54,22 +56,21 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
         BridgeInstances.getPresenter().deregisterForUpdates(this);
     }
 
+    /**
+     * Method to set menu layout file.
+     * @param menu reference to system created menu.
+     * @return Returns super response.
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * Method to initiate the recyclerView.
+     */
     private void buildRecyclerView(){
-        /*
-        groupList.add(new ListItem(R.drawable.ic_group_black_24dp, "Blabla", "Blaaaslfka\nflkasfadssss" , 3));
-        groupList.add(new ListItem(R.drawable.ic_group_black_24dp, "Blabla", "asdasdasd", 3));
-        groupList.add(new ListItem(R.drawable.ic_group_black_24dp, "Blabla", "Blaaaslfkasflkasf", 13));
-         */
-
-
-
-
         mRecyclerView = findViewById(R.id.recyclerViewGroups);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
@@ -86,7 +87,11 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
         });
     }
 
-
+    /**
+     * Method to handle action bar events.
+     * @param item Item that initiated event.
+     * @return Returns super response.
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -96,6 +101,10 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
         return super.onContextItemSelected(item);
     }
 
+    /**
+     * Interface method to toast activity.
+     * @param message Message to toast
+     */
     @Override
     public void doToast(final String message) {
         runOnUiThread(new Runnable() {
@@ -107,6 +116,9 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
         });
     }
 
+    /**
+     * Interface method to update activity.
+     */
     @Override
     public void updateActivity() {
         runOnUiThread(new Runnable() {
@@ -123,6 +135,10 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
         });
     }
 
+    /**
+     * Method to check if there is any updates to the client list of groups
+     * and if there is set them to the recyclerview.
+     */
     private void updateGroupsList(){
         if(updatedGroups != null){
             for (int i = 0; i< updatedGroups.size(); i++){

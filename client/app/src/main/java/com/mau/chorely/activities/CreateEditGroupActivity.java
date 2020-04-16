@@ -31,6 +31,10 @@ import shared.transferable.NetCommands;
 import shared.transferable.Transferable;
 import shared.transferable.User;
 
+/**
+ * This activity handles all creations of groups and editing to already existing groups.
+ * @author Timothy Denison
+ */
 public class CreateEditGroupActivity extends AppCompatActivity implements UpdatableActivity {
     private Group selectedGroup;
     private SpinnerAdapterMembers spinnerAdapter;
@@ -60,12 +64,20 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
         super.onStop();
     }
 
+    /**
+     * Method to set menu recource file.
+     * @param menu system set action-bar.
+     * @return super response.
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_create_edit, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * interface method to update activity.
+     */
     @Override
     public void updateActivity() {
         runOnUiThread(new Runnable() {
@@ -98,6 +110,10 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
 
     }
 
+    /**
+     * Interface method to toast user.
+     * @param message message to toast.
+     */
     @Override
     public void doToast(final String message) {
         runOnUiThread(new Runnable() {
@@ -108,6 +124,11 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
         });
     }
 
+    /**
+     * Callback for menu items
+     * @param item item clicked.
+     * @return super response.
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -117,12 +138,19 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Method to initiate spinner of group members.
+     */
     private void initSpinner() {
         Spinner memberSpinner = findViewById(R.id.spinnerMembers);
         spinnerAdapter = new SpinnerAdapterMembers(this, selectedGroup.getUsers());
         memberSpinner.setAdapter(spinnerAdapter);
     }
 
+    /**
+     * Method to put the activity in different initial states depending on if the user was sent here
+     * by selecting a group to edit, or by creating a new group.
+     */
     private void initActivity() {
         if (selectedGroup != null) {
             EditText groupName = (EditText) findViewById(R.id.edit_group_current_name);
@@ -145,6 +173,10 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
         }
     }
 
+    /**
+     * Method to save group. Invoked by menu button.
+     * If either description or name is empty the method will invoke a toast instead of saving.
+     */
     public void saveGroup() {
         String groupName = ((EditText) findViewById(R.id.edit_group_current_name)).getText().toString();
         String groupDescription = ((EditText) findViewById(R.id.edit_group_edit_description_text)).getText().toString();
@@ -171,6 +203,10 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
         }
     }
 
+    /**
+     * Method to remove a user from a group.
+     * @param view button pressed.
+     */
     public void removeMemberFromGroup(View view) {
         // TODO: 2020-04-12 POPUP DIALOG ask for confirmation?
         if (spinnerAdapter.getCount() > 0) {
@@ -183,6 +219,11 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
         }
     }
 
+    /**
+     * Method to handle search events.
+     * puts activity in a searching state in wait for reply.
+     * @param view Button clicked.
+     */
     public void searchForMember(View view) {
         String searchString = ((EditText)findViewById(R.id.edit_group_memberSearchText)).getText().toString();
         if (!searchString.equals("")) {
@@ -199,6 +240,10 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
         }
     }
 
+    /**
+     * Method to return activity to search state. Invoked by a clock on the cancel button.
+     * @param view button clicked.
+     */
     public void cancelFoundMember(View view) {
         lastSearchedUser = null;
         findViewById(R.id.edit_group_memberSearchCancelButton).setVisibility(View.INVISIBLE);
@@ -210,13 +255,20 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
 
     }
 
+    /**
+     * Method to handle clicks on add button.
+     * @param view
+     */
     public void addMember(View view) {
         selectedGroup.addUser(lastSearchedUser);
         spinnerAdapter.notifyDataSetChanged();
         cancelFoundMember(null);
     }
 
-
+    /**
+     * Method to handle click on edit name button.
+     * @param view Button klicked.
+     */
     public void editGroupName(View view) {
         EditText groupName = findViewById(R.id.edit_group_current_name);
         groupName.setFocusableInTouchMode(true);
@@ -224,6 +276,10 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
         groupName.requestFocus();
     }
 
+    /**
+     * Method to handle clicks on edit button for group description.
+     * @param view view clicked.
+     */
     public void editGroupDescription(View view) {
         EditText groupDescription = findViewById(R.id.edit_group_edit_description_text);
         groupDescription.setFocusableInTouchMode(true);

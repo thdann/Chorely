@@ -10,6 +10,12 @@ import com.mau.chorely.R;
 import com.mau.chorely.activities.interfaces.UpdatableActivity;
 import com.mau.chorely.activities.utils.BridgeInstances;
 
+/**
+ * This activity gets invoked if the client looses its connection to the server.
+ * The user is kept here until the connection is re-established, and is then sent to the
+ * previous activity in the backstack.
+ * @author Timothy denison
+ */
 public class ConnectActivity extends AppCompatActivity implements UpdatableActivity {
 
     @Override
