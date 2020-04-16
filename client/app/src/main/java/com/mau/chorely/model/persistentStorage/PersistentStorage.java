@@ -20,6 +20,11 @@ import java.util.Date;
 import shared.transferable.Group;
 import shared.transferable.User;
 
+/**
+ * This class handles all persistent storage of the client.
+ * It takes a reference to the application files directory upon creation.
+ * @author Timothy Denison
+ */
 public class PersistentStorage {
     private File filesDir;
     private static final String USER_FILE_NAME = "/user.cho";
@@ -27,12 +32,17 @@ public class PersistentStorage {
     private static File groupDir;
     private Group testGroup;
 
+    private PersistentStorage(){}
+
     public PersistentStorage(File filesDir) {
         this.filesDir = filesDir;
         userFile = new File(filesDir.getAbsolutePath() + USER_FILE_NAME);
     }
 
-
+    /**
+     * Method to update a saved user. (This is the user of the client.)
+     * @param user The new user.
+     */
     public void updateUser(User user) {
         if (userFile.exists()) {
             userFile.delete();
@@ -48,6 +58,10 @@ public class PersistentStorage {
     }
 
 
+    /**
+     * Method to get the saved user of the client.
+     * @return Returns the saved user if there is one. Otherwise null.
+     */
     public User getUser(){
         User user = null;
         if(userFile.exists()){
@@ -59,7 +73,7 @@ public class PersistentStorage {
                         "trying to read user." + e.getMessage());
             }
         }
-        // null is returned, if an exception is thrown or if there is no file saved.
+        // null is returned if an exception is thrown, or if there is no file saved.
         return user;
     }
 

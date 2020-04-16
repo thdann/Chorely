@@ -16,11 +16,22 @@ import java.util.ArrayList;
 
 import shared.transferable.User;
 
+/**
+ * This class handles the displaying of members inside the spinner in the CreateEditGroupActivity.
+ * @author Timothy Denison
+ */
 public class SpinnerAdapterMembers extends ArrayAdapter<User> {
     public SpinnerAdapterMembers(Context context, ArrayList<User> memberList){
         super(context, 0, memberList);
     }
 
+    /**
+     * This method sets the layout-resource for each item in the spinner.
+     * @param position position of the current item
+     * @param convertView layout of the current item.
+     * @param parent unknown. Probably the spinner itself, or the activity containing it.
+     * @return returns formatted view.
+     */
     private View initView(int position, @Nullable View convertView, @NonNull ViewGroup parent){
         if(convertView == null){
             convertView = LayoutInflater.from(getContext()).inflate(
@@ -35,12 +46,18 @@ public class SpinnerAdapterMembers extends ArrayAdapter<User> {
         return convertView;
     }
 
+    /**
+     *System callback, returns initview.
+     */
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         return initView(position, convertView, parent);
     }
 
+    /**
+     *System callback, returns initview.
+     */
     @Override
     public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         return initView(position, convertView, parent);
