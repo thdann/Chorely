@@ -8,6 +8,8 @@ public enum NetCommands implements Transferable {
     newGroupOk,
     newGroupDenied,
     addUserToGroup,
+    removeUserFromGroup,
+    updateGroup,
     addNewChore,
     newChoreOk,
     addNewReward,
@@ -17,9 +19,14 @@ public enum NetCommands implements Transferable {
     connectionStatus,
     notConnected,
     connected,
-
+    searchForUser,
+    userExists,
+    userDoesNotExist,
     connectionFailed,
     requestUserGroups,
     userHasNoGroup,
-    userHasGroupUpdate;
+    userHasGroupUpdate,
+
+    clientInternalGroupUpdate
+    ;
 }

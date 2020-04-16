@@ -11,19 +11,26 @@ import com.mau.chorely.R;
 import com.mau.chorely.activities.interfaces.UpdatableActivity;
 import com.mau.chorely.activities.utils.BridgeInstances;
 
+/**
+ * This is the main activity of the application. It launches the program and sends the user to
+ * the appropriate activity depending on the state of the application.
+ * @author Timothy Denidson, Fredrik Jeppson.
+ */
 public class MainActivity extends AppCompatActivity implements UpdatableActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //ModelInstances.getInstance();
+        BridgeInstances.getPresenter().register(this);
+        BridgeInstances.instantiateModel(getFilesDir()); // startar modellen.
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         BridgeInstances.getPresenter().register(this);
+        updateActivity();
     }
 
     @Override
@@ -32,20 +39,29 @@ public class MainActivity extends AppCompatActivity implements UpdatableActivity
         BridgeInstances.getPresenter().deregisterForUpdates(this);
     }
 
+    /**
+     * Interface method to update activity.
+     */
     @Override
-    public void UpdateActivity() {
-        if(BridgeInstances.getModel().isConnected()){
-
-        }
-        else{
+    public void updateActivity() {
+        if (BridgeInstances.getModel().isConnected()) {
+            if (BridgeInstances.getModel().isLoggedIn()) {
+                Intent intent = new Intent(this, ManageGroupsActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        } else {
             Intent intent = new Intent(this, ConnectActivity.class);
             startActivity(intent);
         }
     }
 
+    /**
+     * Interface method
+     * @param message message to toast
+     */
     @Override
     public void doToast(final String message) {
-
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -55,15 +71,17 @@ public class MainActivity extends AppCompatActivity implements UpdatableActivity
         });
     }
 
+    /**
+     * Method for handling clicks on register button.
+     * @param view an object containing the view that called the method.
+     */
     public void register(View view) {
         Intent intent = new Intent(this, RegisterActivity.class);
-
         startActivity(intent);
     }
 
     public void login(View view) {
     }
-
 
 
 }

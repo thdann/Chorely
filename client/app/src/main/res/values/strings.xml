@@ -1,12 +1,25 @@
 <resources>
     <string name="app_name">Chorely</string>
     <string name="retrying"> Retrying.. </string>
-    <string name="register_title" >Register </string>
-    <string name="label_welcome" >Welcome</string>
-    <string name="label_groups">Manage Groups</string>
-    <string name="noGroup">You are not a member of a group yet. Please create a group
-    to start.</string>
-    <string name="groups">Your groups</string>
-    <string name="createGroup"> Create group </string>
-    <string name="connecting">Connecting</string>
+    <string name="register_title">Registrering </string>
+    <string name="label_welcome">Välkommen</string>
+    <string name="label_groups">Hantera grupper</string>
+    <string name="noGroup">Du är ännu inte medlem i någon grupp. Skapa en ny grupp för att börja
+    använda Chorely.</string>
+    <string name="groups">Dina grupper</string>
+    <string name="createGroup"> Skapa grupp </string>
+    <string name="connecting">Ansluter</string>
+    <string name="groupName">Gruppnamn:</string>
+    <string name="hintGroupName">Fyll i ett gruppnamn</string>
+    <string name="groupDescription">Beskrivning </string>
+    <string name="descriptionToolTip">Lägg till en beskrivning för din grupp.</string>
+    <string name="saveChanges">Spara</string>
+    <string name="members">Medlemmar:</string>
+    <string name="reconnecting">Återansluter till servern</string>
+    <string name="editGroupTitle">Redigera grupp</string>
+    <string name="textAddMembers">Lägg till ny:</string>
+    <string name="hintSearchMember">Sök efter medlem</string>
+    <string name="deleteMember">Ta bort medlem</string>
+    <string name="leaveGroup">Lämna grupp</string>
+    <string name="deleteGroup">Radera grupp</string>
 </resources>

@@ -5,11 +5,13 @@ import java.util.List;
 public class Message implements Transferable {
     private NetCommands command;
     private User user;
-    private Group group;
     private List<Transferable> data;
     private ErrorMessage errorMessage;
-    private Chore chore;
-    private Reward reward;
+
+    public Message(NetCommands command, User user) {
+        this.command = command;
+        this.user = user;
+    }
 
     public Message(NetCommands command, User user, List<Transferable> data) {
         this.command = command;
@@ -30,6 +32,10 @@ public class Message implements Transferable {
         this.errorMessage = errorMessage;
     }
 
+    public void setCommand(NetCommands command){
+        this.command = command;
+    }
+
     public NetCommands getCommand() {
         return command;
     }
@@ -38,9 +44,6 @@ public class Message implements Transferable {
         return user;
     }
 
-    public Group getGroup() {
-        return group;
-    }
 
     public ErrorMessage getErrorMessage() {
         return errorMessage;
@@ -50,11 +53,5 @@ public class Message implements Transferable {
         return data;
     }
 
-    public Chore getChore() {
-        return chore;
-    }
 
-    public Reward getReward() {
-        return reward;
-    }
 }

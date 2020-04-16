@@ -1,5 +1,7 @@
 package shared.transferable;
 
+
+
 /**
  * Chore is a class that represent a chore in the application.
  * version 1.0 2020-04-08
@@ -27,7 +29,7 @@ public class Chore implements Transferable {
         return name;
     }
 
-    public int Score() {
+    public int getScore() {
         return score;
     }
     public void setScore(int Score) {
@@ -36,5 +38,15 @@ public class Chore implements Transferable {
 
     public String getDescription() {
         return description;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof Chore){
+            return (((Chore) obj).getDescription().equals(description) &&
+                    ((Chore) obj).getName().equals(name) && ((Chore) obj).getScore() == score);
+        }
+        else
+            return false;
     }
 }

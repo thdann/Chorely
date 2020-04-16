@@ -1,24 +1,6 @@
-/**
- * This class is a bit of a mix between a controller and a model class.
- * It will together with the different activities hold most, if not all business logic.
- * The focus of the class is to recieve requests from both the activities, and the network, in the
- * form of arraylists with a netCommand on index 0.
- *
- * When a request is made from an activity, the model will block the thread from which the request was
- * sent, until it has received a response from the network, and the data is ready to be fetched.
- *
- * There is also an unfinished implementation of error-handling, where all blocked threads will be released.
- *
- * @version 1.0
- * @author Timothy Denison
- */
 
 package com.mau.chorely.model;
 
-
-import android.widget.Toast;
-
-import shared.transferable.ErrorMessage;
 import shared.transferable.Group;
 import shared.transferable.Message;
 import shared.transferable.NetCommands;
@@ -27,87 +9,137 @@ import shared.transferable.User;
 import com.mau.chorely.activities.utils.BridgeInstances;
 import com.mau.chorely.model.persistentStorage.PersistentStorage;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingDeque;
 
-
-public class Model implements NetworkListener{
-
-    public static final int COMMAND_ELEMENT = 0;
-    public static final int ID_ELEMENT = 1;
+/**
+ * This class is a bit of a mix between a controller and a model class.
+ * It will together with the different activities hold most, if not all business logic.
+ * The focus of the class is to recieve requests from both the activities, and the network, in the
+ * form of messages.
+ * @author Timothy Denison
+ * @version 2.0
+ */
+public class Model {
     private LinkedBlockingDeque<Message> taskToHandle = new LinkedBlockingDeque<>();
     private volatile boolean isLoggedIn = false;
     private volatile boolean isConnected = false;
+    private PersistentStorage storage;
     private ClientNetworkManager network;
-    private Thread modelThread = new Thread(new ModelThread());
-    private ErrorMessage errorMessage;
-    private PersistentStorage storage = new PersistentStorage();
-    private Model model;
-    public Model(){
-        System.out.println("Model created");
+    private User lastSearchedUser;
+    private Thread modelThread = new Thread(new ModelThread()); //TODO ändra konstruktion
+
+    private Model(){};
+    public Model(File filesDir) {
         network = new ClientNetworkManager(this);
         modelThread.start();
-        model = this;
+        storage = new PersistentStorage(filesDir);
     }
 
-    public User getUser(){
-        return null;
+    /**
+     * Getter to get the stored client user.
+     * @return current user.
+     */
+    public User getUser() {
+        return storage.getUser();
     }
 
-    public Group[] getGroups(){
-        return null;
+    /**
+     * Getter to get all stored groups.
+     * @return arraylist of groups.
+     */
+    public ArrayList<Group> getGroups() {
+        return storage.getGroups();
     }
 
-    public boolean isLoggedIn(){
-        return isLoggedIn;
+    /**
+     * Method checks if there is a stored user on the client.
+     * @return true if there is a stored user.
+     */
+    public boolean isLoggedIn() {
+        return storage.getUser() != null;
     }
 
-
-    public boolean isConnected(){
+    public boolean isConnected() {
         return isConnected;
     }
 
     /**
-     * Callback method for any request that doesn't require a response.
-      * @param msg Message
+     * This method returns a reference to the last searched user, and sets it to null.
+     * @return last searched User.
+     */
+    public User removeLastSearchedUser(){
+        User temp = lastSearchedUser;
+        lastSearchedUser = null;
+        return temp;
+    }
+
+    /**
+     * Callback method. Puts the message in a queue to be handled by the model thread.
+     * @param msg this is the task to handle, complete with a command, and data.
      */
 
-    @Override
     public void handleTask(Message msg) {
         try {
             taskToHandle.put(msg);
-        } catch (InterruptedException e){
+        } catch (InterruptedException e) {
             System.out.println("Error in model callback" + e.getMessage());
         }
     }
 
-
-
+    /**
+     * This method handles updates to existing groups on the client side.
+     * @param message message containing the group to update.
+     */
+    private void updateGroup (Message message){
+        if(storage.saveOrUpdateGroup((Group)message.getData().get(0))){
+            message.setCommand(NetCommands.updateGroup);
+            network.sendMessage(message);
+            BridgeInstances.getPresenter().updateCurrent();
+        }
+        //If not, group is already up to date.
+    }
 
     /**
-     * Main model thread. Contains switch statement to handle all NetCommands
+     * This method handles creation of new groups on the client side.
+     * @param message message containing the new group.
      */
-
-    private class ModelThread implements Runnable{
+    private void createGroup(Message message){
+        if(storage.saveOrUpdateGroup((Group)message.getData().get(0))){
+            network.sendMessage(message);
+            BridgeInstances.getPresenter().updateCurrent();
+        }
+    }
+    /**
+     * Main model thread. This contains the main switch statement of the client, and all tasks
+     * are diverted throughout the application.
+     */
+    private class ModelThread implements Runnable {
         @Override
         public void run() {
 
-
-
-
-            while (!Thread.interrupted()){
+            while (!Thread.interrupted()) {
                 try {
                     System.out.println("Model is blocking for new message");
-                    Message curWorkingOn = taskToHandle.take();
-                    System.out.println(curWorkingOn.getCommand());
-                    NetCommands command = curWorkingOn.getCommand();
-                    switch (command) {
+                    Message currentTask = taskToHandle.take();
+                    System.out.println(currentTask.getCommand());
+                    NetCommands command = currentTask.getCommand();
 
+                    switch (command) {
+                        case searchForUser:
+                            /*Falls through*/
                         case registerUser:
-                            network.sendMessage(curWorkingOn);
+                            network.sendMessage(currentTask);
+                            break;
+
+                        case clientInternalGroupUpdate:
+                            updateGroup(currentTask);
                             break;
 
                         case registrationOk:
                             isLoggedIn = true;
+                            storage.updateUser(currentTask.getUser());
                             BridgeInstances.getPresenter().updateCurrent();
                             break;
 
@@ -118,8 +150,7 @@ public class Model implements NetworkListener{
                         case connectionFailed:
                             isConnected = false;
                             BridgeInstances.getPresenter().updateCurrent();
-                            BridgeInstances.getPresenter().toastCurrent("Reconnecting to server.");
-
+                            BridgeInstances.getPresenter().toastCurrent("Återansluter till servern.");
                             break;
 
                         case connected:
@@ -127,16 +158,28 @@ public class Model implements NetworkListener{
                             BridgeInstances.getPresenter().updateCurrent();
                             break;
 
-                        case registrationDenied:
+                        case userExists:
+                            lastSearchedUser = (User) currentTask.getData().get(0);
                             BridgeInstances.getPresenter().updateCurrent();
-                            BridgeInstances.getPresenter().toastCurrent(curWorkingOn.getErrorMessage().getMessage());
+                            BridgeInstances.getPresenter().toastCurrent("Användare hittad!");
                             break;
+
+                        case registerNewGroup:
+                            createGroup(currentTask);
+                            break;
+
+                        case registrationDenied:
+                            /*Falls through*/
+                        case userDoesNotExist:
+                            BridgeInstances.getPresenter().updateCurrent();
+                            BridgeInstances.getPresenter().toastCurrent(currentTask.getErrorMessage().getMessage());
+                            break;
+
                         default:
                             System.out.println("Unrecognized command: " + command);
-                            BridgeInstances.getPresenter().toastCurrent("Hejsan!!!!");
-
+                            BridgeInstances.getPresenter().toastCurrent("Unknown command: " +command);
                     }
-                } catch (InterruptedException e){
+                } catch (InterruptedException e) {
                     System.out.println("Thread interrupted in main model queue");
                 }
             }
