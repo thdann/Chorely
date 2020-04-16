@@ -28,11 +28,12 @@ public class Model {
     private PersistentStorage storage;
     private ClientNetworkManager network;
     private User lastSearchedUser;
-    private Thread modelThread = new Thread(new ModelThread()); //TODO ändra konstruktion
+    private Thread modelThread; // TODO: 2020-04-16 Se över om vi ska stoppa den hör tråden nånstans, annars behövs ingen referens. 
 
     private Model(){};
     public Model(File filesDir) {
         network = new ClientNetworkManager(this);
+        modelThread = new Thread(new ModelThread());
         modelThread.start();
         storage = new PersistentStorage(filesDir);
     }
