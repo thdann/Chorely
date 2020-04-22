@@ -4,7 +4,7 @@ package controller;
  * ServerController handles the over all logic on the server side.
  * The class contains the main method that starts the program and makes it possible for a client
  * to obtain a connection by creating an instance of ServerNetwork.
- * version 1.0 2020-03-23
+ * version 3.0 2020-04-22
  *
  * @autor Angelica Asplund, Emma Svensson and Theresa Dannberg
  */
@@ -27,7 +27,7 @@ public class ServerController implements ClientListener {
     private RegisteredUsers registeredUsers;
     private RegisteredGroups registeredGroups;
     private ServerNetwork network;
-    private LinkedBlockingQueue<Message> clientTaskBuffer; //TODO: här läggs alla inkommande arraylists från klienterna.
+    private LinkedBlockingQueue<Message> clientTaskBuffer; 
     private MessageHandler messageHandler;
     private ConcurrentHashMap<User, ClientHandler> onlineClients = new ConcurrentHashMap<>();
 
