@@ -80,5 +80,17 @@ public class RegisteredUsers {
 
     }
 
+    /**
+     * Looks for a requested user among the registered users.
+     * @param user the requested user/username to look for
+     * @return the requested user if it exists, otherwise return null
+     */
+    
+    public User findUser(User user) {
+        if (userNameAvailable(user.getUsername())) {
+            return null;
+        }
+        return user;
+    }
 
 }
