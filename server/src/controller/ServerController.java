@@ -178,6 +178,7 @@ public class ServerController implements ClientListener {
             ErrorMessage errorMessage = new ErrorMessage("Användaren finns inte");
             reply = new Message(NetCommands.userDoesNotExist, request.getUser(), errorMessage);
         }
+        sendReply(reply);
 
     }
 
