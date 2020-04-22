@@ -93,7 +93,7 @@
         android:layout_marginTop="10dp"
         android:background="@drawable/edittext_background"
         android:ems="10"
-        android:gravity="bottom"
+        android:gravity="top"
         android:hint="@string/descriptionToolTip"
         android:inputType="textMultiLine"
         android:textColor="@color/btnColor"

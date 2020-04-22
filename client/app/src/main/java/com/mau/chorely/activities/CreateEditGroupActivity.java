@@ -190,6 +190,8 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
                 }
                 Model model = BridgeInstances.getModel();
                 ArrayList<Transferable> data = new ArrayList<>();
+                selectedGroup.setName(groupName);
+                selectedGroup.setDescription(groupDescription);
                 data.add(selectedGroup);
                 Message message = new Message(command, model.getUser(), data);
                 model.handleTask(message);
@@ -209,12 +211,13 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
      */
     public void removeMemberFromGroup(View view) {
         // TODO: 2020-04-12 POPUP DIALOG ask for confirmation?
-        if (spinnerAdapter.getCount() > 0) {
+        if (spinnerAdapter.getCount() > 1) {
             int selectedUserIndex = ((Spinner) findViewById(R.id.spinnerMembers)).getSelectedItemPosition();
             selectedGroup.getUsers().remove(selectedUserIndex);
             spinnerAdapter.notifyDataSetChanged();
         } else {
-            Toast.makeText(this, "Det finns ingen användare att ta bort.",
+            Toast.makeText(this, "Varje grupp måste ha minst en användare. Om du vill " +
+                            "radera gruppen kan du göra det i menyn.",
                     Toast.LENGTH_SHORT).show();
         }
     }
@@ -241,7 +244,7 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
     }
 
     /**
-     * Method to return activity to search state. Invoked by a clock on the cancel button.
+     * Method to return activity to searchable state. Invoked by a clock on the cancel button.
      * @param view button clicked.
      */
     public void cancelFoundMember(View view) {

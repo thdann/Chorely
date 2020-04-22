@@ -22,8 +22,14 @@ public class User implements Transferable {
         return password;
     }
 
+    public void removeGroupMembership(GenericID  id){
+        groups.remove(id);
+    }
+
     public void addGroupMembership(GenericID newGroup) {
-        groups.add(newGroup);
+        if(!groups.contains(newGroup)) {
+            groups.add(newGroup);
+        }
     }
 
     @Override
