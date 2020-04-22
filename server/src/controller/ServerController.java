@@ -17,6 +17,8 @@ import shared.transferable.*;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -88,6 +90,8 @@ public class ServerController implements ClientListener {
             case updateGroup:
                 updateGroup(msg);
                 break;
+            case searchForUser:
+                searchForUser(msg);
 //            case addNewChore:
 //                  addNewChore(msg);
 //                break;
@@ -113,7 +117,7 @@ public class ServerController implements ClientListener {
         if (registeredUsers.userNameAvailable(request.getUser().getUsername())) {
             if (request.getUser().getPassword() != "") {
                 registeredUsers.writeUserToFile(request.getUser());
-                reply = new Message(NetCommands.registrationOk, request.getUser(), new ArrayList<>());
+                reply = new Message(NetCommands.registrationOk, request.getUser());
                 sendReply(reply);
             }
         } else {
@@ -144,7 +148,7 @@ public class ServerController implements ClientListener {
                 u.addGroupMembership(groupID);
                 registeredUsers.updateUser(u);
             }
-            reply = new Message(NetCommands.newGroupOk, request.getUser(), new ArrayList<>());
+            reply = new Message(NetCommands.newGroupOk, request.getUser());
             sendReply(reply);
             notifyGroupChanges(group);
         } else {
@@ -158,6 +162,23 @@ public class ServerController implements ClientListener {
         Group group = (Group) request.getData().get(0);
         registeredGroups.updateGroup(group);
         notifyGroupChanges(group);
+    }
+
+    public void searchForUser(Message request) {
+        Message reply = null;
+        User dummyUser = (User) request.getData().get(0);
+
+        if (registeredUsers.findUser(dummyUser) != null) {
+            //Användaren finns
+            User foundUser = registeredUsers.findUser(dummyUser);
+            List<Transferable> data = Arrays.asList(new Transferable[]{foundUser});
+            reply = new Message(NetCommands.userExists, request.getUser(), data);
+        } else {
+            //null i return - användaren finns inte, skicka errormessage.
+            ErrorMessage errorMessage = new ErrorMessage("Användaren finns inte");
+            reply = new Message(NetCommands.userDoesNotExist, request.getUser(), errorMessage);
+        }
+
     }
 
   /*  //TODO: skicka svar till klienten
