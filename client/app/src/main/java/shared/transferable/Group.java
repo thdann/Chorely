@@ -64,6 +64,7 @@ public class Group implements Transferable {
     public void setDescription (String description){
         this.description = description;
     }
+
     public void deleteUser(User user) {
         users.remove(user);
     }
