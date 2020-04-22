@@ -161,7 +161,17 @@ public class ServerController implements ClientListener {
     public void updateGroup(Message request) {
         Group group = (Group) request.getData().get(0);
         registeredGroups.updateGroup(group);
+        updateUsersGroups(group);
         notifyGroupChanges(group);
+    }
+
+    public void updateUsersGroups(Group group) {
+        ArrayList<User> members = group.getUsers();
+        GenericID id = group.getGroupID();
+        for (User u : members) {
+            u.addGroupMembership(id);
+            registeredUsers.updateUser(u);
+        }
     }
 
     public void searchForUser(Message request) {
