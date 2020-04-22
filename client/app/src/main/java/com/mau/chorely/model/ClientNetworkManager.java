@@ -13,10 +13,11 @@ import java.util.Date;
 import java.util.concurrent.LinkedBlockingDeque;
 
 /**
- * This is the client class for networking.
- *
  * @author Fredrik Jeppsson
  * @version 2.0
+ * This class handles the network connection between the client and the server. The class is
+ * designed to automatically reconnect whenever the connection to the server is lost. This is
+ * achieved by using three different threads: ClientNetworkManager, InputHandler, OutputHandler.
  */
 public class ClientNetworkManager {
     private static final int SERVER_PORT = 6583;
@@ -32,10 +33,22 @@ public class ClientNetworkManager {
         thread.start();
     }
 
+    /**
+     * Called when a message needs to be sent to the server. The message is put in an output
+     * queue for later processing by the OutputHandler.
+     * @param msg the Message that is sent to the server.
+     */
     public void sendMessage(Message msg) {
         outBoundQueue.add(msg);
     }
 
+    /**
+     * Connects to the server and spawns one thread that handles input and one
+     * thread that handles output. As long as the connection is alive, this thread waits. When
+     * the connection is lost, the thread wakes up and reestablishes the connection.
+     * Once a connection to the server has been successfully established, the Model class is
+     * notified.
+     */
     private class ConnectionHandler implements Runnable {
         private synchronized void sleepConnectionHandler() {
             try {
@@ -64,7 +77,6 @@ public class ClientNetworkManager {
                         connected = true;
                         model.handleTask(new Message(NetCommands.connected, null, new ArrayList<Transferable>()));
                     } catch (IOException e1) {
-                        // This exception happens if the socket has failed to connect.
                         System.out.println(new Date() + " Network: failed to connect...");
                         try {
                             Thread.sleep(500);
@@ -79,6 +91,14 @@ public class ClientNetworkManager {
         }
     }
 
+    /**
+     * Continuously reads Message objects from the input stream. If the underlying socket
+     * connection is lost, an IOException will cause the reading loop to finish. Important
+     * cleanup tasks are then performed, including interrupting the OutputHandler from waiting
+     * on its output queue, and notifying the Model class that the connection has been lost.
+     * It wakes up the ClientNetworkManager thread, causing it to attempt to reestablish the
+     * connection.
+     */
     private class InputHandler implements Runnable {
         private final ObjectInputStream input;
         private final Thread outputThread;
@@ -99,27 +119,28 @@ public class ClientNetworkManager {
             } catch (IOException e) {
                 System.out.println(new Date() + "Network: closed input handler with IOException.");
             } catch (ClassNotFoundException e) {
-                // We should only get here if we have a bug in the program that makes
-                // serialization of Message fail.
                 throw new RuntimeException(e);
             } finally {
                 try {
                     socket.close();
                 } catch (IOException ignore) {
-                    // Socket might already have been closed by the OutputHandler.
                 }
                 connected = false;
-                // Interrupt the output thread in case it's waiting on an empty outBoundQueue.
                 outputThread.interrupt();
-                // Wake up the ConnectionHandler to notify it of connection failure and to initiate
-                // reconnection attempts.
                 connectionHandler.wakeConnectionHandler();
-                // Notify the model class of connection failure.
                 model.handleTask(new Message(NetCommands.connectionFailed, null, new ArrayList<Transferable>()));
             }
         }
     }
 
+    /**
+     * Takes messages from the output queue and sends them to the server. The conditions that
+     * terminate this thread are different from the InputHandler. If this thread is waiting on
+     * an empty output queue, a closed socket will not cause an IOException. Therefore, if this
+     * thread is not interrupted, it will most likely not terminate when the connection is lost.
+     * If an IOException does happen however, the message that the output handler attempted to send
+     * must be put back at the front of the output queue since it was never successfully sent.
+     */
     private class OutputHandler implements Runnable {
         private final Socket socket;
         private final ObjectOutputStream output;
@@ -140,19 +161,13 @@ public class ClientNetworkManager {
                 }
             } catch (IOException e) {
                 System.out.println(new Date() + " Network: closed output handler with IOException.");
-                // If IOException happens, we've taken a Message from the output queue and
-                // tried to send it with writeObject. In that case we need to put it back
-                // at the front of the output queue before terminating the thread.
                 outBoundQueue.addFirst(msg);
             } catch (InterruptedException e) {
                 System.out.println(new Date() + " Network: closed output handler with InterruptedException.");
-                // This interrupted exception happens if another thread interrupts this thread
-                // while the output queue is waiting.
             } finally {
                 try {
                     socket.close();
                 } catch (IOException ignore) {
-                    // Socket might already have been closed by the InputHandler.
                 }
                 connected = false;
             }

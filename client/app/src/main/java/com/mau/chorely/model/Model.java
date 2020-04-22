@@ -28,11 +28,13 @@ public class Model {
     private PersistentStorage storage;
     private ClientNetworkManager network;
     private User lastSearchedUser;
-    private Thread modelThread = new Thread(new ModelThread()); //TODO ändra konstruktion
+    private Thread modelThread; // TODO: 2020-04-16 Se över om vi ska stoppa den hör tråden nånstans, annars behövs ingen referens.
 
     private Model(){};
+
     public Model(File filesDir) {
         network = new ClientNetworkManager(this);
+        modelThread = new Thread(new ModelThread());
         modelThread.start();
         storage = new PersistentStorage(filesDir);
     }
@@ -79,7 +81,6 @@ public class Model {
      * Callback method. Puts the message in a queue to be handled by the model thread.
      * @param msg this is the task to handle, complete with a command, and data.
      */
-
     public void handleTask(Message msg) {
         try {
             taskToHandle.put(msg);
@@ -111,6 +112,7 @@ public class Model {
             BridgeInstances.getPresenter().updateCurrent();
         }
     }
+
     /**
      * Main model thread. This contains the main switch statement of the client, and all tasks
      * are diverted throughout the application.
