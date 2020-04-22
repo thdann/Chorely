@@ -13,7 +13,9 @@ public class User implements Transferable {
         this.password = password;
         groups = new ArrayList<GenericID>();
     }
-
+    public ArrayList<GenericID> getGroups(){
+        return groups;
+    }
     public String getUsername() {
         return username;
     }
@@ -50,8 +52,8 @@ public class User implements Transferable {
         if (!(obj instanceof User)) {
             return false;
         } else {
-            String hashString = username + password;
-            String objHashString = ((User) obj).getUsername() + ((User) obj).getPassword();
+            String hashString = username;
+            String objHashString = ((User) obj).getUsername();
             return hashString.hashCode() == objHashString.hashCode();
         }
     }
