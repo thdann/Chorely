@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class User implements Transferable {
     private final String username;
     private final String password;
-    private ArrayList<GenericID> groups;
+    private ArrayList<GenericID> groups = null;
 
     public User(String username, String password) {
         this.username = username;

@@ -147,7 +147,8 @@ public class Model {
                             break;
 
                         case registerNewGroup:
-                            /*Falls through*/
+                            createGroup(currentTask);
+                            break;
                         case clientInternalGroupUpdate:
                             updateGroup(currentTask);
                             break;

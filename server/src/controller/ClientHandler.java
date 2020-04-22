@@ -1,6 +1,7 @@
 package controller;
 
 import shared.transferable.Message;
+import shared.transferable.NetCommands;
 import shared.transferable.Transferable;
 import shared.transferable.User;
 
@@ -75,6 +76,7 @@ public class ClientHandler {
                     try {
                         System.out.println("Du har kommit hit");
                         Message msg = (Message) ois.readObject();
+                        System.out.println(msg.getCommand());
 
                         if(clientUser == null) {
                             controller.addOnlineClient(msg.getUser(), ClientHandler.this);
