@@ -52,8 +52,8 @@ public class User implements Transferable {
         if (!(obj instanceof User)) {
             return false;
         } else {
-            String hashString = username + password;
-            String objHashString = ((User) obj).getUsername() + ((User) obj).getPassword();
+            String hashString = username;
+            String objHashString = ((User) obj).getUsername();
             return hashString.hashCode() == objHashString.hashCode();
         }
     }

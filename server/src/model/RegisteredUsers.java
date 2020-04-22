@@ -3,6 +3,7 @@ package model;
 import shared.transferable.User;
 
 import java.io.*;
+import java.sql.SQLOutput;
 
 /**
  * RegisteredUser handles all registered users by reading and writing each User object to a
@@ -55,6 +56,7 @@ public class RegisteredUsers {
     public User getUserFromFile(User dummyUser) {
         String filename = String.format("%s%s.dat", filePath, dummyUser.getUsername());
         User foundUser = null;
+
         try (ObjectInputStream ois = new ObjectInputStream((new BufferedInputStream(new FileInputStream(filename))))) {
             foundUser = (User) ois.readObject();
             System.out.println(foundUser.toString());
