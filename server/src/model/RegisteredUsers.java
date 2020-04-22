@@ -46,6 +46,28 @@ public class RegisteredUsers {
     }
 
     /**
+     * Searches among registered users and returns the requested user if it exists, otherwise return null.
+     *
+     * @param dummyUser the user searched for.
+     * @return the requested User-object
+     */
+
+    public User getUserFromFile(User dummyUser) {
+        String filename = String.format("%s%s.dat", filePath, dummyUser.getUsername());
+        User foundUser = null;
+        try (ObjectInputStream ois = new ObjectInputStream((new BufferedInputStream(new FileInputStream(filename))))) {
+            foundUser = (User) ois.readObject();
+            System.out.println(foundUser.toString());
+
+        } catch (IOException | ClassNotFoundException e) {
+            e.getMessage();
+            return null;
+        }
+
+        return foundUser;
+    }
+
+    /**
      * Updates the directory with the new updated user.
      *
      * @param user is the new updated version of the User object to be saved to file.
@@ -82,15 +104,20 @@ public class RegisteredUsers {
 
     /**
      * Looks for a requested user among the registered users.
-     * @param user the requested user/username to look for
+     *
+     * @param dummyUser the requested user/username to look for
      * @return the requested user if it exists, otherwise return null
      */
-    
-    public User findUser(User user) {
-        if (userNameAvailable(user.getUsername())) {
+
+    public User findUser(User dummyUser) {
+        User foundUser = null;
+        if (userNameAvailable(dummyUser.getUsername())) {
             return null;
+        } else {
+            foundUser = getUserFromFile(dummyUser);
         }
-        return user;
+        return foundUser;
+
     }
 
 }
