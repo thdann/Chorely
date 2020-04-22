@@ -6,7 +6,7 @@
     <string name="label_groups">Hantera grupper</string>
     <string name="noGroup">Du är ännu inte medlem i någon grupp. Skapa en ny grupp för att börja
     använda Chorely.</string>
-    <string name="groups">Dina grupper</string>
+    <string name="groups">Dina grupper:</string>
     <string name="createGroup"> Skapa grupp </string>
     <string name="connecting">Ansluter</string>
     <string name="groupName">Gruppnamn:</string>

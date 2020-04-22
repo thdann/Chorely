@@ -13,10 +13,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.nio.Buffer;
+
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.logging.StreamHandler;
+
 
 
 import shared.transferable.Group;
@@ -33,7 +33,6 @@ public class PersistentStorage {
     private static final String USER_FILE_NAME = "/user.cho";
     private static File userFile;
     private static File groupDir;
-    private Group testGroup;
 
     private PersistentStorage() {
     }
@@ -167,4 +166,14 @@ public class PersistentStorage {
             System.out.println("GROUP DELETED");
         }
     }
+
+    public void setSelectedGroup(Group group){
+
+    }
+
+    // TODO: 2020-04-22 Implementerad
+    public Group getSelectedGroup(){
+        return null;
+    }
+
 }

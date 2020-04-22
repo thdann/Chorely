@@ -47,6 +47,10 @@ public class Model {
         return storage.getUser();
     }
 
+    public Group getSelectedGroup(){
+        return storage.getSelectedGroup();
+    }
+
     /**
      * Getter to get all stored groups.
      * @return arraylist of groups.
