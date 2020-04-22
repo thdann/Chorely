@@ -49,18 +49,20 @@ public class ServerController implements ClientListener {
 
     public void addOnlineClient(User user, ClientHandler client) {
         User rebellUser = registeredUsers.getUserFromFile(user);
-        ArrayList<GenericID> groupMemberships = rebellUser.getGroups();
+        if(rebellUser != null) {
+            if (rebellUser.getGroups() != null) {
+                ArrayList<GenericID> groupMemberships = rebellUser.getGroups();
 
-        for (GenericID id : groupMemberships) {
-            Group group = registeredGroups.getGroupByID(id);
-            ArrayList<Transferable> data = new ArrayList<>();
-            data.add(group);
-            Message message = new Message(NetCommands.updateGroup, user, data);
-            sendReply(message);
+                for (GenericID id : groupMemberships) {
+                    Group group = registeredGroups.getGroupByID(id);
+                    ArrayList<Transferable> data = new ArrayList<>();
+                    data.add(group);
+                    Message message = new Message(NetCommands.updateGroup, user, data);
+                    sendReply(message);
+                }
+            }
         }
-
         onlineClients.put(user, client);
-
     }
 
     public void removeOnlineClient(User user) {

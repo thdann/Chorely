@@ -94,6 +94,7 @@ public class PersistentStorage {
 
         File groupFile = new File(groupDir.getPath()+ "/" + newGroup.getGroupID()+".cho");
         if (groupFile.exists()) {
+            System.out.println("FILE EXISTS");
             try (ObjectInputStream inputStream = new ObjectInputStream(new BufferedInputStream(
                     new FileInputStream(groupFile)))) {
                 Group oldGroup = (Group) inputStream.readObject();
@@ -120,6 +121,7 @@ public class PersistentStorage {
 
                 outputStream.writeObject(newGroup);
                 outputStream.flush();
+                groupUpdated = true;
             } catch (IOException e) {
                 System.out.println("ERROR CREATING NEW GROUP FILE: " + e.getMessage());
             }
