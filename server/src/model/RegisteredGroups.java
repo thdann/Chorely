@@ -54,6 +54,23 @@ public class RegisteredGroups {
 
     }
 
+    public Group getGroupFromFile(GenericID id) {
+        String filename = String.format("%s%s.dat", filePath, id);
+        Group foundGroup = null;
+
+        try (ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filename)))) {
+            foundGroup = (Group) ois.readObject();
+            System.out.println(foundGroup.toString());
+
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+
+        return foundGroup;
+
+    }
+
     /**
      * Updates the directory with the new updated group.
      *
@@ -86,6 +103,18 @@ public class RegisteredGroups {
         }
 
         return true;
+
+    }
+
+    public Group getGroupByID(GenericID id) {
+        Group foundGroup = null;
+        if (groupIdAvailable(id)) {
+            //gruppen finns inte
+            return null;
+        } else {
+            foundGroup = getGroupFromFile(id);
+        }
+        return foundGroup;
 
     }
 
