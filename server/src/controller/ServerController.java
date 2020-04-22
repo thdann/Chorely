@@ -48,6 +48,7 @@ public class ServerController implements ClientListener {
     }
 
     public void addOnlineClient(User user, ClientHandler client) {
+        onlineClients.put(user, client);
         User rebellUser = registeredUsers.getUserFromFile(user);
         if(rebellUser != null) {
             if (rebellUser.getGroups() != null) {
@@ -62,7 +63,6 @@ public class ServerController implements ClientListener {
                 }
             }
         }
-        onlineClients.put(user, client);
     }
 
     public void removeOnlineClient(User user) {
@@ -106,12 +106,6 @@ public class ServerController implements ClientListener {
                 break;
             case searchForUser:
                 searchForUser(msg);
-//            case addNewChore:
-//                  addNewChore(msg);
-//                break;
-//            case addNewReward:
-//                 addNewReward(msg);
-//                break;
             default:
                 //TODO:  kod för default case. Vad kan man skriva här?
                 break;
@@ -161,6 +155,7 @@ public class ServerController implements ClientListener {
             for (User u : members) {
                 u.addGroupMembership(groupID);
                 registeredUsers.updateUser(u);
+                System.out.println( u.getUsername() + u.getGroups().get(0).getId());
             }
             reply = new Message(NetCommands.newGroupOk, request.getUser());
             sendReply(reply);
@@ -170,6 +165,7 @@ public class ServerController implements ClientListener {
             reply = new Message(NetCommands.newGroupDenied, request.getUser(), errorMessage);
             sendReply(reply);
         }
+
     }
 
     public void updateGroup(Message request) {

@@ -26,7 +26,7 @@ public enum NetCommands implements Transferable {
     requestUserGroups,
     userHasNoGroup,
     userHasGroupUpdate,
-
+    login,
     clientInternalGroupUpdate
     ;
 }

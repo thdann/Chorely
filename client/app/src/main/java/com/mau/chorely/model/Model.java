@@ -132,6 +132,7 @@ public class Model {
         @Override
         public void run() {
 
+            handleTask(new Message(NetCommands.login, storage.getUser()));
             while (!Thread.interrupted()) {
                 try {
                     System.out.println("Model is blocking for new message");
@@ -140,6 +141,8 @@ public class Model {
                     NetCommands command = currentTask.getCommand();
 
                     switch (command) {
+                        case login:
+                            /*Falls through*/
                         case searchForUser:
                             /*Falls through*/
                         case registerUser:

@@ -62,7 +62,7 @@ public class RegisteredUsers {
             System.out.println(foundUser.toString());
 
         } catch (IOException | ClassNotFoundException e) {
-            e.getMessage();
+            System.out.println(e.getMessage());
             return null;
         }
 
@@ -79,7 +79,8 @@ public class RegisteredUsers {
         File file = new File(filePath + user.getUsername() + ".dat");
         System.out.println("updatemetoden " + file.getPath());
         if (file.exists()) {
-            file.delete();
+            System.out.println("File deleted = " + file.delete());
+
         }
 
         writeUserToFile(user);
