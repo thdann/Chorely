@@ -3,6 +3,7 @@ package com.mau.chorely.activities.utils;
 import com.mau.chorely.activities.interfaces.UpdatableActivity;
 
 import java.util.ArrayList;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 /**
  * This class keeps a reference to the currently running activity in order to enable callbacks from
@@ -11,7 +12,7 @@ import java.util.ArrayList;
  */
 public class Presenter {
 
-    private ArrayList <UpdatableActivity> registeredListeners = new ArrayList<>();
+    private ConcurrentLinkedDeque<UpdatableActivity> registeredListeners = new ConcurrentLinkedDeque<>();
 
     Presenter(){}
 

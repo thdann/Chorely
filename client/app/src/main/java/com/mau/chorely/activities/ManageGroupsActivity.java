@@ -28,6 +28,7 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
     private RecyclerView mRecyclerView;
     private RecyclerViewAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private static final Object lockObjectGroupList = new Object();
     ArrayList<Group> groupList = new ArrayList<>();
     ArrayList<Group> updatedGroups = new ArrayList<>();
 
@@ -47,7 +48,7 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
     protected void onStart() {
         super.onStart();
         BridgeInstances.getPresenter().register(this);
-
+        updateActivity();
     }
 
     @Override
@@ -125,8 +126,10 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
             @Override
             public void run() {
                 if(BridgeInstances.getModel().isConnected()){
-                     updatedGroups = BridgeInstances.getModel().getGroups();
-                     updateGroupsList();
+                    synchronized (lockObjectGroupList) {
+                        updatedGroups = BridgeInstances.getModel().getGroups();
+                        updateGroupsList();
+                    }
                 } else{
                     Intent intent = new Intent(ManageGroupsActivity.this, ConnectActivity.class);
                     startActivity(intent);
@@ -141,26 +144,28 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
      */
     private void updateGroupsList(){
         if(updatedGroups != null){
-            for (int i = 0; i< updatedGroups.size(); i++){
-                Group group = updatedGroups.get(i);
-                if(groupList.contains(group)){
-                    int shownGroupIndex = groupList.indexOf(group);
-                    if(!groupList.get(shownGroupIndex).allIsEqual(group)){
-                        groupList.remove(shownGroupIndex);
-                        groupList.add(shownGroupIndex, group);
+            synchronized (lockObjectGroupList) {
+                for (int i = 0; i < updatedGroups.size(); i++) {
+                    Group group = updatedGroups.get(i);
+                    if (groupList.contains(group)) {
+                        int shownGroupIndex = groupList.indexOf(group);
+                        if (!groupList.get(shownGroupIndex).allIsEqual(group)) {
+                            groupList.remove(shownGroupIndex);
+                            groupList.add(shownGroupIndex, group);
+                            mAdapter.notifyDataSetChanged();
+                        }
+                    } else {
+                        groupList.add(group);
                         mAdapter.notifyDataSetChanged();
                     }
                 }
-                else{
-                    groupList.add(group);
-                    mAdapter.notifyDataSetChanged();
-                }
-            }
 
-            if(updatedGroups.size() < groupList.size()){
-                for (Group group : groupList){
-                    if (!updatedGroups.contains(group)){
-                        groupList.remove(group);
+                if (updatedGroups.size() < groupList.size()) {
+                    for (int i = 0; i< groupList.size(); i++) {
+                        Group group = groupList.get(i);
+                        if (!updatedGroups.contains(group)) {
+                            groupList.remove(group);
+                        }
                     }
                 }
             }

@@ -57,6 +57,13 @@ public class Group implements Transferable {
         users.add(user);
     }
 
+    public void setName(String name){
+        this.name = name;
+    }
+
+    public void setDescription (String description){
+        this.description = description;
+    }
     public void deleteUser(User user) {
         users.remove(user);
     }

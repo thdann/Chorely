@@ -94,12 +94,19 @@ public class Model {
      * @param message message containing the group to update.
      */
     private void updateGroup (Message message){
-        if(storage.saveOrUpdateGroup((Group)message.getData().get(0))){
-            message.setCommand(NetCommands.updateGroup);
-            network.sendMessage(message);
+        Group currentGroup = (Group)message.getData().get(0);
+        if(currentGroup.getUsers().contains(storage.getUser())) {
+
+            if (storage.saveOrUpdateGroup(currentGroup)) {
+                message.setCommand(NetCommands.updateGroup);
+                network.sendMessage(message);
+                BridgeInstances.getPresenter().updateCurrent();
+            }
+            //If not, group is already up to date.
+        } else {
+            storage.deleteGroup(currentGroup);
             BridgeInstances.getPresenter().updateCurrent();
         }
-        //If not, group is already up to date.
     }
 
     /**
@@ -135,6 +142,8 @@ public class Model {
                             network.sendMessage(currentTask);
                             break;
 
+                        case registerNewGroup:
+                            /*Falls through*/
                         case clientInternalGroupUpdate:
                             updateGroup(currentTask);
                             break;
@@ -166,9 +175,7 @@ public class Model {
                             BridgeInstances.getPresenter().toastCurrent("Användare hittad!");
                             break;
 
-                        case registerNewGroup:
-                            createGroup(currentTask);
-                            break;
+
 
                         case registrationDenied:
                             /*Falls through*/
