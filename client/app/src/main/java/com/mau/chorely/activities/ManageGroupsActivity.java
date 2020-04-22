@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mau.chorely.R;
@@ -31,8 +32,6 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
     private static final Object lockObjectGroupList = new Object();
     ArrayList<Group> groupList = new ArrayList<>();
     ArrayList<Group> updatedGroups = new ArrayList<>();
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,9 +80,13 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
         mAdapter.setOnItemClickListener(new RecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                Intent intent = new Intent(ManageGroupsActivity.this, CreateEditGroupActivity.class);
-                intent.putExtra("SELECTED_GROUP", groupList.get(position));
-                startActivity(intent);
+                if(BridgeInstances.getModel().getSelectedGroup() != null) {
+                    Intent intent = new Intent(ManageGroupsActivity.this, CreateEditGroupActivity.class);
+                    intent.putExtra("SELECTED_GROUP", groupList.get(position));
+                    startActivity(intent);
+                } else {
+                    // TODO: 2020-04-22 Här ska användaren tas till huvudaktiviteten.
+                }
             }
         });
     }
@@ -129,6 +132,7 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
                     synchronized (lockObjectGroupList) {
                         updatedGroups = BridgeInstances.getModel().getGroups();
                         updateGroupsList();
+                        updateGroupText();
                     }
                 } else{
                     Intent intent = new Intent(ManageGroupsActivity.this, ConnectActivity.class);
@@ -138,8 +142,16 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
         });
     }
 
+    private void updateGroupText(){
+        if(groupList.size() > 0){
+            ((TextView)findViewById(R.id.manage_groups_textViewYourGroups)).setText(R.string.groups);
+        } else{
+            ((TextView)findViewById(R.id.manage_groups_textViewYourGroups)).setText(R.string.noGroup);
+        }
+    }
+
     /**
-     * Method to check if there is any updates to the client list of groups
+     * Method to check if there are any updates to the client list of groups
      * and if there is set them to the recyclerview.
      */
     private void updateGroupsList(){
