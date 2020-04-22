@@ -76,6 +76,11 @@ public class ServerController implements ClientListener {
         }
     }
 
+    /**
+     * Notifies all the members of a group when a change is made in the group.
+     * @param group
+     */
+
     public void notifyGroupChanges(Group group) {
         ArrayList<User> members = group.getUsers();
         ArrayList<Transferable> data = new ArrayList<>();
@@ -86,6 +91,11 @@ public class ServerController implements ClientListener {
             sendReply(message);
         }
     }
+
+    /**
+     * Handles the incoming messages from the client
+     * @param msg is the incoming message object
+     */
 
     public void handleClientTask(Message msg) {
         NetCommands command = msg.getCommand();
@@ -104,10 +114,10 @@ public class ServerController implements ClientListener {
             case searchForUser:
                 searchForUser(msg);
             case addNewChore:
-                addNewChore(msg);
+                updateGroup(msg);
                 break;
             case addNewReward:
-                 addNewReward(msg);
+                 updateGroup(msg);
                 break;
             default:
                 //TODO:  kod för default case. Vad kan man skriva här?
@@ -178,6 +188,11 @@ public class ServerController implements ClientListener {
         notifyGroupChanges(group);
     }
 
+    /**
+     * Updates the group membership of the added or removed users
+     * @param group is the group that contains changes in members
+     */
+
     public void updateUsersGroups(Group group) {
         ArrayList<User> members = group.getUsers();
         GenericID id = group.getGroupID();
@@ -187,17 +202,20 @@ public class ServerController implements ClientListener {
         }
     }
 
+    /**
+     * Looks for a requested user among registered users.
+     * @param request is the message object that contains the user searched for
+     */
+
     public void searchForUser(Message request) {
         Message reply = null;
         User dummyUser = (User) request.getData().get(0);
 
         if (registeredUsers.findUser(dummyUser) != null) {
-            //Användaren finns
             User foundUser = registeredUsers.findUser(dummyUser);
             List<Transferable> data = Arrays.asList(new Transferable[]{foundUser});
             reply = new Message(NetCommands.userExists, request.getUser(), data);
         } else {
-            //null i return - användaren finns inte, skicka errormessage.
             ErrorMessage errorMessage = new ErrorMessage("Användaren finns inte");
             reply = new Message(NetCommands.userDoesNotExist, request.getUser(), errorMessage);
         }
@@ -205,20 +223,11 @@ public class ServerController implements ClientListener {
 
     }
 
-    //TODO: förslagsvis endast denna metod som uppdaterar gruppen - samma för chore och reward, samma för lägga till/ta bort...
+    /**
+     * Updates registered groups with added or removed chores and rewards
+     * @param request message-object containing the updated group.
+     */
     public void updateGroup(Message request) {
-        Group group = (Group) request.getData().get(0);
-        registeredGroups.updateGroup(group);
-        notifyGroupChanges(group);
-    }
-
-    //TODO: dessa två är likadana, ersätts av metoden ovan?
-    public void addNewChore(Message request) {
-        Group group = (Group) request.getData().get(0);
-        registeredGroups.updateGroup(group);
-        notifyGroupChanges(group);
-    }
-    public void addNewReward(Message request) {
         Group group = (Group) request.getData().get(0);
         registeredGroups.updateGroup(group);
         notifyGroupChanges(group);
