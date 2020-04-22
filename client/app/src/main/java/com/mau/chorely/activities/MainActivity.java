@@ -34,6 +34,12 @@ public class MainActivity extends AppCompatActivity implements UpdatableActivity
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        BridgeInstances.getPresenter().deregisterForUpdates(this);
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         BridgeInstances.getPresenter().deregisterForUpdates(this);
@@ -49,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements UpdatableActivity
                 Intent intent = new Intent(this, ManageGroupsActivity.class);
                 startActivity(intent);
                 finish();
+
             }
         } else {
             Intent intent = new Intent(this, ConnectActivity.class);

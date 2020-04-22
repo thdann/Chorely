@@ -230,14 +230,18 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
     public void searchForMember(View view) {
         String searchString = ((EditText)findViewById(R.id.edit_group_memberSearchText)).getText().toString();
         if (!searchString.equals("")) {
-            findViewById(R.id.edit_group_searchMemberButton).setVisibility(View.INVISIBLE);
-            findViewById(R.id.edit_group_memberSearchWorkingGif).setVisibility(View.VISIBLE);
-            Model model = BridgeInstances.getModel();
-            User user = new User(searchString, "");
-            ArrayList<Transferable> data = new ArrayList<>();
-            data.add(user);
-            Message message = new Message(NetCommands.searchForUser, model.getUser(), data);
-            model.handleTask(message);
+            if(!selectedGroup.getUsers().contains(new User(searchString, ""))) {
+                findViewById(R.id.edit_group_searchMemberButton).setVisibility(View.INVISIBLE);
+                findViewById(R.id.edit_group_memberSearchWorkingGif).setVisibility(View.VISIBLE);
+                Model model = BridgeInstances.getModel();
+                User user = new User(searchString, "");
+                ArrayList<Transferable> data = new ArrayList<>();
+                data.add(user);
+                Message message = new Message(NetCommands.searchForUser, model.getUser(), data);
+                model.handleTask(message);
+            } else {
+                doToast("Den här användaren finns redan i gruppen");
+            }
         } else {
             Toast.makeText(this, "Du har inte fyllt i något användarnamn", Toast.LENGTH_SHORT).show();
         }
@@ -254,6 +258,7 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
         findViewById(R.id.edit_group_memberSearchWorkingGif).setVisibility(View.INVISIBLE);
         findViewById(R.id.edit_group_searchMemberButton).setVisibility(View.VISIBLE);
         findViewById(R.id.edit_group_memberSearchText).setFocusable(true);
+        findViewById(R.id.edit_group_memberSearchText).setFocusableInTouchMode(true);
         ((EditText) findViewById(R.id.edit_group_memberSearchText)).setText("");
 
     }
