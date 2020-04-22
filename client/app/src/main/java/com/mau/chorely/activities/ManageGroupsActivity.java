@@ -51,6 +51,12 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        BridgeInstances.getPresenter().deregisterForUpdates(this);
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         BridgeInstances.getPresenter().deregisterForUpdates(this);
