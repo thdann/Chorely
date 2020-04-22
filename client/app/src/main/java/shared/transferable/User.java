@@ -13,7 +13,9 @@ public class User implements Transferable {
         this.password = password;
         groups = new ArrayList<GenericID>();
     }
-
+    public ArrayList<GenericID> getGroups(){
+        return groups;
+    }
     public String getUsername() {
         return username;
     }
