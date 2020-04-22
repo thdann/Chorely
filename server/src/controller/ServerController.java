@@ -27,7 +27,7 @@ public class ServerController implements ClientListener {
     private RegisteredUsers registeredUsers;
     private RegisteredGroups registeredGroups;
     private ServerNetwork network;
-    private LinkedBlockingQueue<Message> clientTaskBuffer; 
+    private LinkedBlockingQueue<Message> clientTaskBuffer;
     private MessageHandler messageHandler;
     private ConcurrentHashMap<User, ClientHandler> onlineClients = new ConcurrentHashMap<>();
 
@@ -49,7 +49,7 @@ public class ServerController implements ClientListener {
 
     public void addOnlineClient(User user, ClientHandler client) {
         User rebellUser = registeredUsers.getUserFromFile(user);
-        if(rebellUser != null) {
+        if (rebellUser != null) {
             if (rebellUser.getGroups() != null) {
                 ArrayList<GenericID> groupMemberships = rebellUser.getGroups();
 
@@ -88,9 +88,6 @@ public class ServerController implements ClientListener {
     }
 
     public void handleClientTask(Message msg) {
-
-        //TODO: tanke - ska vi skicka replymeddelanden härifrån istället för själva metoden? För här finns ju redan usern som ska ha svaret?
-
         NetCommands command = msg.getCommand();
         User user = msg.getUser();
 
@@ -102,16 +99,16 @@ public class ServerController implements ClientListener {
                 registerNewGroup(msg);
                 break;
             case updateGroup:
-                updateGroup(msg);
+                updateGroupMembers(msg);
                 break;
             case searchForUser:
                 searchForUser(msg);
-//            case addNewChore:
-//                  addNewChore(msg);
-//                break;
-//            case addNewReward:
-//                 addNewReward(msg);
-//                break;
+            case addNewChore:
+                addNewChore(msg);
+                break;
+            case addNewReward:
+                 addNewReward(msg);
+                break;
             default:
                 //TODO:  kod för default case. Vad kan man skriva här?
                 break;
@@ -123,7 +120,6 @@ public class ServerController implements ClientListener {
      *
      * @param request
      */
-
 
     public void registerUser(Message request) {
         Message reply = null;
@@ -142,7 +138,6 @@ public class ServerController implements ClientListener {
             onlineClients.get(request.getUser()).throwOut();
         }
     }
-
 
     /**
      * Registers a new group to the server and updates all the members of that group with the new group membership
@@ -172,7 +167,11 @@ public class ServerController implements ClientListener {
         }
     }
 
-    public void updateGroup(Message request) {
+    /**
+     * Updates the registered group with new members and updates group membership of the added or removed users.
+     */
+
+    public void updateGroupMembers(Message request) {
         Group group = (Group) request.getData().get(0);
         registeredGroups.updateGroup(group);
         updateUsersGroups(group);
@@ -206,18 +205,24 @@ public class ServerController implements ClientListener {
 
     }
 
-  /*  //TODO: skicka svar till klienten
-    public void addNewChore(Message request) {
-        request.getGroup().addChore(request.getChore()); //TODO: Här la jag till en getChore i Message och hämtar, FEL?
-        registeredGroups.updateGroup(request.getGroup());
+    //TODO: förslagsvis endast denna metod som uppdaterar gruppen - samma för chore och reward, samma för lägga till/ta bort...
+    public void updateGroup(Message request) {
+        Group group = (Group) request.getData().get(0);
+        registeredGroups.updateGroup(group);
+        notifyGroupChanges(group);
     }
 
-    //TODO: skicka svar till klienten
-    public void addNewReward(Message request) {
-        request.getGroup().addReward(request.getReward()); //TODO: Här la jag till en getReward i Message och hämtar, FEL?
-        registeredGroups.updateGroup(request.getGroup());
+    //TODO: dessa två är likadana, ersätts av metoden ovan?
+    public void addNewChore(Message request) {
+        Group group = (Group) request.getData().get(0);
+        registeredGroups.updateGroup(group);
+        notifyGroupChanges(group);
     }
-*/
+    public void addNewReward(Message request) {
+        Group group = (Group) request.getData().get(0);
+        registeredGroups.updateGroup(group);
+        notifyGroupChanges(group);
+    }
 
     /**
      * Inner class MessageHandler handles the incoming messages from the client one at a time.
