@@ -48,8 +48,8 @@ public class ServerController implements ClientListener {
     }
 
     public void addOnlineClient(User user, ClientHandler client) {
-        User rebellUser = registeredUsers.getUserFromFile(user);
-        ArrayList<GenericID> groupMemberships = rebellUser.getGroups();
+        User userFromDisk = registeredUsers.getUserFromFile(user);
+        ArrayList<GenericID> groupMemberships = userFromDisk.getGroups();
 
         for (GenericID id : groupMemberships) {
             Group group = registeredGroups.getGroupByID(id);
