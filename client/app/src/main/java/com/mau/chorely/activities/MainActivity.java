@@ -10,6 +10,10 @@ import android.widget.Toast;
 import com.mau.chorely.R;
 import com.mau.chorely.activities.interfaces.UpdatableActivity;
 import com.mau.chorely.activities.utils.BridgeInstances;
+import com.mau.chorely.model.Model;
+
+import shared.transferable.Message;
+import shared.transferable.NetCommands;
 
 /**
  * This is the main activity of the application. It launches the program and sends the user to
@@ -51,7 +55,8 @@ public class MainActivity extends AppCompatActivity implements UpdatableActivity
     @Override
     public void updateActivity() {
         if (BridgeInstances.getModel(getFilesDir()).isConnected()) {
-            if (BridgeInstances.getModel(getFilesDir()).isLoggedIn()) {
+            if (BridgeInstances.getModel(getFilesDir()).hasStoredUser()) {
+
                 Intent intent = new Intent(this, ManageGroupsActivity.class);
                 startActivity(intent);
                 finish();

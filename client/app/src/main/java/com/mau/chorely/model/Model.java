@@ -64,6 +64,10 @@ public class Model {
      * @return true if there is a stored user.
      */
     public boolean isLoggedIn() {
+        return isLoggedIn;
+    }
+
+    public boolean hasStoredUser(){
         return storage.getUser() != null;
     }
 
@@ -113,6 +117,12 @@ public class Model {
         }
     }
 
+    private void loginClient(){
+        if(hasStoredUser()){
+            network.sendMessage(new Message(NetCommands.login, getUser()));
+        }
+    }
+
     /**
      * This method handles creation of new groups on the client side.
      * @param message message containing the new group.
@@ -148,9 +158,15 @@ public class Model {
                             network.sendMessage(currentTask);
                             break;
 
+                        case loginOk:
+                            isLoggedIn = true;
+                            BridgeInstances.getPresenter().updateCurrent();
+                            break;
+
                         case registerNewGroup:
                             createGroup(currentTask);
                             break;
+
                         case clientInternalGroupUpdate:
                             updateGroup(currentTask);
                             break;
@@ -167,12 +183,14 @@ public class Model {
 
                         case connectionFailed:
                             isConnected = false;
+                            isLoggedIn = false;
                             BridgeInstances.getPresenter().updateCurrent();
                             BridgeInstances.getPresenter().toastCurrent("Återansluter till servern.");
                             break;
 
                         case connected:
                             isConnected = true;
+                            loginClient();
                             BridgeInstances.getPresenter().updateCurrent();
                             break;
 

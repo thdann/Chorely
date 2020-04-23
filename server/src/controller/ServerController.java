@@ -107,6 +107,7 @@ public class ServerController implements ClientListener {
         switch (command) {
             case login:
                 logIn(msg);
+                break;
             case registerUser:
                 registerUser(msg);
                 break;
