@@ -48,6 +48,17 @@ public class ServerController implements ClientListener {
     }
 
     public void addOnlineClient(User user, ClientHandler client) {
+
+        User userFromDisk = registeredUsers.getUserFromFile(user);
+        ArrayList<GenericID> groupMemberships = userFromDisk.getGroups();
+
+        for (GenericID id : groupMemberships) {
+            Group group = registeredGroups.getGroupByID(id);
+            ArrayList<Transferable> data = new ArrayList<>();
+            data.add(group);
+            Message message = new Message(NetCommands.updateGroup, user, data);
+            sendReply(message);
+
         onlineClients.put(user, client);
         User rebellUser = registeredUsers.getUserFromFile(user);
         if (rebellUser != null) {
@@ -62,6 +73,7 @@ public class ServerController implements ClientListener {
                     sendReply(message);
                 }
             }
+
         }
     }
 
