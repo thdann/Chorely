@@ -4,7 +4,7 @@ package controller;
  * ServerController handles the over all logic on the server side.
  * The class contains the main method that starts the program and makes it possible for a client
  * to obtain a connection by creating an instance of ServerNetwork.
- * version 1.0 2020-03-23
+ * version 3.0 2020-04-22
  *
  * @autor Angelica Asplund, Emma Svensson and Theresa Dannberg
  */
@@ -27,7 +27,7 @@ public class ServerController implements ClientListener {
     private RegisteredUsers registeredUsers;
     private RegisteredGroups registeredGroups;
     private ServerNetwork network;
-    private LinkedBlockingQueue<Message> clientTaskBuffer; //TODO: här läggs alla inkommande arraylists från klienterna.
+    private LinkedBlockingQueue<Message> clientTaskBuffer;
     private MessageHandler messageHandler;
     private ConcurrentHashMap<User, ClientHandler> onlineClients = new ConcurrentHashMap<>();
 
@@ -48,6 +48,7 @@ public class ServerController implements ClientListener {
     }
 
     public void addOnlineClient(User user, ClientHandler client) {
+
         User userFromDisk = registeredUsers.getUserFromFile(user);
         ArrayList<GenericID> groupMemberships = userFromDisk.getGroups();
 
@@ -57,10 +58,23 @@ public class ServerController implements ClientListener {
             data.add(group);
             Message message = new Message(NetCommands.updateGroup, user, data);
             sendReply(message);
-        }
 
         onlineClients.put(user, client);
+        User rebellUser = registeredUsers.getUserFromFile(user);
+        if (rebellUser != null) {
+            if (rebellUser.getGroups() != null) {
+                ArrayList<GenericID> groupMemberships = rebellUser.getGroups();
 
+                for (GenericID id : groupMemberships) {
+                    Group group = registeredGroups.getGroupByID(id);
+                    ArrayList<Transferable> data = new ArrayList<>();
+                    data.add(group);
+                    Message message = new Message(NetCommands.updateGroup, user, data);
+                    sendReply(message);
+                }
+            }
+
+        }
     }
 
     public void removeOnlineClient(User user) {
@@ -74,6 +88,11 @@ public class ServerController implements ClientListener {
         }
     }
 
+    /**
+     * Notifies all the members of a group when a change is made in the group.
+     * @param group
+     */
+
     public void notifyGroupChanges(Group group) {
         ArrayList<User> members = group.getUsers();
         ArrayList<Transferable> data = new ArrayList<>();
@@ -85,10 +104,12 @@ public class ServerController implements ClientListener {
         }
     }
 
+    /**
+     * Handles the incoming messages from the client
+     * @param msg is the incoming message object
+     */
+
     public void handleClientTask(Message msg) {
-
-        //TODO: tanke - ska vi skicka replymeddelanden härifrån istället för själva metoden? För här finns ju redan usern som ska ha svaret?
-
         NetCommands command = msg.getCommand();
         User user = msg.getUser();
 
@@ -100,16 +121,10 @@ public class ServerController implements ClientListener {
                 registerNewGroup(msg);
                 break;
             case updateGroup:
-                updateGroup(msg);
+                updateGroupMembers(msg);
                 break;
             case searchForUser:
                 searchForUser(msg);
-//            case addNewChore:
-//                  addNewChore(msg);
-//                break;
-//            case addNewReward:
-//                 addNewReward(msg);
-//                break;
             default:
                 //TODO:  kod för default case. Vad kan man skriva här?
                 break;
@@ -121,7 +136,6 @@ public class ServerController implements ClientListener {
      *
      * @param request
      */
-
 
     public void registerUser(Message request) {
         Message reply = null;
@@ -141,7 +155,6 @@ public class ServerController implements ClientListener {
         }
     }
 
-
     /**
      * Registers a new group to the server and updates all the members of that group with the new group membership
      *
@@ -159,6 +172,7 @@ public class ServerController implements ClientListener {
             for (User u : members) {
                 u.addGroupMembership(groupID);
                 registeredUsers.updateUser(u);
+                System.out.println( u.getUsername() + u.getGroups().get(0).getId());
             }
             reply = new Message(NetCommands.newGroupOk, request.getUser());
             sendReply(reply);
@@ -168,25 +182,48 @@ public class ServerController implements ClientListener {
             reply = new Message(NetCommands.newGroupDenied, request.getUser(), errorMessage);
             sendReply(reply);
         }
+
     }
 
-    public void updateGroup(Message request) {
+    /**
+     * Updates the registered group with new members and updates group membership of the added or removed users.
+     */
+
+    public void updateGroupMembers(Message request) {
         Group group = (Group) request.getData().get(0);
         registeredGroups.updateGroup(group);
+        updateUsersGroups(group);
         notifyGroupChanges(group);
     }
+
+    /**
+     * Updates the group membership of the added or removed users
+     * @param group is the group that contains changes in members
+     */
+
+    public void updateUsersGroups(Group group) {
+        ArrayList<User> members = group.getUsers();
+        GenericID id = group.getGroupID();
+        for (User u : members) {
+            u.addGroupMembership(id);
+            registeredUsers.updateUser(u);
+        }
+    }
+
+    /**
+     * Looks for a requested user among registered users.
+     * @param request is the message object that contains the user searched for
+     */
 
     public void searchForUser(Message request) {
         Message reply = null;
         User dummyUser = (User) request.getData().get(0);
 
         if (registeredUsers.findUser(dummyUser) != null) {
-            //Användaren finns
             User foundUser = registeredUsers.findUser(dummyUser);
             List<Transferable> data = Arrays.asList(new Transferable[]{foundUser});
             reply = new Message(NetCommands.userExists, request.getUser(), data);
         } else {
-            //null i return - användaren finns inte, skicka errormessage.
             ErrorMessage errorMessage = new ErrorMessage("Användaren finns inte");
             reply = new Message(NetCommands.userDoesNotExist, request.getUser(), errorMessage);
         }
@@ -194,18 +231,15 @@ public class ServerController implements ClientListener {
 
     }
 
-  /*  //TODO: skicka svar till klienten
-    public void addNewChore(Message request) {
-        request.getGroup().addChore(request.getChore()); //TODO: Här la jag till en getChore i Message och hämtar, FEL?
-        registeredGroups.updateGroup(request.getGroup());
+    /**
+     * Updates registered groups with added or removed chores and rewards
+     * @param request message-object containing the updated group.
+     */
+    public void updateGroup(Message request) {
+        Group group = (Group) request.getData().get(0);
+        registeredGroups.updateGroup(group);
+        notifyGroupChanges(group);
     }
-
-    //TODO: skicka svar till klienten
-    public void addNewReward(Message request) {
-        request.getGroup().addReward(request.getReward()); //TODO: Här la jag till en getReward i Message och hämtar, FEL?
-        registeredGroups.updateGroup(request.getGroup());
-    }
-*/
 
     /**
      * Inner class MessageHandler handles the incoming messages from the client one at a time.
