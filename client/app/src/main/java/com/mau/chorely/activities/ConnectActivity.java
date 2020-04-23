@@ -39,11 +39,11 @@ public class ConnectActivity extends AppCompatActivity implements UpdatableActiv
 
     @Override
     public void updateActivity() {
-        if (BridgeInstances.getModel().isConnected()) {
+        if (BridgeInstances.getModel(getFilesDir()).isConnected()) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (BridgeInstances.getModel().isConnected()) {
+                    if (BridgeInstances.getModel(getFilesDir()).isConnected()) {
                       finish();
                     }
                 }

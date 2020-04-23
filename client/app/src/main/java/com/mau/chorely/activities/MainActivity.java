@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity implements UpdatableActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         BridgeInstances.getPresenter().register(this);
-        BridgeInstances.instantiateModel(getFilesDir()); // startar modellen.
+        BridgeInstances.getModel(getFilesDir()); // startar modellen.
     }
 
     @Override
@@ -50,8 +50,8 @@ public class MainActivity extends AppCompatActivity implements UpdatableActivity
      */
     @Override
     public void updateActivity() {
-        if (BridgeInstances.getModel().isConnected()) {
-            if (BridgeInstances.getModel().isLoggedIn()) {
+        if (BridgeInstances.getModel(getFilesDir()).isConnected()) {
+            if (BridgeInstances.getModel(getFilesDir()).isLoggedIn()) {
                 Intent intent = new Intent(this, ManageGroupsActivity.class);
                 startActivity(intent);
                 finish();

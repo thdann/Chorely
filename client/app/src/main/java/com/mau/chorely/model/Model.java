@@ -132,7 +132,6 @@ public class Model {
         @Override
         public void run() {
 
-            handleTask(new Message(NetCommands.login, storage.getUser()));
             while (!Thread.interrupted()) {
                 try {
                     System.out.println("Model is blocking for new message");

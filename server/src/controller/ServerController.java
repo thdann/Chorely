@@ -48,6 +48,7 @@ public class ServerController implements ClientListener {
     }
 
     public void addOnlineClient(User user, ClientHandler client) {
+        System.out.println("USER:" + user);
         onlineClients.put(user, client);
 
         User userFromFile = registeredUsers.getUserFromFile(user);
