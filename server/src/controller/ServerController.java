@@ -124,24 +124,23 @@ public class ServerController implements ClientListener {
     }
 
     /**
-     * Checks if user is allready registred and ok to log in
+     * Checks if user is already registered and ok to log in
      *
      * @param request
      */
     public void logIn(Message request) {
-        Message reply = null;
+        Message reply;
         User user = request.getUser();
         User userFromFile = registeredUsers.getUserFromFile(user);
 
         if (user.compareUsernamePassword(userFromFile)) {
-            reply = new Message(NetCommands.loginOk, request.getUser());
-            sendReply(reply);
+            reply = new Message(NetCommands.loginOk, user);
         } else {
             ErrorMessage errorMessage = new ErrorMessage("Fel användarnamn eller lösenord, försök igen!");
-            reply = new Message(NetCommands.loginDenied, request.getUser(), errorMessage);
-            sendReply(reply);
+            reply = new Message(NetCommands.loginDenied, user, errorMessage);
         }
 
+        sendReply(reply);
     }
 
     /**
