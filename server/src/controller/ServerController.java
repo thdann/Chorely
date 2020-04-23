@@ -48,32 +48,19 @@ public class ServerController implements ClientListener {
     }
 
     public void addOnlineClient(User user, ClientHandler client) {
+        onlineClients.put(user, client);
 
-        User userFromDisk = registeredUsers.getUserFromFile(user);
-        ArrayList<GenericID> groupMemberships = userFromDisk.getGroups();
-
-        for (GenericID id : groupMemberships) {
-            Group group = registeredGroups.getGroupByID(id);
-            ArrayList<Transferable> data = new ArrayList<>();
-            data.add(group);
-            Message message = new Message(NetCommands.updateGroup, user, data);
-            sendReply(message);
-
-            onlineClients.put(user, client);
-            User rebellUser = registeredUsers.getUserFromFile(user);
-            if (rebellUser != null) {
-                if (rebellUser.getGroups() != null) {
-                    ArrayList<GenericID> groupMemberships = rebellUser.getGroups();
-
-                    for (GenericID id : groupMemberships) {
-                        Group group = registeredGroups.getGroupByID(id);
-                        ArrayList<Transferable> data = new ArrayList<>();
-                        data.add(group);
-                        Message message = new Message(NetCommands.updateGroup, user, data);
-                        sendReply(message);
-                    }
+        User userFromFile = registeredUsers.getUserFromFile(user);
+        if (userFromFile != null) {
+            if (userFromFile.getGroups() != null) {
+                ArrayList<GenericID> groupMemberships = userFromFile.getGroups();
+                for (GenericID id : groupMemberships) {
+                    Group group = registeredGroups.getGroupByID(id);
+                    ArrayList<Transferable> data = new ArrayList<>();
+                    data.add(group);
+                    Message message = new Message(NetCommands.updateGroup, user, data);
+                    sendReply(message);
                 }
-
             }
         }
     }
@@ -91,6 +78,7 @@ public class ServerController implements ClientListener {
 
     /**
      * Notifies all the members of a group when a change is made in the group.
+     *
      * @param group
      */
 
@@ -107,6 +95,7 @@ public class ServerController implements ClientListener {
 
     /**
      * Handles the incoming messages from the client
+     *
      * @param msg is the incoming message object
      */
 
@@ -173,7 +162,7 @@ public class ServerController implements ClientListener {
             for (User u : members) {
                 u.addGroupMembership(groupID);
                 registeredUsers.updateUser(u);
-                System.out.println( u.getUsername() + u.getGroups().get(0).getId());
+                System.out.println(u.getUsername() + u.getGroups().get(0).getId());
             }
             reply = new Message(NetCommands.newGroupOk, request.getUser());
             sendReply(reply);
@@ -199,6 +188,7 @@ public class ServerController implements ClientListener {
 
     /**
      * Updates the group membership of the added or removed users
+     *
      * @param group is the group that contains changes in members
      */
 
@@ -213,6 +203,7 @@ public class ServerController implements ClientListener {
 
     /**
      * Looks for a requested user among registered users.
+     *
      * @param request is the message object that contains the user searched for
      */
 
@@ -234,6 +225,7 @@ public class ServerController implements ClientListener {
 
     /**
      * Updates registered groups with added or removed chores and rewards
+     *
      * @param request message-object containing the updated group.
      */
     public void updateGroup(Message request) {
