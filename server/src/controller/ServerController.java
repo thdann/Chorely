@@ -104,6 +104,8 @@ public class ServerController implements ClientListener {
         User user = msg.getUser();
 
         switch (command) {
+            case login:
+                logIn(msg);
             case registerUser:
                 registerUser(msg);
                 break;
@@ -119,6 +121,27 @@ public class ServerController implements ClientListener {
                 //TODO:  kod för default case. Vad kan man skriva här?
                 break;
         }
+    }
+
+    /**
+     * Checks if user is allready registred and ok to log in
+     *
+     * @param request
+     */
+    public void logIn(Message request) {
+        Message reply = null;
+        User user = request.getUser();
+        User userFromFile = registeredUsers.getUserFromFile(user);
+
+        if (user.compareUsernamePassword(userFromFile)) {
+            reply = new Message(NetCommands.loginOk, request.getUser());
+            sendReply(reply);
+        } else {
+            ErrorMessage errorMessage = new ErrorMessage("Fel användarnamn eller lösenord, försök igen!");
+            reply = new Message(NetCommands.loginDenied, request.getUser(), errorMessage);
+            sendReply(reply);
+        }
+
     }
 
     /**
@@ -233,6 +256,7 @@ public class ServerController implements ClientListener {
         registeredGroups.updateGroup(group);
         notifyGroupChanges(group);
     }
+
 
     /**
      * Inner class MessageHandler handles the incoming messages from the client one at a time.

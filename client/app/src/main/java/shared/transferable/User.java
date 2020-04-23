@@ -58,4 +58,11 @@ public class User implements Transferable {
         }
     }
 
+    public boolean compareUsernamePassword(User otherUser) {
+       String otherPassword = otherUser.getPassword();
+       String otherUsername = otherUser.getUsername();
+       boolean isEqual = username.equals(otherUsername) && password.equals(otherPassword);
+       return  isEqual;
+    }
+
 }
