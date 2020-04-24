@@ -264,7 +264,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:background="null"
+            android:background="@color/background"
             android:onClick="removeMemberFromGroup"
             app:srcCompat="@drawable/delete_icon" />
 
