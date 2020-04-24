@@ -149,9 +149,9 @@
         android:layout_height="wrap_content"
         android:background="@drawable/edit_text_background"
         android:padding="5dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/edit_group_addMemberButton"
         app:layout_constraintTop_toTopOf="@id/edit_group_textViewAddMembers"
-
+        app:layout_constraintStart_toEndOf="@id/edit_group_textViewAddMembers"
         >
 
         <EditText
@@ -218,9 +218,12 @@
         android:background="@color/background"
         android:onClick="addMember"
         android:visibility="invisible"
-        app:layout_constraintStart_toEndOf="@id/edit_group_searchBarMembers"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/edit_group_searchBarMembers"
-        app:srcCompat="@drawable/add_user_icon" />
+        app:srcCompat="@drawable/add_user_icon"
+        app:layout_constraintBottom_toTopOf="@id/edit_group_members_layout"
+        android:layout_marginBottom="2dp"
+        />
 
 
     <RelativeLayout
@@ -228,7 +231,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/edit_group_searchBarMembers"
-        android:paddingTop="10dp"
+        android:paddingVertical="4dp"
+
 
         >
 
@@ -260,7 +264,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:background="@color/background"
+            android:background="null"
             android:onClick="removeMemberFromGroup"
             app:srcCompat="@drawable/delete_icon" />
 
