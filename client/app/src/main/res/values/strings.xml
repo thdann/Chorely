@@ -22,9 +22,11 @@
     <string name="deleteMember">Ta bort medlem</string>
     <string name="leaveGroup">Lämna grupp</string>
     <string name="deleteGroup">Radera grupp</string>
+    <string name="nameChore">Namn på syssla:</string>
+    <string name="descriptionChore">Beskrivning av syssla:</string>
+    <string name="setPointsChore">Poängvärde för syssla:</string>
     <string name="noChoresString">Det finns inga sysslor i den här gruppen.</string>
     <string name="noRewardsString">Det finns inga belöningar i den här gruppen</string>
-
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
