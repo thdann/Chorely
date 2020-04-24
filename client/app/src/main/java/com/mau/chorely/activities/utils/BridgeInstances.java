@@ -21,25 +21,16 @@ public class BridgeInstances {
     private static Presenter presenter;
     private BridgeInstances(){}
 
-    /**
-     * method that is called upon application start. Takes a reference to the application
-     * files-directory
-     * @param appFilesDir Files directory
-     */
-    public static void instantiateModel(File appFilesDir){
-        if(model == null) {
-            model = new Model(appFilesDir);
-        }
-    }
 
     /**
      * Getter for the model.
      * @return the reference to the model.
      */
-    public static Model getModel(){
+    public static Model getModel(File appFilesDir){
         if(model == null){
-            throw new RuntimeException("Model unreferenced");
-            //model = new Model();
+            model = new Model(appFilesDir);
+            Exception e = new Exception("MODEL UNREFERENCED");
+            e.printStackTrace();
         }
         return model;
     }

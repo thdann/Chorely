@@ -38,7 +38,7 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_groups);
         buildRecyclerView();
-        updatedGroups = BridgeInstances.getModel().getGroups();
+        updatedGroups = BridgeInstances.getModel(getFilesDir()).getGroups();
         updateGroupsList();
 
     }
@@ -86,7 +86,7 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
         mAdapter.setOnItemClickListener(new RecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                if(BridgeInstances.getModel().getSelectedGroup() != null) {
+                if(BridgeInstances.getModel(getFilesDir()).getSelectedGroup() != null) {
                     Intent intent = new Intent(ManageGroupsActivity.this, CreateEditGroupActivity.class);
                     intent.putExtra("SELECTED_GROUP", groupList.get(position));
                     startActivity(intent);
@@ -134,9 +134,9 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if(BridgeInstances.getModel().isConnected()){
+                if(BridgeInstances.getModel(getFilesDir()).isConnected()){
                     synchronized (lockObjectGroupList) {
-                        updatedGroups = BridgeInstances.getModel().getGroups();
+                        updatedGroups = BridgeInstances.getModel(getFilesDir()).getGroups();
                         updateGroupsList();
                         updateGroupText();
                     }
