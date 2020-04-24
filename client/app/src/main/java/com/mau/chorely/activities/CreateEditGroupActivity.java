@@ -83,7 +83,7 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Model model = BridgeInstances.getModel();
+                Model model = BridgeInstances.getModel(getFilesDir());
                 if (model.isConnected()) {
                     if (lastSearchedUser == null) {
                         lastSearchedUser = model.removeLastSearchedUser();
@@ -168,7 +168,7 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
             findViewById(R.id.edit_group_edit_description_button).setVisibility(View.INVISIBLE);
             selectedGroup = new Group();
             newGroup = true;
-            selectedGroup.addUser(BridgeInstances.getModel().getUser());
+            selectedGroup.addUser(BridgeInstances.getModel(getFilesDir()).getUser());
             initSpinner();
         }
     }
@@ -188,7 +188,7 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
                 } else{
                     command = NetCommands.clientInternalGroupUpdate;
                 }
-                Model model = BridgeInstances.getModel();
+                Model model = BridgeInstances.getModel(getFilesDir());
                 ArrayList<Transferable> data = new ArrayList<>();
                 selectedGroup.setName(groupName);
                 selectedGroup.setDescription(groupDescription);
@@ -233,7 +233,7 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
             if(!selectedGroup.getUsers().contains(new User(searchString, ""))) {
                 findViewById(R.id.edit_group_searchMemberButton).setVisibility(View.INVISIBLE);
                 findViewById(R.id.edit_group_memberSearchWorkingGif).setVisibility(View.VISIBLE);
-                Model model = BridgeInstances.getModel();
+                Model model = BridgeInstances.getModel(getFilesDir());
                 User user = new User(searchString, "");
                 ArrayList<Transferable> data = new ArrayList<>();
                 data.add(user);

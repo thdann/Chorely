@@ -9,11 +9,16 @@ import android.widget.Toast;
 import com.mau.chorely.R;
 import com.mau.chorely.activities.interfaces.UpdatableActivity;
 import com.mau.chorely.activities.utils.BridgeInstances;
+import com.mau.chorely.model.Model;
+
+import shared.transferable.Message;
+import shared.transferable.NetCommands;
 
 /**
  * This activity gets invoked if the client looses its connection to the server.
  * The user is kept here until the connection is re-established, and is then sent to the
  * previous activity in the backstack.
+ *
  * @author Timothy denison
  */
 public class ConnectActivity extends AppCompatActivity implements UpdatableActivity {
@@ -39,16 +44,16 @@ public class ConnectActivity extends AppCompatActivity implements UpdatableActiv
 
     @Override
     public void updateActivity() {
-        if (BridgeInstances.getModel().isConnected()) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (BridgeInstances.getModel().isConnected()) {
-                      finish();
-                    }
+        Model model = BridgeInstances.getModel(getFilesDir());
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (BridgeInstances.getModel(getFilesDir()).isConnected()) {
+                    finish();
                 }
-            });
-        }
+            }
+        });
+
     }
 
     @Override

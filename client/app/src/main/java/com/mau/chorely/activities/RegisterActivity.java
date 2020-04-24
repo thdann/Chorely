@@ -67,7 +67,7 @@ public class RegisterActivity extends AppCompatActivity implements UpdatableActi
         User userToRegister = new User(username, password);
 
         Message registerMsg = new Message(NetCommands.registerUser, userToRegister, new ArrayList<Transferable>());
-        BridgeInstances.getModel().handleTask(registerMsg);
+        BridgeInstances.getModel(getFilesDir()).handleTask(registerMsg);
         user.setVisibility(View.INVISIBLE);
         pass.setVisibility(View.INVISIBLE);
         Button buttonRegister = findViewById(R.id.register);
@@ -83,8 +83,8 @@ public class RegisterActivity extends AppCompatActivity implements UpdatableActi
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if(BridgeInstances.getModel().isConnected()){
-                    if(BridgeInstances.getModel().isLoggedIn()) {
+                if(BridgeInstances.getModel(getFilesDir()).isConnected()){
+                    if(BridgeInstances.getModel(getFilesDir()).isLoggedIn()) {
                         Intent intent = new Intent(RegisterActivity.this, ManageGroupsActivity.class);
                         startActivity(intent);
                         finish();
