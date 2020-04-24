@@ -22,4 +22,8 @@
     <string name="deleteMember">Ta bort medlem</string>
     <string name="leaveGroup">Lämna grupp</string>
     <string name="deleteGroup">Radera grupp</string>
+    <string name="nameChore">Namn på syssla:</string>
+    <string name="descriptionChore">Beskrivning av syssla:</string>
+    <string name="setPointsChore">Poängvärde för syssla:</string>
+
 </resources>
