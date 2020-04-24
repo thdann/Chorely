@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/btnColor"
-        android:text="xx"
+        android:text="REPLACE ME WITH @strings noRewards"
         android:gravity="center"
         />
 
@@ -25,6 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/btnColor"
+
         android:clickable="true"
         android:focusable="true"
         android:src="@drawable/central_panel_add"
