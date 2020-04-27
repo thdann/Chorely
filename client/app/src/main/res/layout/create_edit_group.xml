@@ -135,16 +135,20 @@
         <RelativeLayout
             android:id="@+id/edit_group_searchBarMembers"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@drawable/edit_text_background">
+
 
             <TextView
                 android:id="@+id/edit_group_textViewAddMembers"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 android:text="@string/textAddMembers"
                 android:textColor="@color/btnColor"
                 android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:background="@color/background"
+                android:paddingRight="5dp"/>
 
             <EditText
                 android:id="@+id/edit_group_memberSearchText"
@@ -235,7 +239,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toEndOf="@+id/edit_group_textViewMembers"
+            android:layout_toLeftOf="@+id/edit_group_deleteMemberButton"
+
             android:backgroundTint="@color/btnColor" />
 
         <ImageButton
