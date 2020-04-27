@@ -91,6 +91,9 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
                     intent.putExtra("SELECTED_GROUP", groupList.get(position));
                     startActivity(intent);
                 } else {
+
+                    Intent intent = new Intent(ManageGroupsActivity.this, CentralActivity.class);
+                    startActivity(intent);
                     // TODO: 2020-04-22 Här ska användaren tas till huvudaktiviteten.
                 }
             }

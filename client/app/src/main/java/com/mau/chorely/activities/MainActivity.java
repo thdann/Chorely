@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements UpdatableActivity
 
             }
         } else {
-            Intent intent = new Intent(this, CreateEditGroupActivity.class);
+            Intent intent = new Intent(this, ConnectActivity.class);
             startActivity(intent);
         }
     }
