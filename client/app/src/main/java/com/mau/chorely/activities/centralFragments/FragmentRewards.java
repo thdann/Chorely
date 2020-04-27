@@ -27,7 +27,6 @@ public class FragmentRewards extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static ArrayList<ListItemCentral> itemList = new ArrayList<>();
-
     private RecyclerView recyclerView;
     private CentralActivityRecyclerViewAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -55,7 +54,6 @@ public class FragmentRewards extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             ArrayList<Reward> rewards = (ArrayList<Reward>) getArguments().getSerializable("REWARDS");
-
             for(Reward reward : rewards){
                 itemList.add(new ListItemCentral(reward));
             }
@@ -65,14 +63,14 @@ public class FragmentRewards extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_chores, container, false);
+        recyclerView = view.findViewById(R.id.fragment_chores_recyclerView);
+        buildRecyclerView();
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_rewards, container, false);
+        return view;
     }
 
-
     private void buildRecyclerView(){
-        if(getActivity() != null) {
-            recyclerView = getActivity().findViewById(R.id.fragment_chores_recyclerView);
             recyclerView.setHasFixedSize(true);
             layoutManager = new LinearLayoutManager(getContext());
             adapter = new CentralActivityRecyclerViewAdapter(itemList);
@@ -84,7 +82,5 @@ public class FragmentRewards extends Fragment {
                     // TODO: 2020-04-23 gå till aktiviteten för ändring av chore.
                 }
             });
-        }
-
     }
 }

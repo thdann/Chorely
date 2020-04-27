@@ -57,7 +57,6 @@ public class FragmentChores extends Fragment {
                 itemList.add(new ListItemCentral(chore));
             }
         }
-        buildRecyclerView();
     }
 
     @Override
@@ -69,14 +68,16 @@ public class FragmentChores extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_chores, container, false);
+        View view = inflater.inflate(R.layout.fragment_chores, container, false);
+
+        recyclerView = view.findViewById(R.id.fragment_chores_recyclerView);
+        buildRecyclerView();
+        return view;
     }
 
     private void buildRecyclerView(){
-        if(getActivity() != null) {
-            recyclerView = getActivity().findViewById(R.id.fragment_chores_recyclerView);
             recyclerView.setHasFixedSize(true);
-            layoutManager = new LinearLayoutManager(getContext());
+            layoutManager = new LinearLayoutManager(getActivity());
             adapter = new CentralActivityRecyclerViewAdapter(itemList);
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setAdapter(adapter);
@@ -88,7 +89,7 @@ public class FragmentChores extends Fragment {
             });
         }
 
-    }
+
 
 
 }

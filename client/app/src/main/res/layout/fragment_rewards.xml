@@ -37,7 +37,7 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/fragment_chores_recyclerView"
+        android:id="@+id/fragment_rewards_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="5dp"
