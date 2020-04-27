@@ -67,9 +67,7 @@ public class FragmentChores extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_chores, container, false);
-
         recyclerView = view.findViewById(R.id.fragment_chores_recyclerView);
         buildRecyclerView();
         return view;

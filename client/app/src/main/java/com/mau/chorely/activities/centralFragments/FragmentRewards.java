@@ -66,7 +66,6 @@ public class FragmentRewards extends Fragment {
         View view = inflater.inflate(R.layout.fragment_chores, container, false);
         recyclerView = view.findViewById(R.id.fragment_chores_recyclerView);
         buildRecyclerView();
-        // Inflate the layout for this fragment
         return view;
     }
 
