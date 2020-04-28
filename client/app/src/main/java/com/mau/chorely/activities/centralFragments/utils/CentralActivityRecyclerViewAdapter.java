@@ -8,7 +8,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-
 import com.mau.chorely.R;
 
 import java.util.ArrayList;
@@ -19,8 +18,6 @@ public class CentralActivityRecyclerViewAdapter extends RecyclerView.Adapter<Cen
     public interface OnitemClickListener {
         void onItemClick(int position);
     }
-
-
 
     public CentralActivityRecyclerViewAdapter(ArrayList<ListItemCentral> itemList){
         this.itemList = itemList;

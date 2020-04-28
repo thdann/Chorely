@@ -6,15 +6,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 
 import com.mau.chorely.R;
+
+import shared.transferable.Chore;
+
+/**
+ * Creates a new Chore
+ * @author Theresa Dannberg
+ * v. 1.0 2020-04-23
+ */
 
 public class CreateChoreActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_create_chore);
     }
 
@@ -32,5 +40,18 @@ public class CreateChoreActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Creates a new Chore-object from the user-input
+     */
+
+    public void createNewChore() {
+
+        String name = ((EditText) findViewById(R.id.activity_register_editText_nameChore)).getText().toString();
+        String description = ((EditText) findViewById(R.id.activity_register_editText_descriptionChore)).getText().toString();
+        int points = Integer.parseInt(((EditText) findViewById(R.id.activity_register_editText_setPointsChore)).getText().toString());
+        Chore chore = new Chore(name, points, description);
+
     }
 }

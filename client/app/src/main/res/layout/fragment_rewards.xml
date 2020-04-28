@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/btnColor"
-        android:text="@string/noRewardsString"
+        android:text="REPLACE ME WITH @strings noRewards"
         android:gravity="center"
         />
 
@@ -25,6 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/btnColor"
+
         android:clickable="true"
         android:focusable="true"
         android:src="@drawable/central_panel_add"
@@ -36,7 +37,7 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/fragment_chores_recyclerView"
+        android:id="@+id/fragment_rewards_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="5dp"
