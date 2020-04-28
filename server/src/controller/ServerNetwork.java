@@ -11,14 +11,13 @@ import java.io.IOException;
 
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.logging.Logger;
 
 
 public class ServerNetwork implements Runnable {
-
+    private final static Logger messagesLogger = Logger.getLogger("messages");
     private ServerController controller;
     private ServerSocket serverSocket;
-
-
 
     public ServerNetwork(ServerController controller, int port) {
         this.controller = controller;

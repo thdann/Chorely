@@ -4,6 +4,7 @@ import shared.transferable.User;
 
 import java.io.*;
 import java.sql.SQLOutput;
+import java.util.logging.Logger;
 
 /**
  * RegisteredUser handles all registered users by reading and writing each User object to a
@@ -14,7 +15,7 @@ import java.sql.SQLOutput;
  */
 
 public class RegisteredUsers {
-
+    private final static Logger messagesLogger = Logger.getLogger("messages");
     private String filePath;
 
     /**

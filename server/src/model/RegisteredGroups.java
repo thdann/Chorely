@@ -5,6 +5,7 @@ import shared.transferable.Group;
 import shared.transferable.User;
 
 import java.io.*;
+import java.util.logging.Logger;
 
 /**
  * RegisteredGroups handles all registered groups by reading and writing each Group object to a
@@ -17,7 +18,7 @@ import java.io.*;
 //TODO vilka olika scenarion kan hända som vi måste ha metoder för här???
 
 public class RegisteredGroups {
-
+    private final static Logger messagesLogger = Logger.getLogger("messages");
     private String filePath;
     private File directory;
 
