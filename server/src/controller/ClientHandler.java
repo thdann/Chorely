@@ -75,9 +75,9 @@ public class ClientHandler {
 
                 while (true) {
                     try {
-                        System.out.println("Du har kommit hit");
                         Message msg = (Message) ois.readObject();
                         System.out.println(msg.getCommand());
+                        messagesLogger.info(msg.getCommand() + " received from client " + msg.getUser());
 
                         if(clientUser == null) {
                             controller.addOnlineClient(msg.getUser(), ClientHandler.this);
@@ -117,9 +117,10 @@ public class ClientHandler {
             try {
                 oos = new ObjectOutputStream(socket.getOutputStream());
                 while (true) {
-                    oos.writeObject(outgoingMessages.take());
+                    Message reply = outgoingMessages.take();
+                    oos.writeObject(reply);
                     oos.flush();
-                    System.out.println("skickat svar till klienten");
+                    messagesLogger.info(reply.getCommand() + " Sent to user " + reply.getUser());
 
                 }
             } catch (IOException | InterruptedException e) {
