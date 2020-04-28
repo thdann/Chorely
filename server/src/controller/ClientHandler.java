@@ -12,6 +12,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.logging.Logger;
 
 /**
  * ClientHandler
@@ -21,7 +22,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 
 public class ClientHandler {
-
+    private final static Logger messagesLogger = Logger.getLogger("messages");
     private Socket socket;
     private InputThread inputThread;
     private OutputThread outputThread;

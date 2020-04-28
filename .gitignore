@@ -293,3 +293,8 @@ obj/
 !/gradle/wrapper/gradle-wrapper.jar
 
 # End of https://www.gitignore.io/api/java,linux,macos,windows,intellij,androidstudio
+#
+# Ignore log files on server.
+
+server/logs/*.log.*
+server/logs/*.log
