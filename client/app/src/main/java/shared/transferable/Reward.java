@@ -19,7 +19,7 @@ public class Reward implements Transferable {
         this.rewardPrice = rewardPrice;
     }
 
-    public Reward(String name,int rewardPrice, String description) {
+    public Reward(String name, int rewardPrice, String description) {
         this.name = name;
         this.rewardPrice = rewardPrice;
         this.description = description;
