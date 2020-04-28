@@ -9,6 +9,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -18,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 
-
 import shared.transferable.Group;
 import shared.transferable.User;
 
@@ -26,7 +26,7 @@ import shared.transferable.User;
  * This class handles all persistent storage of the client.
  * It takes a reference to the application files directory upon creation.
  *
- * @author Timothy Denison
+ * @author Timothy Denison, Theresa Dannberg, Emma Svensson
  */
 public class PersistentStorage {
     private File filesDir;
@@ -88,11 +88,11 @@ public class PersistentStorage {
     // TODO: 2020-04-15 om ändring görs ska även det sparade user objektet ändras för att inehålla den nya gruppen
     public boolean saveOrUpdateGroup(Group newGroup) {
         boolean groupUpdated = false;
-        if(!groupDir.exists()){
+        if (!groupDir.exists()) {
             groupDir.mkdirs();
         }
 
-        File groupFile = new File(groupDir.getPath()+ "/" + newGroup.getGroupID()+".cho");
+        File groupFile = new File(groupDir.getPath() + "/" + newGroup.getGroupID() + ".cho");
         if (groupFile.exists()) {
             System.out.println("FILE EXISTS");
             try (ObjectInputStream inputStream = new ObjectInputStream(new BufferedInputStream(
@@ -128,7 +128,7 @@ public class PersistentStorage {
         }
         System.out.println("Saved new group = " + groupUpdated);
 
-        if(groupUpdated){
+        if (groupUpdated) {
             User user = getUser();
             user.addGroupMembership(newGroup.getGroupID());
         }
@@ -143,9 +143,9 @@ public class PersistentStorage {
         if (groupFiles != null) {
             for (File groupFile : groupFiles) {
                 try (ObjectInputStream inputStream = new ObjectInputStream(new BufferedInputStream(
-                        new FileInputStream(groupFile)))){
+                        new FileInputStream(groupFile)))) {
                     ret.add((Group) inputStream.readObject());
-                } catch (IOException  | ClassNotFoundException e){
+                } catch (IOException | ClassNotFoundException e) {
                     System.out.println("ERROR READING GROUP FILE: " + e.getMessage());
                 }
             }
@@ -154,7 +154,7 @@ public class PersistentStorage {
         return ret;
     }
 
-    public void deleteGroup(Group group){
+    public void deleteGroup(Group group) {
         //remove group from user file
         User user = getUser();
         user.removeGroupMembership(group.getGroupID());
@@ -163,19 +163,26 @@ public class PersistentStorage {
         //delete file
         File fileToDelete = new File(groupDir.getAbsolutePath() + "/" + group.getGroupID() + ".cho");
 
-        if(fileToDelete.exists()){
+        if (fileToDelete.exists()) {
             fileToDelete.delete();
             System.out.println("GROUP DELETED");
         }
     }
 
-    public void setSelectedGroup(Group group){
-
+    public void setSelectedGroup(Group group) {
+        
     }
 
-    // TODO: 2020-04-22 Implementerad
-    public Group getSelectedGroup(){
-        return null;
+    public Group getSelectedGroup() {
+        Group group = null;
+        if (groupDir.exists()) {
+            try (ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(groupDir)))) {
+                group = (Group) ois.readObject();
+            } catch (IOException | ClassNotFoundException e) {
+                System.out.println(new Date() + "File input stream: thrown exception " +
+                        "trying to read group." + e.getMessage());
+            }
+        }
+        return group;
     }
-
 }
