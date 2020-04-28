@@ -30,6 +30,17 @@
         android:layout_marginTop="10dp"
         />
 
+    <View
+        android:id="@+id/create_reward_divider1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/button_background"
+        app:layout_constraintBottom_toTopOf="@+id/activity_register_textField_descriptionReward"
+        app:layout_constraintTop_toBottomOf="@id/activity_register_editText_nameReward"
+        />
+
     <TextView
         android:id="@+id/activity_register_textField_descriptionReward"
         android:layout_width="wrap_content"
@@ -40,7 +51,7 @@
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/activity_register_editText_nameReward"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="30dp"
         />
 
     <EditText
@@ -52,6 +63,18 @@
         android:layout_marginTop="10dp"
         />
 
+    <View
+        android:id="@+id/create_chore_divider2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/button_background"
+        app:layout_constraintBottom_toTopOf="@+id/activity_register_textField_pointsReward"
+        app:layout_constraintTop_toBottomOf="@id/activity_register_editText_descriptionReward"
+        />
+
+
     <TextView
         android:id="@+id/activity_register_textField_pointsReward"
         android:layout_width="wrap_content"
@@ -62,7 +85,7 @@
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/activity_register_editText_descriptionReward"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="30dp"
         />
 
     <EditText

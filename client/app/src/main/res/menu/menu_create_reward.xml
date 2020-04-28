@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/create_chore_menu_saveChanges"
+        android:id="@+id/create_reward_menu_saveChanges"
         android:title="@string/saveChanges"
         android:icon="@drawable/save_icon_white"
         app:showAsAction="always"
