@@ -21,9 +21,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.logging.Logger;
 
 public class ServerController implements ClientListener {
-
+    private final static Logger messagesLogger = Logger.getLogger("messages");
     private RegisteredUsers registeredUsers;
     private RegisteredGroups registeredGroups;
     private ServerNetwork network;

@@ -170,12 +170,14 @@ public class PersistentStorage {
     }
 
     public void setSelectedGroup(Group group){
-
+        //spara ner selectedgroup till filesDir
     }
 
     // TODO: 2020-04-22 Implementerad
     public Group getSelectedGroup(){
         return null;
+        //hämta upp selected group från filesDir
+
     }
 
 }
