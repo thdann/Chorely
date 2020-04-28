@@ -169,8 +169,18 @@ public class PersistentStorage {
         }
     }
 
-    public void setSelectedGroup(Group group) {
-        
+    public void setSelectedGroup(Group inGroup) {
+        Group group = inGroup;
+        if (groupDir.exists()) {
+            groupDir.delete();
+        }
+        try (ObjectOutputStream ois = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(groupDir)))) {
+            ois.writeObject(group);
+            ois.flush();
+        } catch (IOException e) {
+            System.out.println(new Date() + "File output stream: thrown exception " +
+                    "trying to write group." + e.getMessage());
+        }
     }
 
     public Group getSelectedGroup() {
