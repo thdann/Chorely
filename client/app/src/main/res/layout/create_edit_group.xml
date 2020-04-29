@@ -105,7 +105,7 @@
             android:background="@drawable/edit_text_background"
             android:onClick="editGroupDescription"
             android:paddingRight="8dp"
-            android:src="@drawable/edit_button_icon"/>
+            android:src="@drawable/edit_button_icon" />
 
     </RelativeLayout>
 
@@ -123,44 +123,6 @@
 
 
     <TextView
-        android:id="@+id/edit_group_textViewMembers"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="@string/members"
-        android:textColor="@color/btnColor"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edit_group_divider2" />
-
-    <Spinner
-        android:id="@+id/spinnerMembers"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="1.5dp"
-        android:backgroundTint="@color/btnColor"
-        app:layout_constrainedWidth="true"
-        app:layout_constraintStart_toEndOf="@id/edit_group_textViewMembers"
-        app:layout_constraintTop_toTopOf="@id/edit_group_textViewMembers" />
-
-    <ImageButton
-
-
-        android:id="@+id/edit_group_deleteMemberButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="25dp"
-        android:background="@color/background"
-        android:onClick="removeMemberFromGroup"
-        app:layout_constraintStart_toEndOf="@id/spinnerMembers"
-        app:layout_constraintTop_toTopOf="@id/spinnerMembers"
-        app:srcCompat="@drawable/delete_icon" />
-
-
-    <TextView
         android:id="@+id/edit_group_textViewAddMembers"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -170,13 +132,13 @@
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edit_group_textViewMembers" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_group_divider2" />
 
     <RelativeLayout
         android:id="@+id/edit_group_searchBarMembers"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/edittext_background"
+        android:background="@drawable/edit_text_background"
         android:paddingEnd="4dp"
         app:layout_constraintStart_toEndOf="@id/edit_group_textViewMembers"
         app:layout_constraintTop_toTopOf="@id/edit_group_textViewAddMembers">
@@ -190,13 +152,9 @@
             android:hint="@string/hintSearchMember"
             android:padding="0dp"
             android:textColor="@color/btnColor"
-            android:textColorHint="@color/btnColor"
-
-            />
+            android:textColorHint="@color/btnColor" />
 
         <ImageButton
-
-
             android:id="@+id/edit_group_searchMemberButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -222,7 +180,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-
         <ImageButton
             android:id="@+id/edit_group_memberSearchCancelButton"
             android:layout_width="wrap_content"
@@ -234,14 +191,10 @@
             android:onClick="cancelFoundMember"
             android:visibility="invisible"
             app:layout_constraintStart_toEndOf="@id/edit_group_memberSearchText"
-            app:srcCompat="@drawable/cancel_icon"
-
-            />
-
+            app:srcCompat="@drawable/cancel_icon" />
     </RelativeLayout>
 
     <ImageButton
-
         android:id="@+id/edit_group_addMemberButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -253,6 +206,55 @@
         app:layout_constraintStart_toEndOf="@id/edit_group_searchBarMembers"
         app:layout_constraintTop_toTopOf="@id/edit_group_searchBarMembers"
         app:srcCompat="@drawable/add_user_icon" />
+
+    <RelativeLayout
+        android:id="@+id/edit_group_viewMembers_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_group_textViewAddMembers">
+
+
+
+
+    </RelativeLayout>
+
+
+    <TextView
+        android:id="@+id/edit_group_textViewMembers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/members"
+        android:textColor="@color/btnColor"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_group_textViewAddMembers" />
+
+    <Spinner
+        android:id="@+id/spinnerMembers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="1.5dp"
+        android:backgroundTint="@color/btnColor"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintStart_toEndOf="@id/edit_group_textViewMembers"
+        app:layout_constraintTop_toTopOf="@id/edit_group_textViewMembers" />
+
+    <ImageButton
+        android:id="@+id/edit_group_deleteMemberButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="25dp"
+        android:background="@color/background"
+        android:onClick="removeMemberFromGroup"
+        app:layout_constraintStart_toEndOf="@id/spinnerMembers"
+        app:layout_constraintTop_toTopOf="@id/spinnerMembers"
+        app:srcCompat="@drawable/delete_icon" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
