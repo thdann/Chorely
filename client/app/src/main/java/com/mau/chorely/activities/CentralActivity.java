@@ -45,8 +45,8 @@ public class CentralActivity extends AppCompatActivity {
         rewards.add(new Reward("test reward 1", 23));
         rewards.add(new Reward("test reward 2", 45));
 
-        adapter.addFragment(FragmentChores.newInstance(chores), "Chores");
-        adapter.addFragment(FragmentRewards.newInstance(rewards), "Rewards");
+        adapter.addFragment(FragmentChores.newInstance(chores), "Sysslor");
+        adapter.addFragment(FragmentRewards.newInstance(rewards), "Belöningar");
         viewPager.setAdapter(adapter);
     }
 }
