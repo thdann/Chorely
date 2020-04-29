@@ -136,7 +136,7 @@
             android:id="@+id/edit_group_searchBarMembers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/edit_text_background">
+            >
 
 
             <TextView
@@ -186,13 +186,13 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
-            s
+
             <ImageButton
                 android:id="@+id/edit_group_memberSearchCancelButton"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="4dp"
+
                 android:layout_toLeftOf="@+id/edit_group_addMemberButton"
                 android:background="@color/backgroundLight"
                 android:onClick="cancelFoundMember"
