@@ -21,7 +21,7 @@ import java.util.concurrent.LinkedBlockingDeque;
  * It will together with the different activities hold most, if not all business logic.
  * The focus of the class is to recieve requests from both the activities, and the network, in the
  * form of messages.
- * @author Timothy Denison
+ * @author Timothy Denison, Emma Svensson, Theresa Dannberg
  * @version 2.0
  */
 public class Model {
