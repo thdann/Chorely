@@ -44,7 +44,6 @@ public class Message implements Transferable {
         return user;
     }
 
-
     public ErrorMessage getErrorMessage() {
         return errorMessage;
     }
@@ -53,5 +52,13 @@ public class Message implements Transferable {
         return data;
     }
 
-
+    @Override
+    public String toString() {
+        return "Message{" +
+                "command=" + command +
+                ", user=" + user +
+                ", data=" + data +
+                ", errorMessage=" + errorMessage +
+                '}';
+    }
 }
