@@ -235,8 +235,6 @@ public class Model {
                             BridgeInstances.getPresenter().toastCurrent("Användare hittad!");
                             break;
 
-
-
                         case registrationDenied:
                             /*Falls through*/
                         case userDoesNotExist:

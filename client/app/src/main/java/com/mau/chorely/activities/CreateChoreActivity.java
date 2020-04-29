@@ -58,9 +58,7 @@ public class CreateChoreActivity extends AppCompatActivity implements UpdatableA
                 model.handleTask(msg); //Skickar meddelandet till Model?
                 finish();
             }
-
         }
-
         return super.onOptionsItemSelected(item);
     }
 
