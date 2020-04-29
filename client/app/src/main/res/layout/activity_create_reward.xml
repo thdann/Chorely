@@ -50,8 +50,8 @@
         android:textColor="@color/btnColor"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/activity_register_editText_nameReward"
-        android:layout_marginTop="30dp"
+        app:layout_constraintTop_toBottomOf="@+id/create_reward_divider1"
+        android:layout_marginTop="10dp"
         />
 
     <EditText
