@@ -1,15 +1,5 @@
 package controller;
 
-/**
- * ServerController handles the over all logic on the server side.
- * The class contains the main method that starts the program and makes it possible for a client
- * to obtain a connection by creating an instance of ServerNetwork.
- * version 3.0 2020-04-22
- *
- * @autor Angelica Asplund, Emma Svensson and Theresa Dannberg
- */
-
-
 import model.RegisteredGroups;
 import model.RegisteredUsers;
 
@@ -23,6 +13,14 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Logger;
 
+/**
+ * ServerController handles the over all logic on the server side.
+ * The class contains the main method that starts the program and makes it possible for a client
+ * to obtain a connection by creating an instance of ServerNetwork.
+ * version 3.0 2020-04-22
+ *
+ * @author Angelica Asplund, Emma Svensson and Theresa Dannberg
+ */
 public class ServerController implements ClientListener {
     private final static Logger messagesLogger = Logger.getLogger("messages");
     private RegisteredUsers registeredUsers;
@@ -103,7 +101,6 @@ public class ServerController implements ClientListener {
 
     public void handleClientTask(Message msg) {
         NetCommands command = msg.getCommand();
-        User user = msg.getUser();
 
         switch (command) {
             case login:
@@ -120,6 +117,7 @@ public class ServerController implements ClientListener {
                 break;
             case searchForUser:
                 searchForUser(msg);
+                break;
             default:
                 //TODO:  kod för default case. Vad kan man skriva här?
                 break;
@@ -204,10 +202,10 @@ public class ServerController implements ClientListener {
      * Updates the registered group with new changes.
      */
 
-    public void updateGroup (Message request) {
+    public void updateGroup(Message request) {
         Group group = (Group) request.getData().get(0);
         registeredGroups.updateGroup(group);
-        UpdateUsersInGroup(group);
+        updateUsersInGroup(group);
         notifyGroupChanges(group);
     }
 
@@ -217,7 +215,7 @@ public class ServerController implements ClientListener {
      * @param group is the group that contains changes in members
      */
 
-    public void UpdateUsersInGroup (Group group) {
+    private void updateUsersInGroup(Group group) {
         ArrayList<User> members = group.getUsers();
         GenericID id = group.getGroupID();
         for (User u : members) {
@@ -234,7 +232,7 @@ public class ServerController implements ClientListener {
      */
 
     public void searchForUser(Message request) {
-        Message reply = null;
+        Message reply;
         User dummyUser = (User) request.getData().get(0);
 
         if (registeredUsers.findUser(dummyUser) != null) {
@@ -255,10 +253,6 @@ public class ServerController implements ClientListener {
      */
 
     private class MessageHandler implements Runnable {
-
-        public MessageHandler() {
-
-        }
 
         public void run() {
             ArrayList<Transferable> list;
