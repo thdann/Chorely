@@ -116,7 +116,7 @@ public class ServerController implements ClientListener {
                 registerNewGroup(msg);
                 break;
             case updateGroup:
-                updateGroupMembers(msg);
+                updateGroup(msg);
                 break;
             case searchForUser:
                 searchForUser(msg);
@@ -201,13 +201,13 @@ public class ServerController implements ClientListener {
     }
 
     /**
-     * Updates the registered group with new members and updates group membership of the added or removed users.
+     * Updates the registered group with new changes.
      */
 
-    public void updateGroupMembers(Message request) {
+    public void updateGroup (Message request) {
         Group group = (Group) request.getData().get(0);
         registeredGroups.updateGroup(group);
-        updateUsersGroups(group);
+        UpdateUsersInGroup(group);
         notifyGroupChanges(group);
     }
 
@@ -217,13 +217,14 @@ public class ServerController implements ClientListener {
      * @param group is the group that contains changes in members
      */
 
-    public void updateUsersGroups(Group group) {
+    public void UpdateUsersInGroup (Group group) {
         ArrayList<User> members = group.getUsers();
         GenericID id = group.getGroupID();
         for (User u : members) {
             u.addGroupMembership(id);
             registeredUsers.updateUser(u);
         }
+        //TODO: Ta bort raderade gruppmedlemmar
     }
 
     /**
@@ -246,17 +247,6 @@ public class ServerController implements ClientListener {
         }
         sendReply(reply);
 
-    }
-
-    /**
-     * Updates registered groups with added or removed chores and rewards
-     *
-     * @param request message-object containing the updated group.
-     */
-    public void updateGroup(Message request) {
-        Group group = (Group) request.getData().get(0);
-        registeredGroups.updateGroup(group);
-        notifyGroupChanges(group);
     }
 
 
