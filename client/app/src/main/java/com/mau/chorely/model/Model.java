@@ -1,9 +1,12 @@
 
 package com.mau.chorely.model;
 
+import shared.transferable.Chore;
 import shared.transferable.Group;
 import shared.transferable.Message;
 import shared.transferable.NetCommands;
+import shared.transferable.Reward;
+import shared.transferable.Transferable;
 import shared.transferable.User;
 
 import com.mau.chorely.activities.utils.BridgeInstances;
@@ -135,6 +138,40 @@ public class Model {
     }
 
     /**
+     * This method updates current group with new chores.
+     * @param message message containing the new chore.
+     */
+    public void addNewChore(Message message){
+        //TODO: 1 Plocka ut grupp
+        //  Group group = storage.getSelectedGroup();  ?
+        Group group = null;
+        Chore chore = (Chore) message.getData().get(0);
+        group.addChore(chore);
+        ArrayList<Transferable> data = new ArrayList<>();
+        data.add(group);
+        Message newMessage = new Message(NetCommands.updateGroup, message.getUser(), data);
+        updateGroup(newMessage);
+
+    }
+
+    /**
+     * This method updates current group with new reward.
+     * @param message message containing the new reward.
+     */
+    public void addNewReward(Message message) {
+        //TODO: 1 Plocka ut grupp
+        //  Group group = storage.getSelectedGroup();  ?
+        Group group = null;
+        Reward reward = (Reward) message.getData().get(0);
+        group.addReward(reward);
+        ArrayList<Transferable> data = new ArrayList<>();
+        data.add(group);
+        Message newMessage = new Message(NetCommands.updateGroup, message.getUser(), data);
+        updateGroup(newMessage);
+
+    }
+
+    /**
      * Main model thread. This contains the main switch statement of the client, and all tasks
      * are diverted throughout the application.
      */
@@ -208,7 +245,12 @@ public class Model {
                             BridgeInstances.getPresenter().updateCurrent();
                             BridgeInstances.getPresenter().toastCurrent(currentTask.getErrorMessage().getMessage());
                             break;
-
+                        case addNewChore:
+                            addNewChore(currentTask);
+                            break;
+                        case addNewReward:
+                            addNewReward(currentTask);
+                            break;
                         default:
                             System.out.println("Unrecognized command: " + command);
                             BridgeInstances.getPresenter().toastCurrent("Unknown command: " +command);
