@@ -142,9 +142,8 @@ public class Model {
      * @param message message containing the new chore.
      */
     public void addNewChore(Message message){
-        //TODO: 1 Plocka ut grupp
-        //  Group group = storage.getSelectedGroup();  ?
-        Group group = null;
+        //TODO: 1 Plocka ut grupp, är det korrekt på nedan rad?
+        Group group = storage.getSelectedGroup();
         Chore chore = (Chore) message.getData().get(0);
         group.addChore(chore);
         ArrayList<Transferable> data = new ArrayList<>();
@@ -159,9 +158,8 @@ public class Model {
      * @param message message containing the new reward.
      */
     public void addNewReward(Message message) {
-        //TODO: 1 Plocka ut grupp
-        //  Group group = storage.getSelectedGroup();  ?
-        Group group = null;
+        //TODO: 1 Plocka ut grupp, är det gjort på raden nedan?
+        Group group = storage.getSelectedGroup();
         Reward reward = (Reward) message.getData().get(0);
         group.addReward(reward);
         ArrayList<Transferable> data = new ArrayList<>();
