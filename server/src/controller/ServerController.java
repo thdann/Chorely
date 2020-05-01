@@ -223,27 +223,52 @@ public class ServerController implements ClientListener {
      * @param request The Message object containing the updated group.
      */
     public void updateGroup(Message request) {
-        Group group = (Group) request.getData().get(0);
-        registeredGroups.updateGroup(group);
-        updateUsersInGroup(group);
-        notifyGroupChanges(group);
+        Group updatedGroup = (Group) request.getData().get(0);
+        updateUsersInGroup(updatedGroup);
+
+        registeredGroups.updateGroup(updatedGroup);
+        notifyGroupChanges(updatedGroup);
     }
 
+
     /**
-     * Updates the group membership of the added or removed users
+     * Updates the group membership of the removed and/or added users
      *
      * @param group is the group that contains changes in members
      */
     private void updateUsersInGroup(Group group) {
+        removeUsers(group);
+
         ArrayList<User> members = group.getUsers();
         GenericID id = group.getGroupID();
         for (User u : members) {
             u.addGroupMembership(id);
             registeredUsers.updateUser(u);
         }
-        //TODO: Ta bort raderade gruppmedlemmar
     }
 
+    /**
+     * Updates the group membership of the users removed from a group
+     * and notifies the changes to the user.
+     *
+     * @param newGroup
+     */
+    private void removeUsers(Group newGroup) {
+        GenericID id = newGroup.getGroupID();
+        Group oldGroup = registeredGroups.getGroupFromFile(id);
+        ArrayList<Transferable> data = new ArrayList<>();
+        data.add(newGroup);
+
+        for (User u : oldGroup.getUsers()) {
+            if (!newGroup.getUsers().contains(u)) {
+                u.removeGroupMembership(id);
+                registeredUsers.updateUser(u);
+                Message message = new Message(NetCommands.updateGroup, u, data);
+                sendReply(message);
+            }
+        }
+    }
+    
     /**
      * Looks for a requested user among registered users.
      *
@@ -271,7 +296,6 @@ public class ServerController implements ClientListener {
 
         @Override
         public void run() {
-            ArrayList<Transferable> list;
             while (true) {
                 try {
                     Message message = clientTaskBuffer.take();

@@ -2,8 +2,11 @@ package model;
 
 import shared.transferable.GenericID;
 import shared.transferable.Group;
+import shared.transferable.User;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.logging.Logger;
 
 /**
@@ -39,7 +42,7 @@ public class RegisteredGroups {
             System.out.println("write group to file " + filename);
 
         } catch (IOException e) {
-            e.getMessage();
+            messagesLogger.info("writeGropuToFile(group): " + e.getMessage());
         }
     }
 
@@ -57,7 +60,7 @@ public class RegisteredGroups {
             foundGroup = (Group) ois.readObject();
             System.out.println(foundGroup.toString());
         } catch (IOException | ClassNotFoundException e) {
-            System.out.println(e.getMessage());
+            messagesLogger.info("getGropuToFile(id): " + e.getMessage());
             return null;
         }
         return foundGroup;
@@ -108,5 +111,15 @@ public class RegisteredGroups {
         return true;
     }
 
+    public void compareMembers(Group group) {
+        Group oldGroup = getGroupByID(group.getGroupID());
+        Group newGroup = group;
+
+        ArrayList<User> removedUsers = new ArrayList<>();
+        ArrayList<User> oldGroupUsers = oldGroup.getUsers();
+        ArrayList<User> newGroupUsers = newGroup.getUsers();
+
+
+    }
 
 }

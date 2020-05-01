@@ -13,9 +13,11 @@ public class User implements Transferable {
         this.password = password;
         groups = new ArrayList<GenericID>();
     }
-    public ArrayList<GenericID> getGroups(){
+
+    public ArrayList<GenericID> getGroups() {
         return groups;
     }
+
     public String getUsername() {
         return username;
     }
@@ -24,12 +26,12 @@ public class User implements Transferable {
         return password;
     }
 
-    public void removeGroupMembership(GenericID  id){
+    public void removeGroupMembership(GenericID id) {
         groups.remove(id);
     }
 
     public void addGroupMembership(GenericID newGroup) {
-        if(!groups.contains(newGroup)) {
+        if (!groups.contains(newGroup)) {
             groups.add(newGroup);
         }
     }
@@ -59,10 +61,10 @@ public class User implements Transferable {
     }
 
     public boolean compareUsernamePassword(User otherUser) {
-       String otherPassword = otherUser.getPassword();
-       String otherUsername = otherUser.getUsername();
-       boolean isEqual = username.equals(otherUsername) && password.equals(otherPassword);
-       return  isEqual;
+        String otherPassword = otherUser.getPassword();
+        String otherUsername = otherUser.getUsername();
+        boolean isEqual = username.equals(otherUsername) && password.equals(otherPassword);
+        return isEqual;
     }
 
 }
