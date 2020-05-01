@@ -5,7 +5,6 @@ import model.RegisteredUsers;
 
 import shared.transferable.*;
 
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -25,27 +24,39 @@ public class ServerController implements ClientListener {
     private final static Logger messagesLogger = Logger.getLogger("messages");
     private RegisteredUsers registeredUsers;
     private RegisteredGroups registeredGroups;
-    private ServerNetwork network;
     private LinkedBlockingQueue<Message> clientTaskBuffer;
-    private MessageHandler messageHandler;
     private ConcurrentHashMap<User, ClientHandler> onlineClients = new ConcurrentHashMap<>();
 
     public ServerController() {
+        final int PORT = 6583;
+
         registeredUsers = new RegisteredUsers();
         registeredGroups = new RegisteredGroups();
         clientTaskBuffer = new LinkedBlockingQueue<>();
-        network = new ServerNetwork(this, 6583);
-        messageHandler = new MessageHandler();
+        MessageHandler messageHandler = new MessageHandler();
+        new ServerNetwork(this, PORT);
         Thread t1 = new Thread(messageHandler);
+
         t1.start();
     }
 
+    /**
+     * Adds an outgoing message to the buffer-queue.
+     *
+     * @param msg the outgoing Message object.
+     */
     @Override
     public void sendMessage(Message msg) {
         clientTaskBuffer.add(msg);
-
     }
 
+    /**
+     * The method keeps track of the users that are currently online and
+     * which client they are currently connected on.
+     *
+     * @param user   the logged in user
+     * @param client the connected client
+     */
     public void addOnlineClient(User user, ClientHandler client) {
         System.out.println("USER:" + user);
         onlineClients.put(user, client);
@@ -65,10 +76,22 @@ public class ServerController implements ClientListener {
         }
     }
 
+    /**
+     * Removes the user from the list with online clients when the log off.
+     *
+     * @param user the user to be removed from the list.
+     */
     public void removeOnlineClient(User user) {
         onlineClients.remove(user);
     }
 
+    /**
+     * Sends a reply in the form of a message to a client if the client is online,
+     * an updated group for example. If the user is offline the message is added
+     * to a queue that sends the message when the user is online again.
+     *
+     * @param reply the message object containing the reply
+     */
     public void sendReply(Message reply) {
         ClientHandler client = onlineClients.get(reply.getUser());
         if (client != null) {
@@ -79,9 +102,8 @@ public class ServerController implements ClientListener {
     /**
      * Notifies all the members of a group when a change is made in the group.
      *
-     * @param group
+     * @param group the updated group containing the members to be notified.
      */
-
     public void notifyGroupChanges(Group group) {
         ArrayList<User> members = group.getUsers();
         ArrayList<Transferable> data = new ArrayList<>();
@@ -98,7 +120,6 @@ public class ServerController implements ClientListener {
      *
      * @param msg is the incoming message object
      */
-
     public void handleClientTask(Message msg) {
         NetCommands command = msg.getCommand();
 
@@ -127,7 +148,7 @@ public class ServerController implements ClientListener {
     /**
      * Checks if user is already registered and ok to log in
      *
-     * @param request
+     * @param request the Message object containing the user to be checked.
      */
     public void logIn(Message request) {
         Message reply;
@@ -147,18 +168,15 @@ public class ServerController implements ClientListener {
     /**
      * Adds the incoming user to RegisteredUsers
      *
-     * @param request
+     * @param request the Message object containing the user to be added.
      */
-
     public void registerUser(Message request) {
-        Message reply = null;
+        Message reply;
 
         if (registeredUsers.userNameAvailable(request.getUser().getUsername())) {
-            if (request.getUser().getPassword() != "") {
-                registeredUsers.writeUserToFile(request.getUser());
-                reply = new Message(NetCommands.registrationOk, request.getUser());
-                sendReply(reply);
-            }
+            registeredUsers.writeUserToFile(request.getUser());
+            reply = new Message(NetCommands.registrationOk, request.getUser());
+            sendReply(reply);
         } else {
             ErrorMessage errorMessage = new ErrorMessage("Användarnamnet är upptaget, välj ett annat.");
             reply = new Message(NetCommands.registrationDenied, request.getUser(), errorMessage);
@@ -169,11 +187,12 @@ public class ServerController implements ClientListener {
     }
 
     /**
-     * Registers a new group to the server and updates all the members of that group with the new group membership
+     * Registers a new group to the server and updates all the members
+     * of that group with the new group membership
      *
-     * @param request
+     * @param request the Message object containing the group with all
+     *                the members to be added.
      */
-
     public void registerNewGroup(Message request) {
         Message reply = null;
         Group group = (Group) request.getData().get(0);
@@ -195,13 +214,14 @@ public class ServerController implements ClientListener {
             reply = new Message(NetCommands.newGroupDenied, request.getUser(), errorMessage);
             sendReply(reply);
         }
-
     }
 
     /**
-     * Updates the registered group with new changes.
+     * Updates a registered group with new change and notifies all the
+     * members of that group.
+     *
+     * @param request The Message object containing the updated group.
      */
-
     public void updateGroup(Message request) {
         Group group = (Group) request.getData().get(0);
         registeredGroups.updateGroup(group);
@@ -214,7 +234,6 @@ public class ServerController implements ClientListener {
      *
      * @param group is the group that contains changes in members
      */
-
     private void updateUsersInGroup(Group group) {
         ArrayList<User> members = group.getUsers();
         GenericID id = group.getGroupID();
@@ -230,7 +249,6 @@ public class ServerController implements ClientListener {
      *
      * @param request is the message object that contains the user searched for
      */
-
     public void searchForUser(Message request) {
         Message reply;
         User dummyUser = (User) request.getData().get(0);
@@ -244,16 +262,14 @@ public class ServerController implements ClientListener {
             reply = new Message(NetCommands.userDoesNotExist, request.getUser(), errorMessage);
         }
         sendReply(reply);
-
     }
-
 
     /**
      * Inner class MessageHandler handles the incoming messages from the client one at a time.
      */
-
     private class MessageHandler implements Runnable {
 
+        @Override
         public void run() {
             ArrayList<Transferable> list;
             while (true) {
@@ -263,11 +279,7 @@ public class ServerController implements ClientListener {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-
             }
-
         }
-
     }
-
 }
