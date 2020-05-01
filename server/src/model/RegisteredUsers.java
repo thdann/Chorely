@@ -3,7 +3,6 @@ package model;
 import shared.transferable.User;
 
 import java.io.*;
-import java.sql.SQLOutput;
 import java.util.logging.Logger;
 
 /**
@@ -13,7 +12,6 @@ import java.util.logging.Logger;
  *
  * @author Theresa Dannberg
  */
-
 public class RegisteredUsers {
     private final static Logger messagesLogger = Logger.getLogger("messages");
     private String filePath;
@@ -21,10 +19,8 @@ public class RegisteredUsers {
     /**
      * Constructor
      */
-
     public RegisteredUsers() {
         this.filePath = "files/users/";
-
     }
 
     /**
@@ -32,7 +28,6 @@ public class RegisteredUsers {
      *
      * @param user the User object to be saved to file
      */
-
     public void writeUserToFile(User user) {
         String filename = String.format("%s%s.dat", filePath, user.getUsername());
         try (ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filename)))) {
@@ -41,8 +36,7 @@ public class RegisteredUsers {
             System.out.println("write user to file " + filename);
 
         } catch (IOException e) {
-            e.getMessage();
-
+            messagesLogger.info("writeUserToFile(user): " + e.getMessage());
         }
 
     }
@@ -53,7 +47,6 @@ public class RegisteredUsers {
      * @param dummyUser the user searched for.
      * @return the requested User-object
      */
-
     public User getUserFromFile(User dummyUser) {
         String filename = String.format("%s%s.dat", filePath, dummyUser.getUsername());
         User foundUser = null;
@@ -63,7 +56,7 @@ public class RegisteredUsers {
             System.out.println(foundUser.toString());
 
         } catch (IOException | ClassNotFoundException e) {
-            System.out.println(e.getMessage());
+            messagesLogger.info("getUserFromFile(dummyUser): " + e.getMessage());
             return null;
         }
 
@@ -75,17 +68,13 @@ public class RegisteredUsers {
      *
      * @param user is the new updated version of the User object to be saved to file.
      */
-
     public void updateUser(User user) {
         File file = new File(filePath + user.getUsername() + ".dat");
         System.out.println("updatemetoden " + file.getPath());
         if (file.exists()) {
             System.out.println("File deleted = " + file.delete());
-
         }
-
         writeUserToFile(user);
-
     }
 
     /**
@@ -94,16 +83,13 @@ public class RegisteredUsers {
      * @param newUsername the requested username of a new user.
      * @return true if username is available and false if it already taken.
      */
-
     public boolean userNameAvailable(String newUsername) {
         File file = new File(filePath + newUsername + ".dat");
         System.out.println(file.getPath());
         if (file.exists()) {
             return false;
         }
-
         return true;
-
     }
 
     /**
@@ -112,7 +98,6 @@ public class RegisteredUsers {
      * @param dummyUser the requested user/username to look for
      * @return the requested user if it exists, otherwise return null
      */
-
     public User findUser(User dummyUser) {
         User foundUser = null;
         if (userNameAvailable(dummyUser.getUsername())) {
@@ -121,7 +106,5 @@ public class RegisteredUsers {
             foundUser = getUserFromFile(dummyUser);
         }
         return foundUser;
-
     }
-
 }
