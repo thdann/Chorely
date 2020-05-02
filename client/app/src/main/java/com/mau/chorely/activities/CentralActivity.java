@@ -1,24 +1,33 @@
 package com.mau.chorely.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
 import com.mau.chorely.R;
 import com.mau.chorely.activities.centralFragments.FragmentChores;
 import com.mau.chorely.activities.centralFragments.FragmentRewards;
+import com.mau.chorely.activities.interfaces.UpdatableActivity;
+import com.mau.chorely.activities.utils.BridgeInstances;
 import com.mau.chorely.activities.utils.SectionsPageAdapter;
 
 import java.util.ArrayList;
 
 import shared.transferable.Chore;
+import shared.transferable.Group;
 import shared.transferable.Reward;
 
 import static androidx.fragment.app.FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT;
 
-public class CentralActivity extends AppCompatActivity {
+public class CentralActivity extends AppCompatActivity implements UpdatableActivity {
+    private Group selectedGroup;
+    SectionsPageAdapter adapter = new SectionsPageAdapter(getSupportFragmentManager(),
+            BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,21 +38,57 @@ public class CentralActivity extends AppCompatActivity {
         setupViewPager(viewPager);
         TabLayout tabLayout = findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
+        selectedGroup = BridgeInstances.getModel(getFilesDir()).getSelectedGroup();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        BridgeInstances.getPresenter().register(this);
+        System.out.println("CENTRAL REGISTRED FOR UPDATES");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        BridgeInstances.getPresenter().deregisterForUpdates(this);
+    }
+
+    @Override
+    public void updateActivity() {
+        final Group updatedGroup = BridgeInstances.getModel(getFilesDir()).getSelectedGroup();
+        System.out.println("UPDATING FRAGMENTS OUTSIDE IF");
+        if(!selectedGroup.allIsEqual(updatedGroup)){
+            selectedGroup = updatedGroup;
+            System.out.println("UPDATING FRAGMENT LISTS");
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    FragmentChores.updateList(selectedGroup.getChores());
+                    FragmentRewards.updateList(selectedGroup.getRewards());
+                }
+            });
+        }
+    }
+
+    @Override
+    public void doToast(final String message) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(CentralActivity.this, message, Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        SectionsPageAdapter adapter = new SectionsPageAdapter(getSupportFragmentManager(),
-                BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+
 
         // Test data to make it compile.
-        ArrayList<Chore> chores = new ArrayList<>();
-        ArrayList<Reward> rewards = new ArrayList<>();
-        Chore chore = new Chore("Dammsuga", 100, "man måste damsuga hela skiten annars får man inte poäng");
-        chores.add(chore);
-        chores.add(new Chore("test chore 1", 123));
-        chores.add(new Chore("test chore 2", 456));
-        rewards.add(new Reward("test reward 1", 23));
-        rewards.add(new Reward("test reward 2", 45));
+        ArrayList<Chore> chores = BridgeInstances.getModel(getFilesDir()).getSelectedGroup().getChores();
+        ArrayList<Reward> rewards = BridgeInstances.getModel(getFilesDir()).getSelectedGroup().getRewards();
 
         adapter.addFragment(FragmentChores.newInstance(chores), "Sysslor");
         adapter.addFragment(FragmentRewards.newInstance(rewards), "Belöningar");

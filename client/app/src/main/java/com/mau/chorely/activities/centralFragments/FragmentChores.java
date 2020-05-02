@@ -1,5 +1,6 @@
 package com.mau.chorely.activities.centralFragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,9 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mau.chorely.R;
+import com.mau.chorely.activities.CentralActivity;
+import com.mau.chorely.activities.CreateChoreActivity;
 import com.mau.chorely.activities.centralFragments.utils.*;
-
+import com.mau.chorely.activities.utils.BridgeInstances;
 
 
 import java.util.ArrayList;
@@ -24,15 +28,17 @@ import shared.transferable.Chore;
  * Use the {@link FragmentChores#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentChores extends Fragment {
+public class FragmentChores extends Fragment implements View.OnClickListener {
     private static ArrayList<ListItemCentral> itemList = new ArrayList<>();
     private RecyclerView recyclerView;
-    private CentralActivityRecyclerViewAdapter adapter;
+    private static CentralActivityRecyclerViewAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
 
     public FragmentChores() {
         // Required empty public constructor
     }
+
+
 
     /**
      * Use this factory method to create a new instance of
@@ -53,24 +59,43 @@ public class FragmentChores extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             ArrayList<Chore> chores = (ArrayList<Chore>) getArguments().getSerializable("CHORES");
-            for(Chore chore : chores){
-                itemList.add(new ListItemCentral(chore));
-            }
+            validateAndUpdateListData(chores);
         }
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chores, container, false);
         recyclerView = view.findViewById(R.id.fragment_chores_recyclerView);
+        FloatingActionButton createButton = view.findViewById(R.id.fragment_chores_createNewChoreButton);
+        createButton.setOnClickListener(this);
         buildRecyclerView();
         return view;
+    }
+
+    private static void validateAndUpdateListData(ArrayList<Chore> chores){
+        for(Chore chore : chores){
+            boolean foundItem = false;
+            for(int i = 0; i < itemList.size(); i++){
+                if(itemList.get(i).equals(chore)){
+                    foundItem = true;
+                    if(!itemList.get(i).allIsEqual(chore)){
+                        itemList.get(i).updateItem(chore);
+                    }
+                }
+            }
+            if(!foundItem){
+                itemList.add(new ListItemCentral(chore));
+            }
+        }
+    }
+
+    public static void updateList(ArrayList<Chore> chores){
+        validateAndUpdateListData(chores);
+        adapter.notifyDataSetChanged();
     }
 
     private void buildRecyclerView(){
@@ -87,7 +112,9 @@ public class FragmentChores extends Fragment {
             });
         }
 
-
-
-
+    @Override
+    public void onClick(View v) {
+        Intent intent = new Intent(getContext(), CreateChoreActivity.class);
+        startActivity(intent);
+    }
 }

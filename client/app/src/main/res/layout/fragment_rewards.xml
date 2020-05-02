@@ -21,11 +21,10 @@
         />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fragment_rewards_addNewChoreButton"
+        android:id="@+id/fragment_rewards_addNewRewardButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/btnColor"
-
         android:clickable="true"
         android:focusable="true"
         android:src="@drawable/central_panel_add"
