@@ -86,17 +86,9 @@ public class CentralActivity extends AppCompatActivity implements UpdatableActiv
 
 
         // Test data to make it compile.
-        ArrayList<Chore> chores = new ArrayList<>();
-        ArrayList<Reward> rewards = new ArrayList<>();
-        /*
-        Chore chore = new Chore("Dammsuga", 100, "man måste damsuga hela skiten annars får man inte poäng");
-        chores.add(chore);
-        chores.add(new Chore("test chore 1", 123));
-        chores.add(new Chore("test chore 2", 456));
-        rewards.add(new Reward("test reward 1", 23));
-        rewards.add(new Reward("test reward 2", 45));
+        ArrayList<Chore> chores = BridgeInstances.getModel(getFilesDir()).getSelectedGroup().getChores();
+        ArrayList<Reward> rewards = BridgeInstances.getModel(getFilesDir()).getSelectedGroup().getRewards();
 
-         */
         adapter.addFragment(FragmentChores.newInstance(chores), "Sysslor");
         adapter.addFragment(FragmentRewards.newInstance(rewards), "Belöningar");
         viewPager.setAdapter(adapter);

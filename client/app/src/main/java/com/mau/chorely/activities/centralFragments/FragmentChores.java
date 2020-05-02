@@ -82,15 +82,18 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
     }
 
     public static void updateList(ArrayList<Chore> chores){
-        for(Chore c : chores){
-            if(itemList.contains(c)){
-                int index = itemList.indexOf(c);
-                ListItemCentral item = itemList.get(index);
-                if(!itemList.get(index).allIsEqual(c)){
-                    item.updateItem(c);
+        for(Chore chore : chores){
+            boolean foundItem = false;
+            for(int i = 0; i < itemList.size(); i++){
+                if(itemList.get(i).equals(chore)){
+                    foundItem = true;
+                    if(!itemList.get(i).allIsEqual(chore)){
+                        itemList.get(i).updateItem(chore);
+                    }
                 }
-            } else{
-                itemList.add(new ListItemCentral(c));
+            }
+            if(!foundItem){
+                itemList.add(new ListItemCentral(chore));
             }
         }
         adapter.notifyDataSetChanged();

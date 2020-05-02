@@ -20,6 +20,7 @@ import com.mau.chorely.activities.centralFragments.utils.CentralActivityRecycler
 import com.mau.chorely.activities.centralFragments.utils.ListItemCentral;
 import com.mau.chorely.activities.utils.BridgeInstances;
 
+import java.nio.file.FileSystemNotFoundException;
 import java.util.ArrayList;
 
 import shared.transferable.Reward;
@@ -36,6 +37,7 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
     private RecyclerView recyclerView;
     private static CentralActivityRecyclerViewAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
+
     public FragmentRewards() {
         // Required empty public constructor
     }
@@ -59,9 +61,7 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             ArrayList<Reward> rewards = (ArrayList<Reward>) getArguments().getSerializable("REWARDS");
-            for(Reward reward : rewards){
-                itemList.add(new ListItemCentral(reward));
-            }
+            updateList(rewards);
         }
 
 
@@ -80,34 +80,35 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
     }
 
     public static void updateList(ArrayList<Reward> rewards){
-        for(Reward r : rewards){
-            if(itemList.contains(r)){
-                if(itemList.contains(r)){
-                    int index = itemList.indexOf(r);
-                    ListItemCentral item = itemList.get(index);
-                    if(!item.allIsEqual(r)){
-                        item.updateItem(r);
+        for(Reward reward : rewards){
+            boolean foundItem = false;
+            for(int i = 0; i < itemList.size(); i++){
+                if(itemList.get(i).equals(reward)){
+                    foundItem = true;
+                    if(!itemList.get(i).allIsEqual(reward)){
+                        itemList.get(i).updateItem(reward);
                     }
-                } else {
-                    itemList.add(new ListItemCentral(r));
                 }
+            }
+            if(!foundItem){
+                itemList.add(new ListItemCentral(reward));
             }
         }
         adapter.notifyDataSetChanged();
     }
 
-    private void buildRecyclerView(){
-            recyclerView.setHasFixedSize(true);
-            layoutManager = new LinearLayoutManager(getContext());
-            adapter = new CentralActivityRecyclerViewAdapter(itemList);
-            recyclerView.setLayoutManager(layoutManager);
-            recyclerView.setAdapter(adapter);
-            adapter.setOnclickListener(new CentralActivityRecyclerViewAdapter.OnitemClickListener() {
-                @Override
-                public void onItemClick(int position) {
-                    // TODO: 2020-04-23 gå till aktiviteten för ändring av chore.
-                }
-            });
+    private void buildRecyclerView() {
+        recyclerView.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(getContext());
+        adapter = new CentralActivityRecyclerViewAdapter(itemList);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
+        adapter.setOnclickListener(new CentralActivityRecyclerViewAdapter.OnitemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                // TODO: 2020-04-23 gå till aktiviteten för ändring av chore.
+            }
+        });
     }
 
     @Override

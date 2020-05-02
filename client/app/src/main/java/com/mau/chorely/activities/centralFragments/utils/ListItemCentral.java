@@ -90,6 +90,7 @@ public class ListItemCentral {
         } else {
             ret = false;
         }
+        System.out.println("CHEKED ITEM RESULT: " + ret);
         return ret;
     }
 }
