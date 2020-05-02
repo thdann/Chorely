@@ -1,7 +1,3 @@
-import shared.transferable.Message;
-import shared.transferable.NetCommands;
-import shared.transferable.Transferable;
-import shared.transferable.User;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -12,6 +8,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.*;
+
+import shared.transferable.Message;
+import shared.transferable.User;
+import shared.transferable.NetCommands;
+
 
 public class TestClient {
     Socket socket;
@@ -60,7 +61,6 @@ public class TestClient {
                             received.add(msg);
                         }
                     } catch (ClassNotFoundException | IOException ignore) {
-                        System.out.println("closed msg collector");
                     }
                 });
 
@@ -94,7 +94,6 @@ public class TestClient {
                 e.printStackTrace();
             }
 
-            System.out.println("closed output.");
         }
     }
 
