@@ -186,6 +186,7 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
                         Group group = groupList.get(i);
                         if (!updatedGroups.contains(group)) {
                             groupList.remove(group);
+                            mAdapter.notifyDataSetChanged();
                         }
                     }
                 }
