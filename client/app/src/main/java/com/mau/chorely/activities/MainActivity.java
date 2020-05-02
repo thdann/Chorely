@@ -56,11 +56,15 @@ public class MainActivity extends AppCompatActivity implements UpdatableActivity
     public void updateActivity() {
         if (BridgeInstances.getModel(getFilesDir()).isConnected()) {
             if (BridgeInstances.getModel(getFilesDir()).hasStoredUser()) {
-
-                Intent intent = new Intent(this, ManageGroupsActivity.class);
-                startActivity(intent);
-                finish();
-
+                if(BridgeInstances.getModel(getFilesDir()).getSelectedGroup() != null){
+                    Intent intent = new Intent(this, CentralActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Intent intent = new Intent(this, ManageGroupsActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
             }
         } else {
             Intent intent = new Intent(this, ConnectActivity.class);

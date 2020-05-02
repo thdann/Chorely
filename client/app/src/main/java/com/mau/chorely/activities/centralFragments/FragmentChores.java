@@ -1,5 +1,6 @@
 package com.mau.chorely.activities.centralFragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,7 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mau.chorely.R;
+import com.mau.chorely.activities.CentralActivity;
+import com.mau.chorely.activities.CreateChoreActivity;
 import com.mau.chorely.activities.centralFragments.utils.*;
 
 
@@ -24,15 +28,17 @@ import shared.transferable.Chore;
  * Use the {@link FragmentChores#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentChores extends Fragment {
+public class FragmentChores extends Fragment implements View.OnClickListener {
     private static ArrayList<ListItemCentral> itemList = new ArrayList<>();
     private RecyclerView recyclerView;
-    private CentralActivityRecyclerViewAdapter adapter;
+    private static CentralActivityRecyclerViewAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
 
     public FragmentChores() {
         // Required empty public constructor
     }
+
+
 
     /**
      * Use this factory method to create a new instance of
@@ -69,8 +75,25 @@ public class FragmentChores extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chores, container, false);
         recyclerView = view.findViewById(R.id.fragment_chores_recyclerView);
+        FloatingActionButton createButton = view.findViewById(R.id.fragment_chores_createNewChoreButton);
+        createButton.setOnClickListener(this);
         buildRecyclerView();
         return view;
+    }
+
+    public static void updateList(ArrayList<Chore> chores){
+        for(Chore c : chores){
+            if(itemList.contains(c)){
+                int index = itemList.indexOf(c);
+                ListItemCentral item = itemList.get(index);
+                if(!itemList.get(index).allIsEqual(c)){
+                    item.updateItem(c);
+                }
+            } else{
+                itemList.add(new ListItemCentral(c));
+            }
+        }
+        adapter.notifyDataSetChanged();
     }
 
     private void buildRecyclerView(){
@@ -87,7 +110,9 @@ public class FragmentChores extends Fragment {
             });
         }
 
-
-
-
+    @Override
+    public void onClick(View v) {
+        Intent intent = new Intent(getContext(), CreateChoreActivity.class);
+        startActivity(intent);
+    }
 }
