@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.text.style.UpdateAppearance;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -28,7 +27,6 @@ import shared.transferable.Transferable;
  * @author Theresa Dannberg
  * v. 1.0 2020-04-23
  */
-
 public class CreateChoreActivity extends AppCompatActivity implements UpdatableActivity {
 
     @Override
@@ -47,15 +45,11 @@ public class CreateChoreActivity extends AppCompatActivity implements UpdatableA
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.create_chore_menu_saveChanges) {
-            // Skriv vad som händer när man klickar på knappen med disketten
-            // 1. kontrollera att namn och poäng-fälten är ifyllda, annars felmeddelanden.
-            // 2. skapa chore
-            // 3. skapa meddelande och skicka till Model-klassen
 
-            if (controlTextFields()) { // Metoden kontrollerar så att namn och points är ifyllda, annars felmeddelanden.
-                Message msg = createMessageNewChore(); // Skapar meddelande med ny chore.
+            if (controlTextFields()) {
+                Message msg = createMessageNewChore();
                 Model model = BridgeInstances.getModel(getFilesDir());
-                model.handleTask(msg); //Skickar meddelandet till Model?
+                model.handleTask(msg);
                 finish();
             }
         }
@@ -65,11 +59,16 @@ public class CreateChoreActivity extends AppCompatActivity implements UpdatableA
     /**
      * Creates a new Chore-object from the user-input
      */
-
     public Chore createNewChore() {
         String name = ((EditText) findViewById(R.id.activity_register_editText_nameChore)).getText().toString();
         String description = ((EditText) findViewById(R.id.activity_register_editText_descriptionChore)).getText().toString();
-        int points = Integer.parseInt(((EditText) findViewById(R.id.activity_register_editText_setPointsChore)).getText().toString());
+        int points = 0;
+        try {
+            points = Integer.parseInt(((EditText) findViewById(R.id.activity_register_editText_setPointsChore)).getText().toString());
+        } catch (NumberFormatException e) {
+            doToast("Du måste fylla i poäng med siffror");
+        }
+
         Chore chore = new Chore(name, points, description);
         return chore;
     }

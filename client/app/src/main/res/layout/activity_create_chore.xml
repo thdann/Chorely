@@ -25,6 +25,7 @@
         android:layout_height="40dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/edit_text_background"
+        android:textColor="@color/btnColor"
         app:layout_constraintTop_toBottomOf="@+id/activity_register_textField_nameChore" />
 
     <View
@@ -55,6 +56,8 @@
         android:layout_height="120dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/edit_text_background"
+        android:gravity="top"
+        android:textColor="@color/btnColor"
         app:layout_constraintTop_toBottomOf="@id/activity_register_textField_descriptionChore" />
 
     <View
@@ -85,6 +88,7 @@
         android:layout_height="40dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/edit_text_background"
+        android:textColor="@color/btnColor"
         app:layout_constraintTop_toBottomOf="@id/activity_register_textField_setPointsChore" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
