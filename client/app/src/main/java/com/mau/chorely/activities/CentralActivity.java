@@ -44,6 +44,7 @@ public class CentralActivity extends AppCompatActivity implements UpdatableActiv
     @Override
     protected void onStart() {
         super.onStart();
+
         BridgeInstances.getPresenter().register(this);
         System.out.println("CENTRAL REGISTRED FOR UPDATES");
     }

@@ -23,6 +23,7 @@ import com.mau.chorely.activities.utils.BridgeInstances;
 import java.nio.file.FileSystemNotFoundException;
 import java.util.ArrayList;
 
+import shared.transferable.Chore;
 import shared.transferable.Reward;
 
 /**
@@ -61,11 +62,13 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             ArrayList<Reward> rewards = (ArrayList<Reward>) getArguments().getSerializable("REWARDS");
-            updateList(rewards);
+            validateAndUpdateListData(rewards);
         }
 
 
     }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -79,7 +82,7 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
         return view;
     }
 
-    public static void updateList(ArrayList<Reward> rewards){
+    private static void validateAndUpdateListData(ArrayList<Reward> rewards){
         for(Reward reward : rewards){
             boolean foundItem = false;
             for(int i = 0; i < itemList.size(); i++){
@@ -94,6 +97,10 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
                 itemList.add(new ListItemCentral(reward));
             }
         }
+    }
+
+    public static void updateList(ArrayList<Reward> rewards){
+        validateAndUpdateListData(rewards);
         adapter.notifyDataSetChanged();
     }
 

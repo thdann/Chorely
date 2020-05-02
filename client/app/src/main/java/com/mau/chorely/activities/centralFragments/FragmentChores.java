@@ -16,7 +16,7 @@ import com.mau.chorely.R;
 import com.mau.chorely.activities.CentralActivity;
 import com.mau.chorely.activities.CreateChoreActivity;
 import com.mau.chorely.activities.centralFragments.utils.*;
-
+import com.mau.chorely.activities.utils.BridgeInstances;
 
 
 import java.util.ArrayList;
@@ -59,16 +59,11 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             ArrayList<Chore> chores = (ArrayList<Chore>) getArguments().getSerializable("CHORES");
-            for(Chore chore : chores){
-                itemList.add(new ListItemCentral(chore));
-            }
+            validateAndUpdateListData(chores);
         }
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -81,7 +76,7 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
         return view;
     }
 
-    public static void updateList(ArrayList<Chore> chores){
+    private static void validateAndUpdateListData(ArrayList<Chore> chores){
         for(Chore chore : chores){
             boolean foundItem = false;
             for(int i = 0; i < itemList.size(); i++){
@@ -96,6 +91,10 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
                 itemList.add(new ListItemCentral(chore));
             }
         }
+    }
+
+    public static void updateList(ArrayList<Chore> chores){
+        validateAndUpdateListData(chores);
         adapter.notifyDataSetChanged();
     }
 
