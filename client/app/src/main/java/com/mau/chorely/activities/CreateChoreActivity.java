@@ -45,11 +45,7 @@ public class CreateChoreActivity extends AppCompatActivity implements UpdatableA
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.create_chore_menu_saveChanges) {
-
             if (controlTextFields()) {
-                Message msg = createMessageNewChore();
-                Model model = BridgeInstances.getModel(getFilesDir());
-                model.handleTask(msg);
                 finish();
             }
         }
@@ -59,26 +55,18 @@ public class CreateChoreActivity extends AppCompatActivity implements UpdatableA
     /**
      * Creates a new Chore-object from the user-input
      */
-    public Chore createNewChore() {
-        String name = ((EditText) findViewById(R.id.activity_register_editText_nameChore)).getText().toString();
-        String description = ((EditText) findViewById(R.id.activity_register_editText_descriptionChore)).getText().toString();
-        int points = 0;
-        try {
-            points = Integer.parseInt(((EditText) findViewById(R.id.activity_register_editText_setPointsChore)).getText().toString());
-        } catch (NumberFormatException e) {
-            doToast("Du måste fylla i poäng med siffror");
-        }
-
-        Chore chore = new Chore(name, points, description);
+    public Chore createNewChore(String name, String desc, int points) {
+        Chore chore = new Chore(name, points, desc);
         return chore;
     }
 
-    public Message createMessageNewChore() {
+    public boolean createMessageNewChore(Chore newChore) {
         Model model = BridgeInstances.getModel(getFilesDir());
         ArrayList<Transferable> data = new ArrayList<>();
-        data.add(createNewChore());
+        data.add(newChore);
         Message message = new Message(NetCommands.addNewChore, model.getUser(), data);
-        return message;
+        model.handleTask(message);
+        return true;
     }
 
     public boolean controlTextFields() {
@@ -86,17 +74,24 @@ public class CreateChoreActivity extends AppCompatActivity implements UpdatableA
         String descriptionField = ((EditText) findViewById(R.id.activity_register_editText_descriptionChore)).getText().toString();
         String pointsField = ((EditText) findViewById(R.id.activity_register_editText_setPointsChore)).getText().toString();
 
-        if (nameField == "") {
+        if (nameField.equals("")) {
             doToast("Du måste fylla i namn");
             return false;
-        } else if (descriptionField == "") {
+        } else if (descriptionField.equals("")) {
             doToast("Du måste fylla i beskrivning");
             return false;
-        } else if (pointsField == "") {
+        } else if (pointsField.equals("")) {
             doToast("Du måste fylla i poäng");
             return false;
-        }
-        return true;
+        } else
+            try {
+                int points = Integer.parseInt(pointsField);
+                createMessageNewChore(createNewChore(nameField, descriptionField, points));
+                return true;
+            } catch (NumberFormatException e) {
+                doToast("Du måste fylla i poäng med siffor");
+                return false;
+            }
     }
 
     @Override
@@ -115,4 +110,5 @@ public class CreateChoreActivity extends AppCompatActivity implements UpdatableA
         });
 
     }
+
 }
