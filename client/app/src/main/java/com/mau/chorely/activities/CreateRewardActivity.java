@@ -21,7 +21,6 @@ import shared.transferable.NetCommands;
 import shared.transferable.Reward;
 import shared.transferable.Transferable;
 
-
 /**
  * Creates a new Reward
  *
@@ -59,12 +58,17 @@ public class CreateRewardActivity extends AppCompatActivity implements Updatable
         return super.onOptionsItemSelected(item);
     }
 
-
-
     public Reward createNewReward() {
         String name = ((EditText) findViewById(R.id.activity_register_editText_nameReward)).getText().toString();
         String description = ((EditText) findViewById(R.id.activity_register_editText_descriptionReward)).getText().toString();
-        int points = Integer.parseInt(((EditText) findViewById(R.id.activity_register_editText_pointsReward)).getText().toString());
+        int points = 0;
+        try {
+            points = Integer.parseInt(((EditText) findViewById(R.id.activity_register_editText_pointsReward)).getText().toString());
+
+        } catch (NumberFormatException e) {
+            doToast("Du måste fylla i poäng med siffor");
+        }
+
         Reward reward = new Reward(name, points, description);
         return reward;
     }
