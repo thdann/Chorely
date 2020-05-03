@@ -11,10 +11,10 @@ public class TestUtils {
      *
      * @param user the user that you want to delete from file.
      */
-    public static boolean deleteUser(User user) {
+    public static void deleteUser(User user) {
         String username = user.getUsername();
         String filename = "files/users/" + username + ".dat";
         File file = new File(filename);
-        return file.delete();
+        file.delete();
     }
 }

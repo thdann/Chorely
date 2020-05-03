@@ -27,8 +27,8 @@ public class ServerController implements ClientListener {
     private LinkedBlockingQueue<Message> clientTaskBuffer;
     private ConcurrentHashMap<User, ClientHandler> onlineClients = new ConcurrentHashMap<>();
 
-    public ServerController() {
-        final int PORT = 6583;
+    public ServerController(int port) {
+        final int PORT = port;
 
         registeredUsers = new RegisteredUsers();
         registeredGroups = new RegisteredGroups();

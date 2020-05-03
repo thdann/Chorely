@@ -10,101 +10,63 @@ import java.util.List;
 import java.util.concurrent.*;
 
 import shared.transferable.Message;
-import shared.transferable.User;
-import shared.transferable.NetCommands;
 
-
+/**
+ * @author Fredrik Jeppsson
+ */
 public class TestClient {
-    Socket socket;
-    ObjectOutputStream out;
-    ObjectInputStream in;
+    private final static String IP = "127.0.0.1";
+    private final static int INPUT_TIME = 1000;
 
-    public TestClient(String ip, int port, List<Message> outgoingMessage) {
-        try {
-            socket = new Socket(ip, port);
-            out = new ObjectOutputStream(socket.getOutputStream());
-            in = new ObjectInputStream(socket.getInputStream());
-            Thread output = new Thread(new Output(outgoingMessage));
-            output.start();
-
-
-
-        } catch (IOException e) {
-            System.err.println("Couldn't establish connection to server.");
-//            System.exit(0);
-        }
+    private TestClient() {
     }
 
-    public List<Message> getReceivedMessages() {
-        try {
-            ExecutorService executorService = Executors.newSingleThreadExecutor();
-            Future<List<Message>> receivedMessages = executorService.submit(new Input());
-            List<Message> messages = receivedMessages.get();
-            executorService.shutdown();
-            return messages;
-        } catch (InterruptedException | ExecutionException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private class Input implements Callable<List<Message>> {
-
-        @Override
-        public List<Message> call() throws Exception {
+    /**
+     *
+     * @param outgoingMessages the messages that are sent to the server during this test run.
+     * @return a list of messages received from the server as a response to the outgoing messages.
+     */
+    public static Callable<List<Message>> newTestRun(List<Message> outgoingMessages, int port) {
+        return () -> {
             List<Message> received = Collections.synchronizedList(new ArrayList<>());
+            ExecutorService executor = Executors.newFixedThreadPool(2);
 
-            try {
-                Thread collectMessages = new Thread(() -> {
+            try (Socket socket = new Socket(IP, port)) {
+                var out = new ObjectOutputStream(socket.getOutputStream());
+                var in = new ObjectInputStream(socket.getInputStream());
+
+                Runnable output = () -> {
+                    try {
+                        for (Message msg : outgoingMessages) {
+                            out.writeObject(msg);
+                            out.flush();
+                        }
+                    } catch (IOException ignore) {
+                        // How do I handle the case where I don't manage to send all outgoing messages?
+                        // In that case I won't get everything either and the test will fail.
+                    }
+                };
+
+                Runnable input = () -> {
                     try {
                         while (!Thread.currentThread().isInterrupted()) {
-                            Message msg = (Message) in.readObject();
+                            var msg = (Message) in.readObject();
                             received.add(msg);
                         }
                     } catch (ClassNotFoundException | IOException ignore) {
                     }
-                });
+                };
 
-                collectMessages.start();
-                Thread.sleep(1000);
-                socket.close();
-            }
-
-            catch (InterruptedException | IOException e) {
+                executor.submit(output);
+                executor.submit(input);
+                Thread.sleep(INPUT_TIME);
+                in.close();
+                executor.shutdown();
+            } catch (IOException ignore) {
+                // Will most likely lead to returning an empty List.
             }
 
             return received;
-        }
+        };
     }
-
-    private class Output implements Runnable {
-        private final List<Message> outgoingMessages;
-
-        public Output(List<Message> outgoingMessages) {
-            this.outgoingMessages = outgoingMessages;
-        }
-
-        @Override
-        public void run() {
-            try {
-                for (Message msg : outgoingMessages) {
-                    out.writeObject(msg);
-                    out.flush();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-    }
-
-
-    public static void main(String[] args) {
-        List<Message> send = new ArrayList<>();
-//        send.add(new Message(NetCommands.registerUser, new User("Fredrik", "secret")));
-        send.add(new Message(NetCommands.login, new User("Fredrik", "secret")));
-        TestClient test = new TestClient("127.0.0.1", 6583, send);
-        List<Message> received = test.getReceivedMessages();
-        System.out.println(received);
-    }
-
 }
