@@ -4,10 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.CreateRewardActivity"
-    android:padding="30dp"
     android:background="@drawable/background"
-    >
+    android:padding="30dp"
+    tools:context=".activities.CreateRewardActivity">
 
     <TextView
         android:id="@+id/activity_register_textField_nameReward"
@@ -18,17 +17,16 @@
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/activity_register_editText_nameReward"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="@drawable/edit_text_background"
-        app:layout_constraintTop_toBottomOf="@+id/activity_register_textField_nameReward"
         android:layout_marginTop="10dp"
-        />
+        android:background="@drawable/edit_text_background"
+        android:textColor="@color/btnColor"
+        app:layout_constraintTop_toBottomOf="@+id/activity_register_textField_nameReward" />
 
     <View
         android:id="@+id/create_reward_divider1"
@@ -38,30 +36,29 @@
         android:layout_marginBottom="20dp"
         android:background="@drawable/button_background"
         app:layout_constraintBottom_toTopOf="@+id/activity_register_textField_descriptionReward"
-        app:layout_constraintTop_toBottomOf="@id/activity_register_editText_nameReward"
-        />
+        app:layout_constraintTop_toBottomOf="@id/activity_register_editText_nameReward" />
 
     <TextView
         android:id="@+id/activity_register_textField_descriptionReward"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:text="Beskrivning av belöning:"
-        android:textSize="20sp"
         android:textColor="@color/btnColor"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/create_reward_divider1"
-        android:layout_marginTop="10dp"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/create_reward_divider1" />
 
     <EditText
         android:id="@+id/activity_register_editText_descriptionReward"
         android:layout_width="match_parent"
         android:layout_height="120dp"
-        android:background="@drawable/edit_text_background"
-        app:layout_constraintTop_toBottomOf="@+id/activity_register_textField_descriptionReward"
         android:layout_marginTop="10dp"
-        />
+        android:background="@drawable/edit_text_background"
+        android:gravity="top"
+        android:textColor="@color/btnColor"
+        app:layout_constraintTop_toBottomOf="@+id/activity_register_textField_descriptionReward" />
 
     <View
         android:id="@+id/create_chore_divider2"
@@ -71,31 +68,29 @@
         android:layout_marginBottom="20dp"
         android:background="@drawable/button_background"
         app:layout_constraintBottom_toTopOf="@+id/activity_register_textField_pointsReward"
-        app:layout_constraintTop_toBottomOf="@id/activity_register_editText_descriptionReward"
-        />
+        app:layout_constraintTop_toBottomOf="@id/activity_register_editText_descriptionReward" />
 
 
     <TextView
         android:id="@+id/activity_register_textField_pointsReward"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
         android:text="Poäng på belöning:"
-        android:textSize="20sp"
         android:textColor="@color/btnColor"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/activity_register_editText_descriptionReward"
-        android:layout_marginTop="30dp"
-        />
+        app:layout_constraintTop_toBottomOf="@id/activity_register_editText_descriptionReward" />
 
     <EditText
         android:id="@+id/activity_register_editText_pointsReward"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="@drawable/edit_text_background"
-        app:layout_constraintTop_toBottomOf="@+id/activity_register_textField_pointsReward"
         android:layout_marginTop="10dp"
-
+        android:background="@drawable/edit_text_background"
+        android:textColor="@color/btnColor"
+        app:layout_constraintTop_toBottomOf="@+id/activity_register_textField_pointsReward"
 
 
         />

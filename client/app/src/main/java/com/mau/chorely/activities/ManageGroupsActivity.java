@@ -91,10 +91,10 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
                     intent.putExtra("SELECTED_GROUP", groupList.get(position));
                     startActivity(intent);
                 } else {
-
+                    BridgeInstances.getModel(getFilesDir()).setSelectedGroup(groupList.get(position));
                     Intent intent = new Intent(ManageGroupsActivity.this, CentralActivity.class);
                     startActivity(intent);
-                    // TODO: 2020-04-22 Här ska användaren tas till huvudaktiviteten.
+                    finish();
                 }
             }
         });
@@ -186,6 +186,7 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
                         Group group = groupList.get(i);
                         if (!updatedGroups.contains(group)) {
                             groupList.remove(group);
+                            mAdapter.notifyDataSetChanged();
                         }
                     }
                 }
