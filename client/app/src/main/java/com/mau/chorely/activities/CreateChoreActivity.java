@@ -44,7 +44,7 @@ public class CreateChoreActivity extends AppCompatActivity implements UpdatableA
             Chore chore = (Chore) bundle.get("chore");
             ((EditText) (findViewById(R.id.activity_register_editText_nameChore))).setText(chore.getName());
             ((EditText) (findViewById(R.id.activity_register_editText_descriptionChore))).setText(chore.getDescription());
-            ((EditText) (findViewById(R.id.activity_register_editText_setPointsChore))).setText(chore.getScore());
+            ((EditText) (findViewById(R.id.activity_register_editText_setPointsChore))).setText("" + chore.getScore());
         }
     }
 

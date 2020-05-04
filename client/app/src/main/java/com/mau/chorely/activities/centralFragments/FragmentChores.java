@@ -33,7 +33,7 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
     private RecyclerView recyclerView;
     private static CentralActivityRecyclerViewAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
-    
+
 
     public FragmentChores() {
         // Required empty public constructor
