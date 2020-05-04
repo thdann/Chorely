@@ -72,7 +72,7 @@ public class RegisteredUsers {
         File file = new File(filePath + user.getUsername() + ".dat");
         System.out.println("updatemetoden " + file.getPath());
         if (file.exists()) {
-            System.out.println("File deleted = " + file.delete());
+            messagesLogger.info("File deleted = " + file.delete());
         }
         writeUserToFile(user);
     }
@@ -85,7 +85,6 @@ public class RegisteredUsers {
      */
     public boolean userNameAvailable(String newUsername) {
         File file = new File(filePath + newUsername + ".dat");
-        System.out.println(file.getPath());
         if (file.exists()) {
             return false;
         }
