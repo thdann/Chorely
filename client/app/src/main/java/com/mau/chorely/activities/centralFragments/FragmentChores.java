@@ -33,8 +33,7 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
     private RecyclerView recyclerView;
     private static CentralActivityRecyclerViewAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
-
-    private ArrayList<Chore> listOfChores = new ArrayList<>();
+    
 
     public FragmentChores() {
         // Required empty public constructor
@@ -109,7 +108,7 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
             public void onItemClick(int position) {
                 // TODO: 2020-04-23 gå till aktiviteten för ändring av chore.
                 Intent intent = new Intent(getContext(), CreateChoreActivity.class);
-                intent.putExtra("chore", listOfChores.get(position));
+                intent.putExtra("chore", itemList.get(position).getChore());
                 startActivity(intent);
 
             }

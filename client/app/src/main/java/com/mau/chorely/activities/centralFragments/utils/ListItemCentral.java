@@ -9,22 +9,34 @@ public class ListItemCentral {
     String title;
     String description;
     int points;
+    Chore chore;
+    Reward reward;
     public ListItemCentral(String title, String description, int points){
         this.title = title;
         this.description = description;
         this.points=points;
     }
 
+    public Chore getChore() {
+        return chore;
+    }
+
+    public Reward getReward() {
+        return reward;
+    }
+
     public ListItemCentral(Chore chore){
         title = chore.getName();
         description = chore.getDescription();
         points = chore.getScore();
+        this.chore = chore;
     }
 
     public ListItemCentral(Reward reward){
         title = reward.getName();
         description = reward.getDescription();
         points = reward.getRewardPrice();
+        this.reward = reward;
     }
 
     public String getTitle(){
