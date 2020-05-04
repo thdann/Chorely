@@ -1,5 +1,6 @@
 package shared.transferable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Message implements Transferable {
@@ -11,12 +12,15 @@ public class Message implements Transferable {
     public Message(NetCommands command, User user) {
         this.command = command;
         this.user = user;
+        this.data = new ArrayList<>();
+        this.errorMessage = new ErrorMessage("");
     }
 
     public Message(NetCommands command, User user, List<Transferable> data) {
         this.command = command;
         this.user = user;
         this.data = data;
+        this.errorMessage = new ErrorMessage("");
     }
 
     public Message(NetCommands command, User user, List<Transferable> data, ErrorMessage errorMessage) {
@@ -29,6 +33,7 @@ public class Message implements Transferable {
     public Message(NetCommands command, User user, ErrorMessage errorMessage) {
         this.command = command;
         this.user = user;
+        this.data = new ArrayList<>();
         this.errorMessage = errorMessage;
     }
 
@@ -60,5 +65,20 @@ public class Message implements Transferable {
                 ", data=" + data +
                 ", errorMessage=" + errorMessage +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Message)) {
+            return false;
+        }
+        Message otherMessage = (Message) obj;
+
+        boolean equalCommands = command.equals(otherMessage.command);
+        boolean equalUser = user.equals(otherMessage.user);
+        boolean equalErrorMessage = errorMessage.equals(otherMessage.errorMessage);
+        boolean equalData = data.equals(otherMessage.data);
+
+        return equalCommands && equalUser && equalErrorMessage && equalData;
     }
 }

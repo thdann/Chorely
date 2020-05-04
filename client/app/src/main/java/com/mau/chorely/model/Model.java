@@ -54,6 +54,10 @@ public class Model {
         return storage.getSelectedGroup();
     }
 
+    public void setSelectedGroup(Group group){
+        storage.setSelectedGroup(group);
+    }
+
     /**
      * Getter to get all stored groups.
      * @return arraylist of groups.
@@ -111,6 +115,20 @@ public class Model {
             if (storage.saveOrUpdateGroup(currentGroup)) {
                 message.setCommand(NetCommands.updateGroup);
                 network.sendMessage(message);
+                BridgeInstances.getPresenter().updateCurrent();
+            }
+            //If not, group is already up to date.
+        } else {
+            storage.deleteGroup(currentGroup);
+            BridgeInstances.getPresenter().updateCurrent();
+        }
+    }
+
+    private void updateGroupExternal (Message message){
+        Group currentGroup = (Group)message.getData().get(0);
+        if(currentGroup.getUsers().contains(storage.getUser())) {
+
+            if (storage.saveOrUpdateGroup(currentGroup)) {
                 BridgeInstances.getPresenter().updateCurrent();
             }
             //If not, group is already up to date.
@@ -241,11 +259,17 @@ public class Model {
                             BridgeInstances.getPresenter().updateCurrent();
                             BridgeInstances.getPresenter().toastCurrent(currentTask.getErrorMessage().getMessage());
                             break;
+
                         case addNewChore:
                             addNewChore(currentTask);
                             break;
+
                         case addNewReward:
                             addNewReward(currentTask);
+                            break;
+
+                        case updateGroup:
+                            updateGroupExternal(currentTask);
                             break;
                         default:
                             System.out.println("Unrecognized command: " + command);
