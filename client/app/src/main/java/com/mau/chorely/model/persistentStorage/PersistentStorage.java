@@ -9,16 +9,17 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.Date;
 
 
+import shared.transferable.GenericID;
 import shared.transferable.Group;
 import shared.transferable.User;
 
@@ -31,8 +32,10 @@ import shared.transferable.User;
 public class PersistentStorage {
     private File filesDir;
     private static final String USER_FILE_NAME = "/user.cho";
+    private static final String SEL_GROUP_FILE_NAME = "/selGroup.cho";
     private static File userFile;
     private static File groupDir;
+    private static File selectedGroup;
 
     private PersistentStorage() {
     }
@@ -41,6 +44,7 @@ public class PersistentStorage {
         this.filesDir = filesDir;
         userFile = new File(filesDir.getAbsolutePath() + USER_FILE_NAME);
         groupDir = new File(filesDir.getAbsolutePath() + "/groups");
+        selectedGroup = new File(filesDir.getAbsolutePath() + SEL_GROUP_FILE_NAME);
     }
 
     /**
@@ -171,11 +175,11 @@ public class PersistentStorage {
 
     public void setSelectedGroup(Group inGroup) {
         Group group = inGroup;
-        if (groupDir.exists()) {
-            groupDir.delete();
+        if (selectedGroup.exists()) {
+            selectedGroup.delete();
         }
-        try (ObjectOutputStream ois = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(groupDir)))) {
-            ois.writeObject(group);
+        try (ObjectOutputStream ois = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(selectedGroup)))) {
+            ois.writeObject(group.getGroupID());
             ois.flush();
         } catch (IOException e) {
             System.out.println(new Date() + "File output stream: thrown exception " +
@@ -185,9 +189,14 @@ public class PersistentStorage {
 
     public Group getSelectedGroup() {
         Group group = null;
-        if (groupDir.exists()) {
-            try (ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(groupDir)))) {
-                group = (Group) ois.readObject();
+        if (selectedGroup.exists()) {
+            try (ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(selectedGroup)))) {
+                GenericID id = (GenericID) ois.readObject();
+                try(ObjectInputStream groupInput = new ObjectInputStream(new BufferedInputStream(new FileInputStream(groupDir +"/" + id +".cho")))){
+                    group = (Group) groupInput.readObject();
+                } catch (IOException f){
+                    System.out.println("ERROR READING SELECTED GROUP: " + f.getMessage());
+                }
             } catch (IOException | ClassNotFoundException e) {
                 System.out.println(new Date() + "File input stream: thrown exception " +
                         "trying to read group." + e.getMessage());

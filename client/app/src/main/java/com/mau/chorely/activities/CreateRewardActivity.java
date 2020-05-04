@@ -59,8 +59,6 @@ public class CreateRewardActivity extends AppCompatActivity implements Updatable
         return super.onOptionsItemSelected(item);
     }
 
-
-
     public Reward createNewReward() {
         String name = ((EditText) findViewById(R.id.activity_register_editText_nameReward)).getText().toString();
         String description = ((EditText) findViewById(R.id.activity_register_editText_descriptionReward)).getText().toString();
