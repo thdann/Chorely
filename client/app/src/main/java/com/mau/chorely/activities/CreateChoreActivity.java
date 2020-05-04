@@ -3,6 +3,7 @@ package com.mau.chorely.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -43,6 +44,10 @@ public class CreateChoreActivity extends AppCompatActivity implements UpdatableA
         if (bundle != null) {
             Chore chore = (Chore) bundle.get("chore");
             ((EditText) (findViewById(R.id.activity_register_editText_nameChore))).setText(chore.getName());
+            findViewById(R.id.activity_register_editText_nameChore).setBackground(getDrawable(R.color.background));
+            findViewById(R.id.activity_register_editText_nameChore).setFocusable(false);
+            findViewById(R.id.activity_register_editText_nameChore).setFocusableInTouchMode(false);
+
             ((EditText) (findViewById(R.id.activity_register_editText_descriptionChore))).setText(chore.getDescription());
             ((EditText) (findViewById(R.id.activity_register_editText_setPointsChore))).setText("" + chore.getScore());
         }
