@@ -37,6 +37,19 @@ public class CreateRewardActivity extends AppCompatActivity implements Updatable
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        Bundle bundle = getIntent().getExtras();
+
+        if (bundle != null) {
+            Reward reward = (Reward) bundle.get("reward");
+            ((EditText) (findViewById(R.id.activity_register_editText_nameReward))).setText(reward.getName());
+            ((EditText) (findViewById(R.id.activity_register_editText_descriptionReward))).setText(reward.getDescription());
+            ((EditText) (findViewById(R.id.activity_register_editText_pointsReward))).setText("" + reward.getRewardPrice());
+        }
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_create_reward, menu);
         return super.onCreateOptionsMenu(menu);
@@ -59,20 +72,26 @@ public class CreateRewardActivity extends AppCompatActivity implements Updatable
         return super.onOptionsItemSelected(item);
     }
 
-    public Reward createNewReward() {
+  /*  public Reward createNewReward() {
         String name = ((EditText) findViewById(R.id.activity_register_editText_nameReward)).getText().toString();
         String description = ((EditText) findViewById(R.id.activity_register_editText_descriptionReward)).getText().toString();
         int points = Integer.parseInt(((EditText) findViewById(R.id.activity_register_editText_pointsReward)).getText().toString());
         Reward reward = new Reward(name, points, description);
         return reward;
+    } */
+
+    public Reward createNewReward(String name, String desc, int points) {
+        Reward reward = new Reward(name, points, desc);
+        return reward;
     }
 
-    public Message createMessageNewReward() {
+    public boolean createMessageNewReward(Reward newReward) {
         Model model = BridgeInstances.getModel(getFilesDir());
         ArrayList<Transferable> data = new ArrayList<>();
-        data.add(createNewReward());
+        data.add(newReward);
         Message message = new Message(NetCommands.addNewReward, model.getUser(), data);
-        return message;
+        model.handleTask(message);
+        return true;
     }
 
     public boolean controlTextFields() {
@@ -80,17 +99,25 @@ public class CreateRewardActivity extends AppCompatActivity implements Updatable
         String descriptionField = ((EditText) findViewById(R.id.activity_register_editText_descriptionReward)).getText().toString();
         String pointsField = ((EditText) findViewById(R.id.activity_register_editText_pointsReward)).getText().toString();
 
-        if (nameField == "") {
+        if (nameField.equals("")) {
             doToast("Du måste fylla i namn på belöningen");
             return false;
-        } else if (descriptionField == "") {
+        } else if (descriptionField.equals("")) {
             doToast("Du måste fylla i en beskrivning av belöningen");
             return false;
-        } else if (pointsField == "") {
+        } else if (pointsField.equals("")) {
             doToast("Du måste fylla i antal poäng belöningen kostar");
             return false;
-        }
-        return true;
+        } else
+            try {
+                int points = Integer.parseInt(pointsField);
+                createMessageNewReward(createNewReward(nameField, descriptionField, points));
+                return true;
+            } catch (NumberFormatException e) {
+                doToast("Du måste fylla i poäng med siffor");
+                return false;
+            }
+
     }
 
     @Override
