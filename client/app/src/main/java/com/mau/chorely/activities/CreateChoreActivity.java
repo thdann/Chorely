@@ -36,6 +36,19 @@ public class CreateChoreActivity extends AppCompatActivity implements UpdatableA
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        Bundle bundle = getIntent().getExtras();
+
+        if (bundle != null) {
+            Chore chore = (Chore) bundle.get("chore");
+            ((EditText) (findViewById(R.id.activity_register_editText_nameChore))).setText(chore.getName());
+            ((EditText) (findViewById(R.id.activity_register_editText_descriptionChore))).setText(chore.getDescription());
+            ((EditText) (findViewById(R.id.activity_register_editText_setPointsChore))).setText(chore.getScore());
+        }
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_create_chore, menu);
         return super.onCreateOptionsMenu(menu);

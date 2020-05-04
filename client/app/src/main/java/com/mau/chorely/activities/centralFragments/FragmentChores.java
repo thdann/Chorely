@@ -34,10 +34,11 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
     private static CentralActivityRecyclerViewAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
 
+    private ArrayList<Chore> listOfChores = new ArrayList<>();
+
     public FragmentChores() {
         // Required empty public constructor
     }
-
 
 
     /**
@@ -49,7 +50,7 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
     public static FragmentChores newInstance(ArrayList<Chore> chores) {
         FragmentChores fragment = new FragmentChores();
         Bundle args = new Bundle();
-        args.putSerializable("CHORES" , chores);
+        args.putSerializable("CHORES", chores);
         fragment.setArguments(args);
         return fragment;
     }
@@ -64,7 +65,6 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
     }
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -76,41 +76,45 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
         return view;
     }
 
-    private static void validateAndUpdateListData(ArrayList<Chore> chores){
-        for(Chore chore : chores){
+    private static void validateAndUpdateListData(ArrayList<Chore> chores) {
+        for (Chore chore : chores) {
             boolean foundItem = false;
-            for(int i = 0; i < itemList.size(); i++){
-                if(itemList.get(i).equals(chore)){
+            for (int i = 0; i < itemList.size(); i++) {
+                if (itemList.get(i).equals(chore)) {
                     foundItem = true;
-                    if(!itemList.get(i).allIsEqual(chore)){
+                    if (!itemList.get(i).allIsEqual(chore)) {
                         itemList.get(i).updateItem(chore);
                     }
                 }
             }
-            if(!foundItem){
+            if (!foundItem) {
                 itemList.add(new ListItemCentral(chore));
             }
         }
     }
 
-    public static void updateList(ArrayList<Chore> chores){
+    public static void updateList(ArrayList<Chore> chores) {
         validateAndUpdateListData(chores);
         adapter.notifyDataSetChanged();
     }
 
-    private void buildRecyclerView(){
-            recyclerView.setHasFixedSize(true);
-            layoutManager = new LinearLayoutManager(getActivity());
-            adapter = new CentralActivityRecyclerViewAdapter(itemList);
-            recyclerView.setLayoutManager(layoutManager);
-            recyclerView.setAdapter(adapter);
-            adapter.setOnclickListener(new CentralActivityRecyclerViewAdapter.OnitemClickListener() {
-                @Override
-                public void onItemClick(int position) {
-                    // TODO: 2020-04-23 gå till aktiviteten för ändring av chore.
-                }
-            });
-        }
+    private void buildRecyclerView() {
+        recyclerView.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(getActivity());
+        adapter = new CentralActivityRecyclerViewAdapter(itemList);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
+        adapter.setOnclickListener(new CentralActivityRecyclerViewAdapter.OnitemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                // TODO: 2020-04-23 gå till aktiviteten för ändring av chore.
+                Intent intent = new Intent(getContext(), CreateChoreActivity.class);
+                intent.putExtra("chore", listOfChores.get(position));
+                startActivity(intent);
+
+            }
+        });
+    }
 
     @Override
     public void onClick(View v) {
