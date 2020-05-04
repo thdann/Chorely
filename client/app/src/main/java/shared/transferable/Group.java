@@ -8,6 +8,7 @@ package shared.transferable;
  */
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Group implements Transferable {
     private String name;
@@ -16,6 +17,7 @@ public class Group implements Transferable {
     private GenericID groupID = new GenericID();
     private ArrayList<Chore> chores = new ArrayList<>();
     private ArrayList<Reward> rewards = new ArrayList<>();
+    private HashMap<User, Integer> points = new HashMap<>();
 
     /**
      * CreateEditGroupActivity needs to be able to create a group before name is set.
