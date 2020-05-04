@@ -61,9 +61,6 @@ public class CreateRewardActivity extends AppCompatActivity implements Updatable
         if (id == R.id.create_reward_menu_saveChanges) {
 
             if (controlTextFields()) {
-                Message msg = createMessageNewReward();
-                Model model = BridgeInstances.getModel(getFilesDir());
-                model.handleTask(msg);
                 finish();
             }
 
@@ -71,6 +68,7 @@ public class CreateRewardActivity extends AppCompatActivity implements Updatable
 
         return super.onOptionsItemSelected(item);
     }
+
 
   /*  public Reward createNewReward() {
         String name = ((EditText) findViewById(R.id.activity_register_editText_nameReward)).getText().toString();
