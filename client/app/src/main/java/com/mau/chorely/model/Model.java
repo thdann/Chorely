@@ -160,7 +160,7 @@ public class Model {
      * @param message message containing the new chore.
      */
     public void addNewChore(Message message){
-        //TODO: 1 Plocka ut grupp, är det korrekt på nedan rad?
+        // FIXME: 2020-05-04 Sysslor dupliceras osynligt.
         Group group = storage.getSelectedGroup();
         Chore chore = (Chore) message.getData().get(0);
         group.addChore(chore);
@@ -270,7 +270,9 @@ public class Model {
 
                         case updateGroup:
                             updateGroupExternal(currentTask);
+                            BridgeInstances.getPresenter().updateCurrent();
                             break;
+
                         default:
                             System.out.println("Unrecognized command: " + command);
                             BridgeInstances.getPresenter().toastCurrent("Unknown command: " +command);

@@ -86,7 +86,7 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
         mAdapter.setOnItemClickListener(new RecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                if(BridgeInstances.getModel(getFilesDir()).getSelectedGroup() != null) {
+                if(BridgeInstances.getModel(getFilesDir()).getSelectedGroup() != null ) {
                     Intent intent = new Intent(ManageGroupsActivity.this, CreateEditGroupActivity.class);
                     intent.putExtra("SELECTED_GROUP", groupList.get(position));
                     startActivity(intent);
