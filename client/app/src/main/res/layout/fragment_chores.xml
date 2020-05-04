@@ -1,48 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.centralFragments.FragmentChores"
     android:background="@color/background"
-
-    >
-
+    tools:context=".activities.centralFragments.FragmentChores">
 
     <TextView
-        android:layout_marginTop="4dp"
         android:id="@+id/fragment_chores_textViewEmpty"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/btnColor"
-        android:text="REPLACE ME WITH @strings noChores"
+        android:layout_marginTop="4dp"
         android:gravity="center"
-        />
+        android:text="REPLACE ME WITH @strings noChores"
+        android:textColor="@color/btnColor" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fragment_chores_claimChoreButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/fragment_chores_editChoreButton"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="@color/btnColor"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/action_chore_done" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fragment_chores_editChoreButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/fragment_chores_createNewChoreButton"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="@color/btnColor"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/action_chore_edit" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fragment_chores_createNewChoreButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
         android:backgroundTint="@color/btnColor"
         android:clickable="true"
         android:focusable="true"
-        android:src="@drawable/central_panel_add"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-         />
-
+        android:src="@drawable/central_panel_add" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/fragment_chores_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="5dp"
-        android:scrollbars="vertical"
-        />
-
-
+        android:scrollbars="vertical" />
 
 </RelativeLayout>
