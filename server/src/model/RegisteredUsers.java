@@ -14,7 +14,7 @@ import java.util.logging.Logger;
  */
 public class RegisteredUsers {
     private final static Logger messagesLogger = Logger.getLogger("messages");
-    private String filePath;
+    private final String filePath;
 
     /**
      * Constructor
@@ -28,7 +28,7 @@ public class RegisteredUsers {
      *
      * @param user the User object to be saved to file
      */
-    public void writeUserToFile(User user) {
+    public synchronized void writeUserToFile(User user) {
         String filename = String.format("%s%s.dat", filePath, user.getUsername());
         try (ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filename)))) {
             oos.writeObject(user);
@@ -47,7 +47,7 @@ public class RegisteredUsers {
      * @param dummyUser the user searched for.
      * @return the requested User-object
      */
-    public User getUserFromFile(User dummyUser) {
+    public synchronized User getUserFromFile(User dummyUser) {
         String filename = String.format("%s%s.dat", filePath, dummyUser.getUsername());
         User foundUser = null;
 
@@ -68,7 +68,7 @@ public class RegisteredUsers {
      *
      * @param user is the new updated version of the User object to be saved to file.
      */
-    public void updateUser(User user) {
+    public synchronized void updateUser(User user) {
         File file = new File(filePath + user.getUsername() + ".dat");
         System.out.println("updatemetoden " + file.getPath());
         if (file.exists()) {
@@ -83,7 +83,7 @@ public class RegisteredUsers {
      * @param newUsername the requested username of a new user.
      * @return true if username is available and false if it already taken.
      */
-    public boolean userNameAvailable(String newUsername) {
+    public synchronized boolean userNameAvailable(String newUsername) {
         File file = new File(filePath + newUsername + ".dat");
         if (file.exists()) {
             return false;
@@ -97,7 +97,7 @@ public class RegisteredUsers {
      * @param dummyUser the requested user/username to look for
      * @return the requested user if it exists, otherwise return null
      */
-    public User findUser(User dummyUser) {
+    public synchronized User findUser(User dummyUser) {
         User foundUser = null;
         if (userNameAvailable(dummyUser.getUsername())) {
             return null;
