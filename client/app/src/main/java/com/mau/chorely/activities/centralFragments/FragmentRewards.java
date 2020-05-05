@@ -164,7 +164,7 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
 
         } else if (v.getId() == R.id.fragment_reward_changeRewardButton) {
             Intent intent = new Intent(getContext(), CreateRewardActivity.class);
-            intent.putExtra("belöning", itemList.get(selectedItem).getReward());
+            intent.putExtra("reward", itemList.get(selectedItem).getReward());
             startActivity(intent);
         }
     }

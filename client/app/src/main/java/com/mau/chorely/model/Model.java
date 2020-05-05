@@ -192,7 +192,18 @@ public class Model {
 
         Group group = storage.getSelectedGroup();
         Reward reward = (Reward) message.getData().get(0);
-        group.addReward(reward);
+        boolean foundSame = false;
+        for(Reward tempReward : group.getRewards()){
+            if(tempReward.nameEquals(reward)){
+                foundSame = true;
+                if(!tempReward.equals(reward)){
+                    tempReward.updateReward(reward);
+                }
+            }
+        }
+        if(!foundSame){
+            group.addReward(reward);
+        }
         ArrayList<Transferable> data = new ArrayList<>();
         data.add(group);
         Message newMessage = new Message(NetCommands.updateGroup, message.getUser(), data);
