@@ -10,6 +10,7 @@ package shared.transferable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class Group implements Transferable {
     private String name;
@@ -118,8 +119,12 @@ public class Group implements Transferable {
         } else {
             points.put(user, incomingPoints);
         }
-        
 
+
+    }
+
+    public Map<User, Integer> getPoints() {
+        return points;
     }
 
     public boolean allIsEqual(Group group) {
@@ -138,6 +143,18 @@ public class Group implements Transferable {
             }
             for (int i = 0; i < users.size(); i++) {
                 if (!group.getUsers().get(i).equals(users.get(i))) {
+                    return false;
+                }
+            }
+            for (Map.Entry inputEntry : group.getPoints().entrySet()) {
+                boolean foundEntry = false;
+                for (Map.Entry entry : points.entrySet()) {
+                    if (entry.getKey().equals(inputEntry.getKey()) && entry.getValue().equals(inputEntry.getValue()))
+                    {
+                        foundEntry = true;
+                    }
+                }
+                if (!foundEntry) {
                     return false;
                 }
             }
