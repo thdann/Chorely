@@ -40,6 +40,16 @@ public class Chore implements Transferable {
         return description;
     }
 
+    public void updateChore(Chore chore){
+        this.name = chore.getName();
+        this.description = chore.getDescription();
+        this.score = chore.getScore();
+    }
+
+    public boolean nameEquals(Chore input){
+        return this.name.equals(input.getName());
+    }
+
     @Override
     public boolean equals(Object obj) {
         if(obj instanceof Chore){
