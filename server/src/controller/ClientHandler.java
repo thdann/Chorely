@@ -17,7 +17,7 @@ import java.util.logging.Logger;
  * ClientHandler
  * version 2.0 2020-03-23
  *
- * @autor Angelica Asplund, Emma Svensson and Theresa Dannberg
+ * @author Angelica Asplund, Emma Svensson, Theresa Dannberg, Fredrik Jeppsson
  */
 public class ClientHandler {
     private final static Logger messagesLogger = Logger.getLogger("messages");
@@ -26,7 +26,6 @@ public class ClientHandler {
     private OutputThread outputThread;
     private ServerController controller;
     private LinkedBlockingQueue<Message> outgoingMessages;
-    private volatile User clientUser = null;
 
     public ClientHandler(Socket socket, ServerController controller, RegisteredUsers registeredUsers) {
         this.controller = controller;
@@ -48,14 +47,6 @@ public class ClientHandler {
      */
     public void addToOutgoingMessages(Message reply) {
         outgoingMessages.add(reply);
-    }
-
-    /**
-     * Removes a user from the list of clients currently online.
-     */
-    public void throwOut() {
-        controller.removeOnlineClient(clientUser);
-        this.clientUser = null;
     }
 
     private boolean registerUser(Message message) {
