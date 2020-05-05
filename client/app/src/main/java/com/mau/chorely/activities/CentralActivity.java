@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Toast;
 
@@ -28,6 +29,12 @@ public class CentralActivity extends AppCompatActivity implements UpdatableActiv
     private Group selectedGroup;
     SectionsPageAdapter adapter = new SectionsPageAdapter(getSupportFragmentManager(),
             BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_central_activity, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

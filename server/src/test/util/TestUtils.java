@@ -1,5 +1,6 @@
 package test.util;
 
+import shared.transferable.Group;
 import shared.transferable.User;
 
 import java.io.File;
@@ -14,6 +15,12 @@ public class TestUtils {
     public static void deleteUser(User user) {
         String username = user.getUsername();
         String filename = "files/users/" + username + ".dat";
+        File file = new File(filename);
+        file.delete();
+    }
+
+    public static void deleteGroup(Group group) {
+        String filename = "files/groups/" + group.getGroupID() + ".dat";
         File file = new File(filename);
         file.delete();
     }
