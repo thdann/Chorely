@@ -86,6 +86,7 @@ public class ListItemCentral {
         return ret;
     }
 
+
     @Override
     public boolean equals(@Nullable Object obj) {
         boolean ret;
