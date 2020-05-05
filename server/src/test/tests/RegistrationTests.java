@@ -1,5 +1,6 @@
 import controller.ServerController;
 import org.junit.jupiter.api.Test;
+import shared.transferable.ErrorMessage;
 import shared.transferable.Message;
 import shared.transferable.NetCommands;
 import shared.transferable.User;
@@ -59,7 +60,7 @@ public class RegistrationTests {
             List<Callable<List<Message>>> tests = new ArrayList<>();
             tests.add(TestClient.newTestRun(outgoingMessages1, port));
             tests.add(TestClient.newTestRun(outgoingMessages2, port));
-            tests.add(TestClient.newTestRun(outgoingMessages3, port ));
+            tests.add(TestClient.newTestRun(outgoingMessages3, port));
             tests.add(TestClient.newTestRun(outgoingMessages4, port));
 
             List<Future<List<Message>>> futureResults = executor.invokeAll(tests);
@@ -90,11 +91,39 @@ public class RegistrationTests {
 
     }
 
-//    @Test
-//    public void testRegistrationDenied() {
-//        ExecutorService executor = Executors.newCachedThreadPool();
-//        ServerController serverController = new ServerController();
-//
-//    }
+    @Test
+    public void testRegistrationDenied() {
+        try {
+            int port = 6585;
+            ExecutorService executorService = Executors.newCachedThreadPool();
+            ServerController serverController = new ServerController(port);
+            User user = new User("testRegistration", "secret");
+            List<Message> outgoingMessages = new ArrayList<>();
+            outgoingMessages.add(new Message(NetCommands.registerUser, user));
+
+            // Normal registration.
+            Callable<List<Message>> testClient = TestClient.newTestRun(outgoingMessages, port);
+            Future<List<Message>> received = executorService.submit(testClient);
+            List<Message> receivedMessages = received.get();
+            List<Message> expected = Collections.singletonList(new Message(NetCommands.registrationOk, user));
+            assertEquals(receivedMessages, expected);
+
+            // Trying to register with the same username - should fail because it already rexists.
+            Callable<List<Message>> testClient2 = TestClient.newTestRun(outgoingMessages, port);
+            Future<List<Message>> received2 = executorService.submit(testClient);
+            List<Message> receivedMessages2 = received2.get();
+            List<Message> expected2 = Collections.singletonList(new Message(NetCommands.registrationDenied, user,
+                    new ErrorMessage("Användarnamnet är upptaget, välj ett annat.")));
+            assertEquals(receivedMessages2, expected2);
+
+            TestUtils.deleteUser(user);
+
+        } catch (InterruptedException | ExecutionException e) {
+            // What do I do here?
+        }
+    }
+
+
 }
+
 
