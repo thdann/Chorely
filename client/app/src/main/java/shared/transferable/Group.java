@@ -4,7 +4,7 @@ package shared.transferable;
  * Group is a class that represent a group in the application.
  * version 2.0 2020-04-08
  *
- * @autor Timothy Denison and Emma Svensson.
+ * @autor Timothy Denison and Emma Svensson, Angelica Asplund.
  */
 
 import java.util.ArrayList;
@@ -19,6 +19,7 @@ public class Group implements Transferable {
     private ArrayList<Chore> chores = new ArrayList<>();
     private ArrayList<Reward> rewards = new ArrayList<>();
     private Map<User, Integer> points = new HashMap<>();
+    private int incomingPoints;
 
     /**
      * CreateEditGroupActivity needs to be able to create a group before name is set.
@@ -108,6 +109,13 @@ public class Group implements Transferable {
         return users.size();
     }
 
+    public void modifyUserPoints (User user, int incomingPoints) {
+       int tempPoints = points.get(user);
+       tempPoints += incomingPoints;
+       points.put(user, tempPoints);
+
+    }
+
     public boolean allIsEqual(Group group) {
         if (group.getRewards().size() == rewards.size() && group.getChores().size() == chores.size()
                 && group.getUsers().size() == users.size()) {
@@ -148,4 +156,6 @@ public class Group implements Transferable {
     public int hashCode() {
         return groupID.hashCode();
     }
+
+
 }
