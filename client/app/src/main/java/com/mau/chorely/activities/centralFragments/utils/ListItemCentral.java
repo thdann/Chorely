@@ -54,12 +54,14 @@ public class ListItemCentral {
         title = chore.getName();
         description = chore.getDescription();
         points = chore.getScore();
+        this.chore = chore;
     }
 
     public void updateItem(Reward reward){
         title = reward.getName();
         description = reward.getDescription();
         points = reward.getRewardPrice();
+        this.reward = reward;
     }
 
     public boolean allIsEqual(Object input){
