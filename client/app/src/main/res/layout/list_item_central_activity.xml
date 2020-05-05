@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
         android:id="@+id/central_list_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="447dp"
+        android:layout_height="788dp"
         android:background="@color/background"
         android:paddingHorizontal="10dp"
         android:paddingTop="10dp"
-        >
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
 
 
         <TextView
@@ -22,9 +24,8 @@
             android:layout_height="wrap_content"
             android:text="Title"
             android:textColor="@color/btnColor"
-            android:textStyle="bold"
             android:textSize="20sp"
-            />
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/central_list_description"
@@ -33,48 +34,70 @@
             android:layout_below="@id/central_list_titleText"
             android:layout_marginStart="20dp"
             android:text="Description"
-            android:textSize="15sp"
             android:textColor="@color/btnColor"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/central_list_descriptionText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/central_list_titleText"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="30dp"
+            android:text="Senast utförd av: "
+            android:textColor="@color/btnColor"
+            android:textSize="17sp"
+            app:layout_constraintTop_toBottomOf="@+id/central_list_description"
+            />
+
+
+        <TextView
+            android:id="@+id/central_list_descriptionText2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/central_list_titleText"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="59dp"
+            android:text="Senast använd av: "
+            android:textColor="@color/btnColor"
+            android:textSize="17sp"
+            app:layout_constraintTop_toBottomOf="@+id/central_list_description"
             />
 
         <TextView
             android:id="@+id/central_list_pointText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textColor="@color/btnColor"
-            android:textStyle="bold"
-            android:text="0"
             android:layout_alignParentRight="true"
-            />
+            android:text="0"
+            android:textColor="@color/btnColor"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <ImageView
             android:layout_width="24sp"
             android:layout_height="24sp"
             android:layout_marginTop="2dp"
+            android:layout_marginEnd="4dp"
             android:layout_toStartOf="@id/central_list_pointText"
             android:src="@drawable/point_star_button_color"
-            android:layout_marginEnd="4dp"
 
             />
-
 
 
         <View
             android:id="@+id/central_list_divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginEnd="4dp"
-            android:layout_marginStart="4dp"
-            android:background="@drawable/button_background"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_centerHorizontal="true"
             android:layout_below="@id/central_list_description"
-            android:layout_marginTop="10dp"
-            />
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="66dp"
+            android:layout_marginEnd="4dp"
+            android:background="@drawable/button_background"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </RelativeLayout>
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
