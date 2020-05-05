@@ -2,12 +2,10 @@ import controller.ServerController;
 import org.junit.jupiter.api.Test;
 import shared.transferable.Group;
 import shared.transferable.Message;
-import shared.transferable.NetCommands;
 import shared.transferable.User;
 import test.util.TestClient;
 import test.util.TestUtils;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.*;
 
@@ -22,28 +20,40 @@ public class UpdateGroupTests {
      */
     @Test
     public void testLoginAndReceiveGroup() {
+        User user = new User("testLoginAndReceiveGroup", "secret");
+        Group group = new Group("testLoginGroup");
+        group.addUser(user);
+
         try {
             int port = 6586;
             ExecutorService executorService = Executors.newCachedThreadPool();
             ServerController serverController = new ServerController(port);
 
             // Register a user and create a group.
-            User user = new User("testLoginAndReceiveGroup", "secret");
             List<Message> outgoingMessages = List.of(
                     new Message(registerUser, user),
-                    new Message(registerNewGroup, user, List.of(new Group("testLoginGroup"))));
+                    new Message(registerNewGroup, user, List.of(group)));
             Callable<List<Message>> testClient = TestClient.newTestRun(outgoingMessages, port);
             Future<List<Message>> received = executorService.submit(testClient);
             List<Message> receivedMessages = received.get();
-            List<Message> expected = List.of(new Message(registrationOk, user), new Message(newGroupOk, user));
-            assertEquals(receivedMessages, expected);
+            List<Message> expected = List.of(
+                    new Message(registrationOk, user),
+                    new Message(newGroupOk, user),
+                    new Message(updateGroup, user, List.of(group)));
+            assertEquals(expected, receivedMessages);
 
-            // Login and expect to find 
-
-
-//            TestUtils.deleteUser(user);
+            // Login and expect to receive the group in an update group message.
+            outgoingMessages = List.of(new Message(login, user));
+            testClient= TestClient.newTestRun(outgoingMessages, port);
+            received = executorService.submit(testClient);
+            receivedMessages = received.get();
+            expected = List.of(new Message(loginOk, user), new Message(updateGroup, user, List.of(group)));
+            assertEquals(expected, receivedMessages);
         } catch (InterruptedException | ExecutionException e) {
             // What do I do here?
+        } finally {
+            TestUtils.deleteUser(user);
+            TestUtils.deleteGroup(group);
         }
 
     }
