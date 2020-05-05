@@ -13,13 +13,15 @@ import com.mau.chorely.R;
 import java.util.ArrayList;
 
 public class CentralActivityRecyclerViewAdapter extends RecyclerView.Adapter<CentralActivityRecyclerViewAdapter.RecyclerViewHolder> {
+
     private ArrayList<ListItemCentral> itemList;
     private OnitemClickListener clickListener;
+
     public interface OnitemClickListener {
         void onItemClick(int position);
     }
 
-    public CentralActivityRecyclerViewAdapter(ArrayList<ListItemCentral> itemList){
+    public CentralActivityRecyclerViewAdapter(ArrayList<ListItemCentral> itemList) {
         this.itemList = itemList;
     }
 
@@ -45,15 +47,16 @@ public class CentralActivityRecyclerViewAdapter extends RecyclerView.Adapter<Cen
         return itemList.size();
     }
 
-    public void setOnclickListener(OnitemClickListener listener){
+    public void setOnclickListener(OnitemClickListener listener) {
         this.clickListener = listener;
     }
 
-    public static class RecyclerViewHolder extends RecyclerView.ViewHolder{
+    public static class RecyclerViewHolder extends RecyclerView.ViewHolder {
         private TextView textViewTitle;
         private TextView textViewDescription;
         private TextView textViewPoints;
-        private RecyclerViewHolder(View itemView, final OnitemClickListener clickListener){
+
+        private RecyclerViewHolder(View itemView, final OnitemClickListener clickListener) {
             super(itemView);
             textViewTitle = itemView.findViewById(R.id.central_list_titleText);
             textViewDescription = itemView.findViewById(R.id.central_list_description);
@@ -62,9 +65,9 @@ public class CentralActivityRecyclerViewAdapter extends RecyclerView.Adapter<Cen
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(clickListener != null){
+                    if (clickListener != null) {
                         int position = getAdapterPosition();
-                        if(position != RecyclerView.NO_POSITION){
+                        if (position != RecyclerView.NO_POSITION) {
                             clickListener.onItemClick(position);
                         }
                     }
