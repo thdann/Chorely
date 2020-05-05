@@ -110,9 +110,15 @@ public class Group implements Transferable {
     }
 
     public void modifyUserPoints (User user, int incomingPoints) {
-       int tempPoints = points.get(user);
-       tempPoints += incomingPoints;
-       points.put(user, tempPoints);
+        if(points.containsKey(user)) {
+            if(points.get(user) != null) {
+                int tempPoints = points.get(user);
+                tempPoints += incomingPoints;
+                points.put(user, tempPoints);
+            } else {
+                points.put(user, incomingPoints);
+            }
+        }
 
     }
 
