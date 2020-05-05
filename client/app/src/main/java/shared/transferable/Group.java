@@ -61,11 +61,11 @@ public class Group implements Transferable {
         users.add(user);
     }
 
-    public void setName(String name){
+    public void setName(String name) {
         this.name = name;
     }
 
-    public void setDescription (String description){
+    public void setDescription(String description) {
         this.description = description;
     }
 
@@ -109,16 +109,16 @@ public class Group implements Transferable {
         return users.size();
     }
 
-    public void modifyUserPoints (User user, int incomingPoints) {
-        if(points.containsKey(user)) {
-            if(points.get(user) != null) {
-                int tempPoints = points.get(user);
-                tempPoints += incomingPoints;
-                points.put(user, tempPoints);
-            } else {
-                points.put(user, incomingPoints);
-            }
+    public void modifyUserPoints(User user, int incomingPoints) {
+
+        if (points.get(user) != null) {
+            int tempPoints = points.get(user);
+            tempPoints += incomingPoints;
+            points.put(user, tempPoints);
+        } else {
+            points.put(user, incomingPoints);
         }
+        
 
     }
 
@@ -132,12 +132,12 @@ public class Group implements Transferable {
             }
 
             for (int i = 0; i < rewards.size(); i++) {
-                if(!group.getRewards().get(i).equals(rewards.get(i))){
+                if (!group.getRewards().get(i).equals(rewards.get(i))) {
                     return false;
                 }
             }
-            for(int i = 0; i< users.size(); i++){
-                if(!group.getUsers().get(i).equals(users.get(i))){
+            for (int i = 0; i < users.size(); i++) {
+                if (!group.getUsers().get(i).equals(users.get(i))) {
                     return false;
                 }
             }
