@@ -27,6 +27,11 @@ import com.mau.chorely.model.Model;
 import java.util.ArrayList;
 
 import shared.transferable.Chore;
+import shared.transferable.Group;
+import shared.transferable.Message;
+import shared.transferable.NetCommands;
+import shared.transferable.Transferable;
+import shared.transferable.User;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -124,14 +129,8 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
                 view.setBackgroundColor(getResources().getColor(R.color.backgroundLight));
                 view.setSelected(true);
 
-
-                System.out.println(view.toString());
-                System.out.println(view.getRootView().toString());
-
                 view.findViewById(R.id.central_list_layout).setBackgroundColor(0);
 
-
-                // TODO: 2020-04-23 gå till aktiviteten för ändring av chore.
                 getView().findViewById(R.id.fragment_chores_claimChoreButton).setVisibility(View.VISIBLE);
                 getView().findViewById(R.id.fragment_chores_editChoreButton).setVisibility(View.VISIBLE);
 
@@ -147,7 +146,17 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
             Intent intent = new Intent(getContext(), CreateChoreActivity.class);
             startActivity(intent);
         } else if (v.getId() == R.id.fragment_chores_claimChoreButton) {
-            //öka poängen för användaren
+
+            int points = Integer.parseInt(itemList.get(selectedItem).getPoints());
+            // Uppdatera poängen för användaren i selected goup:
+            Model model = BridgeInstances.getModel(getActivity().getFilesDir());
+            Group group = model.getSelectedGroup();
+            User currentUser = model.getUser();
+            ArrayList<Transferable> data = new ArrayList<>();
+            data.add(group);
+            group.modifyUserPoints(model.getUser(), points);
+            Message message = new Message(NetCommands.clientInternalGroupUpdate, currentUser, data)
+
         } else if (v.getId() == R.id.fragment_chores_editChoreButton) {
             Intent intent = new Intent(getContext(), CreateChoreActivity.class);
             intent.putExtra("chore", itemList.get(selectedItem).getChore());
