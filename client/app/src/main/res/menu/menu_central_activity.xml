@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <group>
+
+        <item
+            android:id="@+id/menu_central_star"
+            android:icon="@drawable/point_star_button_color"
+            android:title=""
+            app:showAsAction="always"
+
+            />
+
+        <item
+            android:id="@+id/menu_central_pointsText"
+            android:title="100"
+            app:showAsAction="always"
+            />
+    </group>
+</menu>
