@@ -37,4 +37,48 @@
         android:background="@color/background"
         />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/manage_groups_enterButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/manage_groups_editButton"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="@color/btnColor"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/enter_group"
+        android:visibility="invisible"
+        android:onClick="enterGroupClick"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/manage_groups_editButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/fragment_chores_createNewButton"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="@color/btnColor"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/action_chore_edit"
+        android:visibility="invisible"
+        android:onClick="editGroupClick"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fragment_chores_createNewButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="@color/btnColor"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/central_panel_add"
+        android:onClick="newGroupClick"/>
+
 </RelativeLayout>
