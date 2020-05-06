@@ -25,5 +25,8 @@
     <string name="nameChore">Namn på syssla:</string>
     <string name="descriptionChore">Beskrivning av syssla:</string>
     <string name="setPointsChore">Poängvärde för syssla:</string>
+    <string name="doneByChore">Senast utförd av: </string>
+    <string name="doneByReward">Senast köpt av</string>
+
 
 </resources>

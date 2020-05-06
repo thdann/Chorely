@@ -116,7 +116,7 @@ public class ClientHandler {
 
                 while (true) {
                     Message msg = (Message) ois.readObject();
-                    messagesLogger.info(msg.getCommand() + " received from client " + msg.getUser());
+                    messagesLogger.info( "INCOMING MESSAGE: \n" + msg + " received from client " + msg.getUser());
                     controller.sendMessage(msg);
                 }
 
@@ -143,7 +143,7 @@ public class ClientHandler {
                     Message reply = outgoingMessages.take();
                     oos.writeObject(reply);
                     oos.flush();
-                    messagesLogger.info(reply.getCommand() + " Sent to user " + reply.getUser());
+                    messagesLogger.info( "OUTGOINg: \n" + reply + " Sent to user " + reply.getUser());
                 }
             } catch (IOException | InterruptedException ignore) {
                 // We get here when the connection to the client is lost and the input thread interrupts

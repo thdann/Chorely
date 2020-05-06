@@ -193,7 +193,11 @@ public class Group implements Transferable {
 
     @Override
     public String toString() {
-        return name;
+        String ret = name;
+        ret += "Members: \n";
+        ret += users;
+
+        return ret;
     }
 }
 

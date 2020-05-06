@@ -12,7 +12,7 @@ public class Reward implements Transferable {
     private String name;
     private int rewardPrice;
     private String description;
-
+    private String lastDoneByUser = "";
 
     public Reward(String name, int rewardPrice) {
         this.name = name;
@@ -23,6 +23,14 @@ public class Reward implements Transferable {
         this.name = name;
         this.rewardPrice = rewardPrice;
         this.description = description;
+    }
+
+    public String getLastDoneByUser() {
+        return lastDoneByUser;
+    }
+
+    public void setLastDoneByUser(String lastDoneByUser) {
+        this.lastDoneByUser = lastDoneByUser;
     }
 
     public String getName() {
@@ -52,7 +60,8 @@ public class Reward implements Transferable {
         if (obj instanceof Reward){
             return (((Reward) obj).getName().equals(name) &&
                     ((Reward) obj).getDescription().equals(description) &&
-                    ((Reward) obj).getRewardPrice() == rewardPrice);
+                    ((Reward) obj).getRewardPrice() == rewardPrice &&
+                    ((Reward) obj).getLastDoneByUser().equals(lastDoneByUser));
         }
         else
             return false;

@@ -196,6 +196,7 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
                 Message message = new Message(command, model.getUser(), data);
                 model.handleTask(message);
                 newGroup = false;
+                selectedGroup = null;
                 finish();
             } else {
                 doToast("Fyll i beskrivning till din grupp.");
