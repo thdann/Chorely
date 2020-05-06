@@ -127,7 +127,7 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
 
                 for (int i = 0; i < itemList.size(); i++) {
                     if (i == selectedItem) {
-                        selectedView.findViewById(R.id.central_list_layout).setBackgroundColor(getResources().getColor(R.color.backgroundLight));
+                        selectedView.findViewById(R.id.central_list_layout).setBackground(getResources().getDrawable(R.drawable.edit_text_background));
                     } else {
                         View unselectedView = recyclerView.getChildAt(i);
                         unselectedView.findViewById(R.id.central_list_layout).setBackgroundColor(getResources().getColor(R.color.background));
@@ -159,9 +159,14 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
             User currentUser = model.getUser();
             ArrayList<Transferable> data = new ArrayList<>();
             data.add(group);
-//            group.modifyUserPoints(model.getUser(), points);
-//            Message message = new Message(NetCommands.clientInternalGroupUpdate, currentUser, data);
-//            model.handleTask(message);
+            System.out.println("rad165");
+            System.out.println(points);
+            System.out.println(model.getUser().toString());
+            group.modifyUserPoints(model.getUser(), points);
+            System.out.println("rad167");
+            Message message = new Message(NetCommands.clientInternalGroupUpdate, currentUser, data);
+            System.out.println("rad169");
+            model.handleTask(message);
 
         } else if (v.getId() == R.id.fragment_chores_editChoreButton) {
             Intent intent = new Intent(getContext(), CreateChoreActivity.class);

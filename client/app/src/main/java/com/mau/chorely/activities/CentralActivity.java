@@ -33,6 +33,7 @@ public class CentralActivity extends AppCompatActivity implements UpdatableActiv
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_central_activity, menu);
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -41,11 +42,13 @@ public class CentralActivity extends AppCompatActivity implements UpdatableActiv
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_central);
 
+
         ViewPager viewPager = findViewById(R.id.viewPager);
         setupViewPager(viewPager);
         TabLayout tabLayout = findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
         selectedGroup = BridgeInstances.getModel(getFilesDir()).getSelectedGroup();
+        setTitle(selectedGroup.getName());
     }
 
     @Override
