@@ -19,12 +19,16 @@ import com.mau.chorely.activities.CreateRewardActivity;
 import com.mau.chorely.activities.centralFragments.utils.CentralActivityRecyclerViewAdapter;
 import com.mau.chorely.activities.centralFragments.utils.ListItemCentral;
 import com.mau.chorely.activities.utils.BridgeInstances;
+import com.mau.chorely.model.Model;
 
 import java.nio.file.FileSystemNotFoundException;
 import java.util.ArrayList;
 
 import shared.transferable.Chore;
+import shared.transferable.Group;
 import shared.transferable.Reward;
+import shared.transferable.Transferable;
+import shared.transferable.User;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,12 +36,11 @@ import shared.transferable.Reward;
  * create an instance of this fragment.
  */
 public class FragmentRewards extends Fragment implements View.OnClickListener {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static ArrayList<ListItemCentral> itemList = new ArrayList<>();
     private RecyclerView recyclerView;
     private static CentralActivityRecyclerViewAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
+    private int selectedItem;
 
     public FragmentRewards() {
         // Required empty public constructor
@@ -76,11 +79,16 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_rewards, container, false);
         recyclerView = view.findViewById(R.id.fragment_rewards_recyclerView);
         FloatingActionButton createButton = (FloatingActionButton) view.findViewById(R.id.fragment_rewards_addNewRewardButton);
+        FloatingActionButton buyRewardButton = view.findViewById(R.id.fragment_reward_buyRewardButton);
+        FloatingActionButton editRewardButton = view.findViewById(R.id.fragment_reward_changeRewardButton);
         createButton.setOnClickListener(this);
+        buyRewardButton.setOnClickListener(this);
+        editRewardButton.setOnClickListener(this);
         buildRecyclerView();
-        System.out.println("VIEW CREATED!!!!!!!!!");
+
         return view;
     }
+
 
     private static void validateAndUpdateListData(ArrayList<Reward> rewards){
         for(Reward reward : rewards){
@@ -103,7 +111,7 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
         validateAndUpdateListData(rewards);
         adapter.notifyDataSetChanged();
     }
-
+    //TODO: Dubbelkolla gärna att OK, var ej helt med på vad jag gjorde utan utgick från FragmentChores för nedan 2 metoder
     private void buildRecyclerView() {
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getContext());
@@ -113,14 +121,52 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
         adapter.setOnclickListener(new CentralActivityRecyclerViewAdapter.OnitemClickListener() {
             @Override
             public void onItemClick(int position) {
-                // TODO: 2020-04-23 gå till aktiviteten för ändring av chore.
+                selectedItem = position;
+                View selectedView = recyclerView.getChildAt(position);
+
+                for (int i = 0; i < itemList.size(); i++) {
+                    if (i == selectedItem) {
+                        selectedView.findViewById(R.id.central_list_layout).setBackgroundColor(getResources().getColor(R.color.backgroundLight));
+                    } else {
+                        View unselectedView = recyclerView.getChildAt(i);
+                        unselectedView.findViewById(R.id.central_list_layout).setBackgroundColor(getResources().getColor(R.color.background));
+                    }
+                }
+
+                System.out.println(selectedView.toString());
+                System.out.println(selectedView.getRootView().toString());
+
+                getView().findViewById(R.id.fragment_reward_buyRewardButton).setVisibility(View.VISIBLE);
+                getView().findViewById(R.id.fragment_reward_changeRewardButton).setVisibility(View.VISIBLE);
             }
         });
     }
 
+
     @Override
     public void onClick(View v) {
-        Intent intent = new Intent(getContext(), CreateRewardActivity.class);
-        startActivity(intent);
+
+        if (v.getId() == R.id.fragment_rewards_addNewRewardButton) {
+            Intent intent = new Intent(getContext(), CreateRewardActivity.class);
+            startActivity(intent);
+        } else if (v.getId() == R.id.fragment_reward_buyRewardButton) {
+
+            int points = Integer.parseInt(itemList.get(selectedItem).getPoints());
+            // Uppdatera poängen för användaren i selected group:
+            Model model = BridgeInstances.getModel(getActivity().getFilesDir());
+            Group group = model.getSelectedGroup();
+            User currentUser = model.getUser();
+            ArrayList<Transferable> data = new ArrayList<>();
+            data.add(group);
+//            group.modifyUserPoints(model.getUser(), points);
+//            Message message = new Message(NetCommands.clientInternalGroupUpdate, currentUser, data);
+//            model.handleTask(message);
+
+        } else if (v.getId() == R.id.fragment_reward_changeRewardButton) {
+            Intent intent = new Intent(getContext(), CreateRewardActivity.class);
+            intent.putExtra("reward", itemList.get(selectedItem).getReward());
+            startActivity(intent);
+        }
     }
+
 }

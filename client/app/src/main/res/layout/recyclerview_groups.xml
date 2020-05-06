@@ -7,14 +7,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/btnColor"
-    android:backgroundTint="@color/btnColor"
+    android:backgroundTint="@color/background"
     app:cardCornerRadius="4dp">
 
     <RelativeLayout
+        android:id="@+id/group_list_relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="4dp"
-        android:background="@color/btnColor">
+        android:background="@color/background">
 
         <ImageView
             android:id="@+id/imageViewGroupList"
@@ -29,7 +30,7 @@
             android:layout_alignParentTop="true"
             android:layout_toEndOf="@id/imageViewGroupList"
             android:text="line 1"
-            android:textColor="@android:color/black"
+            android:textColor="@color/btnColor"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -41,7 +42,7 @@
             android:layout_marginStart="20dp"
             android:layout_toEndOf="@id/imageViewGroupList"
             android:text="line2"
-            android:textColor="@android:color/black"
+            android:textColor="@color/btnColor"
             android:textSize="15sp" />
 
         <TextView
@@ -52,7 +53,7 @@
             android:layout_toStartOf="@id/textViewMembersNumber"
             android:layout_marginEnd="2dp"
             android:text="Members:"
-            android:textColor="@android:color/black"
+            android:textColor="@color/btnColor"
             android:textSize="15sp"
             android:textStyle="bold" />
 
@@ -65,36 +66,21 @@
             android:layout_alignBaseline="@id/textViewMembers"
             android:layout_alignParentEnd="true"
             android:text="2"
-            android:textColor="@android:color/black"
+            android:textColor="@color/btnColor"
             android:textSize="15sp"
             android:textStyle="bold" />
 
-
-
-        <!--
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/recyclerview_groups_editButton"
-            android:background="@drawable/ic_mode_edit_black_24dp"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="10dp"
-            android:layout_alignBaseline="@id/textViewGroupDetails"
-            />
-
-
-        <ImageButton
-            android:id="@+id/recyclerview_groups_editButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/textViewMembers"
-            android:layout_alignStart="@id/textViewMembers"
-            android:layout_marginStart="60dp"
+        <View
+            android:id="@+id/central_list_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/textViewGroupDetails"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="4dp"
             android:layout_marginTop="10dp"
-            android:background="@color/btnColor"
-            android:src="@drawable/ic_mode_edit_black_24dp"
-             />
-             -->
+            android:layout_marginEnd="4dp"
+            android:background="@drawable/button_background"
+            app:layout_constraintEnd_toEndOf="parent" />
 
 
     </RelativeLayout>

@@ -108,7 +108,7 @@ public class RegistrationTests {
             List<Message> expected = Collections.singletonList(new Message(NetCommands.registrationOk, user));
             assertEquals(receivedMessages, expected);
 
-            // Trying to register with the same username - should fail because it already rexists.
+            // Trying to register with the same username - should fail because it already exists.
             Callable<List<Message>> testClient2 = TestClient.newTestRun(outgoingMessages, port);
             Future<List<Message>> received2 = executorService.submit(testClient);
             List<Message> receivedMessages2 = received2.get();

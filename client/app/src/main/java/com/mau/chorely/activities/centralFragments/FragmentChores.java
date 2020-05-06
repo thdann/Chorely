@@ -1,8 +1,12 @@
 package com.mau.chorely.activities.centralFragments;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,11 +21,17 @@ import com.mau.chorely.activities.CentralActivity;
 import com.mau.chorely.activities.CreateChoreActivity;
 import com.mau.chorely.activities.centralFragments.utils.*;
 import com.mau.chorely.activities.utils.BridgeInstances;
+import com.mau.chorely.model.Model;
 
 
 import java.util.ArrayList;
 
 import shared.transferable.Chore;
+import shared.transferable.Group;
+import shared.transferable.Message;
+import shared.transferable.NetCommands;
+import shared.transferable.Transferable;
+import shared.transferable.User;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -33,7 +43,7 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
     private RecyclerView recyclerView;
     private static CentralActivityRecyclerViewAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
-
+    private int selectedItem;
 
     public FragmentChores() {
         // Required empty public constructor
@@ -69,8 +79,14 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chores, container, false);
         recyclerView = view.findViewById(R.id.fragment_chores_recyclerView);
+        // Create references to buttons in view
         FloatingActionButton createButton = view.findViewById(R.id.fragment_chores_createNewChoreButton);
+        FloatingActionButton claimChoreButton = view.findViewById(R.id.fragment_chores_claimChoreButton);
+        FloatingActionButton editChoreButton = view.findViewById(R.id.fragment_chores_editChoreButton);
+        // Adding listener
         createButton.setOnClickListener(this);
+        claimChoreButton.setOnClickListener(this);
+        editChoreButton.setOnClickListener(this);
         buildRecyclerView();
         return view;
     }
@@ -106,10 +122,23 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
         adapter.setOnclickListener(new CentralActivityRecyclerViewAdapter.OnitemClickListener() {
             @Override
             public void onItemClick(int position) {
-                // TODO: 2020-04-23 gå till aktiviteten för ändring av chore.
-                Intent intent = new Intent(getContext(), CreateChoreActivity.class);
-                intent.putExtra("chore", itemList.get(position).getChore());
-                startActivity(intent);
+                selectedItem = position;
+                View selectedView = recyclerView.getChildAt(position);
+
+                for (int i = 0; i < itemList.size(); i++) {
+                    if (i == selectedItem) {
+                        selectedView.findViewById(R.id.central_list_layout).setBackgroundColor(getResources().getColor(R.color.backgroundLight));
+                    } else {
+                        View unselectedView = recyclerView.getChildAt(i);
+                        unselectedView.findViewById(R.id.central_list_layout).setBackgroundColor(getResources().getColor(R.color.background));
+                    }
+                }
+
+                System.out.println(selectedView.toString());
+                System.out.println(selectedView.getRootView().toString());
+
+                getView().findViewById(R.id.fragment_chores_claimChoreButton).setVisibility(View.VISIBLE);
+                getView().findViewById(R.id.fragment_chores_editChoreButton).setVisibility(View.VISIBLE);
 
             }
         });
@@ -117,7 +146,27 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        Intent intent = new Intent(getContext(), CreateChoreActivity.class);
-        startActivity(intent);
+
+        if (v.getId() == R.id.fragment_chores_createNewChoreButton) {
+            Intent intent = new Intent(getContext(), CreateChoreActivity.class);
+            startActivity(intent);
+        } else if (v.getId() == R.id.fragment_chores_claimChoreButton) {
+
+            int points = Integer.parseInt(itemList.get(selectedItem).getPoints());
+            // Uppdatera poängen för användaren i selected group:
+            Model model = BridgeInstances.getModel(getActivity().getFilesDir());
+            Group group = model.getSelectedGroup();
+            User currentUser = model.getUser();
+            ArrayList<Transferable> data = new ArrayList<>();
+            data.add(group);
+//            group.modifyUserPoints(model.getUser(), points);
+//            Message message = new Message(NetCommands.clientInternalGroupUpdate, currentUser, data);
+//            model.handleTask(message);
+
+        } else if (v.getId() == R.id.fragment_chores_editChoreButton) {
+            Intent intent = new Intent(getContext(), CreateChoreActivity.class);
+            intent.putExtra("chore", itemList.get(selectedItem).getChore());
+            startActivity(intent);
+        }
     }
 }

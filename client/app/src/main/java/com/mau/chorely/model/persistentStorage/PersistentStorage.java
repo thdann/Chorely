@@ -45,6 +45,19 @@ public class PersistentStorage {
         userFile = new File(filesDir.getAbsolutePath() + USER_FILE_NAME);
         groupDir = new File(filesDir.getAbsolutePath() + "/groups");
         selectedGroup = new File(filesDir.getAbsolutePath() + SEL_GROUP_FILE_NAME);
+        deleteAllGroups();
+
+    }
+
+
+    private void deleteAllGroups(){
+        if(groupDir.exists()) {
+            File[] groupFiles = groupDir.listFiles();
+            for(File file : groupFiles){
+                System.out.println("Deleted File: " + file.toString());
+                file.delete();
+            }
+        }
     }
 
     /**
@@ -90,7 +103,7 @@ public class PersistentStorage {
 
     // TODO: 2020-04-13 Ska returnera sant om ändringar gjorts. falskt om identisk grupp finns sparad
     // TODO: 2020-04-15 om ändring görs ska även det sparade user objektet ändras för att inehålla den nya gruppen
-    public boolean saveOrUpdateGroup(Group newGroup) {
+    public synchronized boolean saveOrUpdateGroup(Group newGroup) {
         boolean groupUpdated = false;
         if (!groupDir.exists()) {
             groupDir.mkdirs();
@@ -141,7 +154,7 @@ public class PersistentStorage {
     }
 
 
-    public ArrayList<Group> getGroups() {
+    public synchronized ArrayList<Group> getGroups() {
         ArrayList<Group> ret = new ArrayList<>();
         File[] groupFiles = groupDir.listFiles();
         if (groupFiles != null) {
@@ -173,7 +186,7 @@ public class PersistentStorage {
         }
     }
 
-    public void setSelectedGroup(Group inGroup) {
+    public synchronized void setSelectedGroup(Group inGroup) {
         Group group = inGroup;
         if (selectedGroup.exists()) {
             selectedGroup.delete();
@@ -187,7 +200,7 @@ public class PersistentStorage {
         }
     }
 
-    public Group getSelectedGroup() {
+    public synchronized Group getSelectedGroup() {
         Group group = null;
         if (selectedGroup.exists()) {
             try (ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(selectedGroup)))) {
