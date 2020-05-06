@@ -12,21 +12,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mau.chorely.R;
-import com.mau.chorely.activities.CentralActivity;
 import com.mau.chorely.activities.CreateRewardActivity;
 import com.mau.chorely.activities.centralFragments.utils.CentralActivityRecyclerViewAdapter;
 import com.mau.chorely.activities.centralFragments.utils.ListItemCentral;
 import com.mau.chorely.activities.utils.BridgeInstances;
 import com.mau.chorely.model.Model;
 
-import java.nio.file.FileSystemNotFoundException;
 import java.util.ArrayList;
 
-import shared.transferable.Chore;
 import shared.transferable.Group;
 import shared.transferable.Message;
 import shared.transferable.NetCommands;
