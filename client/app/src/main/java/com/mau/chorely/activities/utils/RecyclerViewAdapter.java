@@ -92,7 +92,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
         Group currentGroup = mItemList.get(position);
         String groupSize = "" + currentGroup.size();
-        holder.mImageView.setImageResource(R.drawable.ic_group_black_24dp);
+        holder.mImageView.setImageResource(R.drawable.icon_group_green);
         holder.textViewTitle.setText(currentGroup.getName());
         holder.textViewDetails.setText(currentGroup.getDescription());
         holder.textViewMembersNum.setText(groupSize);

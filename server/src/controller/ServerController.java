@@ -22,21 +22,15 @@ import java.util.logging.Logger;
  */
 public class ServerController implements ClientListener {
     private final static Logger messagesLogger = Logger.getLogger("messages");
-    private RegisteredUsers registeredUsers;
-    private RegisteredGroups registeredGroups;
-    private LinkedBlockingQueue<Message> clientTaskBuffer;
-    private ConcurrentHashMap<User, ClientHandler> onlineClients = new ConcurrentHashMap<>();
+    private final RegisteredUsers registeredUsers = new RegisteredUsers();
+    private final RegisteredGroups registeredGroups = new RegisteredGroups();
+    private final LinkedBlockingQueue<Message> clientTaskBuffer = new LinkedBlockingQueue<>();
+    private final ConcurrentHashMap<User, ClientHandler> onlineClients = new ConcurrentHashMap<>();
 
     public ServerController(int port) {
-        final int PORT = port;
-
-        registeredUsers = new RegisteredUsers();
-        registeredGroups = new RegisteredGroups();
-        clientTaskBuffer = new LinkedBlockingQueue<>();
         MessageHandler messageHandler = new MessageHandler();
-        new ServerNetwork(this, PORT);
+        new ServerNetwork(this, port, registeredUsers);
         Thread t1 = new Thread(messageHandler);
-
         t1.start();
     }
 
@@ -58,9 +52,24 @@ public class ServerController implements ClientListener {
      * @param client the connected client
      */
     public void addOnlineClient(User user, ClientHandler client) {
-        System.out.println("USER:" + user);
         onlineClients.put(user, client);
+    }
 
+    /**
+     * Removes the user from the list with online clients when the log off.
+     *
+     * @param user the user to be removed from the list.
+     */
+    public void removeOnlineClient(User user) {
+        onlineClients.remove(user);
+    }
+
+    /**
+     * Sends the groups that a user belongs to.
+     *
+     * @param user the user whose groups are sent.
+     */
+    public void sendSavedGroups(User user) {
         User userFromFile = registeredUsers.getUserFromFile(user);
         if (userFromFile != null) {
             if (userFromFile.getGroups() != null) {
@@ -76,14 +85,6 @@ public class ServerController implements ClientListener {
         }
     }
 
-    /**
-     * Removes the user from the list with online clients when the log off.
-     *
-     * @param user the user to be removed from the list.
-     */
-    public void removeOnlineClient(User user) {
-        onlineClients.remove(user);
-    }
 
     /**
      * Sends a reply in the form of a message to a client if the client is online,
@@ -124,12 +125,6 @@ public class ServerController implements ClientListener {
         NetCommands command = msg.getCommand();
 
         switch (command) {
-            case login:
-                logIn(msg);
-                break;
-            case registerUser:
-                registerUser(msg);
-                break;
             case registerNewGroup:
                 registerNewGroup(msg);
                 break;
@@ -142,47 +137,6 @@ public class ServerController implements ClientListener {
             default:
                 //TODO:  kod för default case. Vad kan man skriva här?
                 break;
-        }
-    }
-
-    /**
-     * Checks if user is already registered and ok to log in
-     *
-     * @param request the Message object containing the user to be checked.
-     */
-    public void logIn(Message request) {
-        Message reply;
-        User user = request.getUser();
-        User userFromFile = registeredUsers.getUserFromFile(user);
-
-        if (user.compareUsernamePassword(userFromFile)) {
-            reply = new Message(NetCommands.loginOk, user);
-        } else {
-            ErrorMessage errorMessage = new ErrorMessage("Fel användarnamn eller lösenord, försök igen!");
-            reply = new Message(NetCommands.loginDenied, user, errorMessage);
-        }
-
-        sendReply(reply);
-    }
-
-    /**
-     * Adds the incoming user to RegisteredUsers
-     *
-     * @param request the Message object containing the user to be added.
-     */
-    public void registerUser(Message request) {
-        Message reply;
-
-        if (registeredUsers.userNameAvailable(request.getUser().getUsername())) {
-            registeredUsers.writeUserToFile(request.getUser());
-            reply = new Message(NetCommands.registrationOk, request.getUser());
-            sendReply(reply);
-        } else {
-            ErrorMessage errorMessage = new ErrorMessage("Användarnamnet är upptaget, välj ett annat.");
-            reply = new Message(NetCommands.registrationDenied, request.getUser(), errorMessage);
-
-            sendReply(reply);
-            onlineClients.get(request.getUser()).throwOut();
         }
     }
 
@@ -204,7 +158,6 @@ public class ServerController implements ClientListener {
             for (User u : members) {
                 u.addGroupMembership(groupID);
                 registeredUsers.updateUser(u);
-                System.out.println(u.getUsername() + u.getGroups().get(0).getId());
             }
             reply = new Message(NetCommands.newGroupOk, request.getUser());
             sendReply(reply);
@@ -268,7 +221,7 @@ public class ServerController implements ClientListener {
             }
         }
     }
-    
+
     /**
      * Looks for a requested user among registered users.
      *
