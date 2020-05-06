@@ -7,6 +7,54 @@
     android:background="@color/background"
     tools:context=".activities.CentralActivity">
 
+    <RelativeLayout
+        android:id="@+id/activity_central_nameAndPointsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/background"
+        app:layout_constraintTop_toTopOf="parent"
+        android:padding="3dp"
+
+        >
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true">
+
+            <TextView
+                android:id="@+id/nameAndPointsLayout_userName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:text="Användarnamn"
+                android:textColor="@color/btnColor"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/nameAndPointsLayout_star"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/nameAndPointsLayout_userName"
+                android:layout_alignParentTop="true"
+                android:src="@drawable/central_menu_star"
+                android:layout_marginStart="25dp"  />
+
+            <TextView
+                android:id="@+id/nameAndPointsLayout_userPoints"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/nameAndPointsLayout_star"
+                android:textColor="@color/btnColor"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:text="100"
+                android:layout_marginStart="5dp"
+                android:layout_alignParentTop="true" />
+
+        </RelativeLayout>
+    </RelativeLayout>
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
@@ -15,9 +63,8 @@
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tabTextColor="@color/btnColor"
-        />
+        app:layout_constraintTop_toBottomOf="@id/activity_central_nameAndPointsLayout"
+        app:tabTextColor="@color/btnColor" />
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPager"

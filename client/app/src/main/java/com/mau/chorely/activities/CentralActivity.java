@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
@@ -33,12 +34,12 @@ public class CentralActivity extends AppCompatActivity implements UpdatableActiv
     SectionsPageAdapter adapter = new SectionsPageAdapter(getSupportFragmentManager(),
             BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
 
-    @Override
+  /*  @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_central_activity, menu);
 
         return super.onCreateOptionsMenu(menu);
-    }
+    } */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +115,8 @@ public class CentralActivity extends AppCompatActivity implements UpdatableActiv
         User user = BridgeInstances.getModel(getFilesDir()).getUser();
         int points = selectedGroup.getUserPoints(user);
 
-        MenuItem item = findViewById(R.id.menu_central_pointsText);
-        item.setTitle(points);
+        ((TextView)findViewById(R.id.nameAndPointsLayout_userName)).setText(user.getUsername());
+        ((TextView)findViewById(R.id.nameAndPointsLayout_userPoints)).setText("" + points);
+        
     }
 }
