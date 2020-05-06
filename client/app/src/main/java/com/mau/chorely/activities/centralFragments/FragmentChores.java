@@ -1,5 +1,7 @@
 package com.mau.chorely.activities.centralFragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -19,6 +21,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mau.chorely.R;
 import com.mau.chorely.activities.CentralActivity;
 import com.mau.chorely.activities.CreateChoreActivity;
+import com.mau.chorely.activities.MainActivity;
 import com.mau.chorely.activities.centralFragments.utils.*;
 import com.mau.chorely.activities.utils.BridgeInstances;
 import com.mau.chorely.model.Model;
@@ -152,21 +155,29 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
             startActivity(intent);
         } else if (v.getId() == R.id.fragment_chores_claimChoreButton) {
 
-            int points = Integer.parseInt(itemList.get(selectedItem).getPoints());
-            // Uppdatera poängen för användaren i selected group:
-            Model model = BridgeInstances.getModel(getActivity().getFilesDir());
-            Group group = model.getSelectedGroup();
-            User currentUser = model.getUser();
-            ArrayList<Transferable> data = new ArrayList<>();
-            data.add(group);
-            System.out.println("rad165");
-            System.out.println(points);
-            System.out.println(model.getUser().toString());
-            group.modifyUserPoints(model.getUser(), points);
-            System.out.println("rad167");
-            Message message = new Message(NetCommands.clientInternalGroupUpdate, currentUser, data);
-            System.out.println("rad169");
-            model.handleTask(message);
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage("Har du utfört sysslan?")
+                    .setPositiveButton("JA", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            int points = Integer.parseInt(itemList.get(selectedItem).getPoints());
+                            // Uppdatera poängen för användaren i selected group:
+                            Model model = BridgeInstances.getModel(getActivity().getFilesDir());
+                            Group group = model.getSelectedGroup();
+                            User currentUser = model.getUser();
+                            ArrayList<Transferable> data = new ArrayList<>();
+                            data.add(group);
+                            group.modifyUserPoints(model.getUser(), points);
+                            Message message = new Message(NetCommands.clientInternalGroupUpdate, currentUser, data);
+                            model.handleTask(message);
+                        }
+                    }).setNegativeButton("NEJ", null);
+
+            AlertDialog alert = builder.create();
+            alert.show();
+
+
+
 
         } else if (v.getId() == R.id.fragment_chores_editChoreButton) {
             Intent intent = new Intent(getContext(), CreateChoreActivity.class);
@@ -174,4 +185,6 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
             startActivity(intent);
         }
     }
+
+
 }
