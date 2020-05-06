@@ -119,9 +119,21 @@ public class Group implements Transferable {
         } else {
             points.put(user, incomingPoints);
         }
+    }
 
+    public int getUserPoints(User user) {
+        if (points.containsKey(user)) {
+            if (points.get(user) != null) {
+                return points.get(user);
+            } else {
+                return 0;
+            }
+        } else {
+            return 0;
+        }
 
     }
+
 
     public Map<User, Integer> getPoints() {
         return points;
@@ -149,8 +161,7 @@ public class Group implements Transferable {
             for (Map.Entry inputEntry : group.getPoints().entrySet()) {
                 boolean foundEntry = false;
                 for (Map.Entry entry : points.entrySet()) {
-                    if (entry.getKey().equals(inputEntry.getKey()) && entry.getValue().equals(inputEntry.getValue()))
-                    {
+                    if (entry.getKey().equals(inputEntry.getKey()) && entry.getValue().equals(inputEntry.getValue())) {
                         foundEntry = true;
                     }
                 }

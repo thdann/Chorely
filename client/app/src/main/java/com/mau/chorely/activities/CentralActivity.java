@@ -7,7 +7,9 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
@@ -23,6 +25,7 @@ import java.util.ArrayList;
 import shared.transferable.Chore;
 import shared.transferable.Group;
 import shared.transferable.Reward;
+import shared.transferable.User;
 
 import static androidx.fragment.app.FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT;
 
@@ -31,12 +34,12 @@ public class CentralActivity extends AppCompatActivity implements UpdatableActiv
     SectionsPageAdapter adapter = new SectionsPageAdapter(getSupportFragmentManager(),
             BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
 
-    @Override
+  /*  @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_central_activity, menu);
 
         return super.onCreateOptionsMenu(menu);
-    }
+    } */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +82,7 @@ public class CentralActivity extends AppCompatActivity implements UpdatableActiv
                 public void run() {
                     FragmentChores.updateList(selectedGroup.getChores());
                     FragmentRewards.updateList(selectedGroup.getRewards());
+                    updateUserPoints();
                 }
             });
         }
@@ -105,5 +109,14 @@ public class CentralActivity extends AppCompatActivity implements UpdatableActiv
         adapter.addFragment(FragmentChores.newInstance(chores), "Sysslor");
         adapter.addFragment(FragmentRewards.newInstance(rewards), "Belöningar");
         viewPager.setAdapter(adapter);
+    }
+
+    private void updateUserPoints() {
+        User user = BridgeInstances.getModel(getFilesDir()).getUser();
+        int points = selectedGroup.getUserPoints(user);
+
+        ((TextView)findViewById(R.id.nameAndPointsLayout_userName)).setText(user.getUsername());
+        ((TextView)findViewById(R.id.nameAndPointsLayout_userPoints)).setText("" + points);
+        
     }
 }
