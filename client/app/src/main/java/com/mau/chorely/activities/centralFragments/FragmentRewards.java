@@ -162,7 +162,7 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
                             User currentUser = model.getUser();
                             ArrayList<Transferable> data = new ArrayList<>();
                             data.add(group);
-                            group.modifyUserPoints(model.getUser(), points);
+                            group.modifyUserPoints(model.getUser(), points *= -1);
                             Message message = new Message(NetCommands.clientInternalGroupUpdate, currentUser, data);
                             model.handleTask(message);
                         }
