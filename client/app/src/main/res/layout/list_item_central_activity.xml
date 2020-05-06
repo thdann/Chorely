@@ -37,7 +37,7 @@
             android:textSize="20sp" />
 
         <TextView
-            android:id="@+id/central_list_descriptionText"
+            android:id="@+id/central_list_LastDoneByMarker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/central_list_description"
@@ -52,13 +52,13 @@
 
 
         <TextView
-            android:id="@+id/central_list_descriptionText2"
+            android:id="@+id/central_list_LastDoneBy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/central_list_description"
             android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
-            android:layout_toEndOf="@+id/central_list_descriptionText"
+            android:layout_toEndOf="@+id/central_list_LastDoneByMarker"
             android:text="Angelica"
             android:textStyle="italic"
             android:textColor="@color/btnColor"
@@ -89,10 +89,10 @@
             android:id="@+id/central_list_divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_below="@id/central_list_description"
+            android:layout_below="@id/central_list_LastDoneBy"
             android:layout_centerHorizontal="true"
             android:layout_marginStart="4dp"
-            android:layout_marginTop="66dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="4dp"
             android:background="@drawable/button_background"
             app:layout_constraintEnd_toEndOf="parent" />
