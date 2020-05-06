@@ -73,7 +73,7 @@ public class ServerController implements ClientListener {
         User userFromFile = registeredUsers.getUserFromFile(user);
         if (userFromFile != null) {
             if (userFromFile.getGroups() != null) {
-                ArrayList<GenericID> groupMemberships = userFromFile.getGroups();
+                List<GenericID> groupMemberships = userFromFile.getGroups();
                 for (GenericID id : groupMemberships) {
                     Group group = registeredGroups.getGroupByID(id);
                     ArrayList<Transferable> data = new ArrayList<>();
