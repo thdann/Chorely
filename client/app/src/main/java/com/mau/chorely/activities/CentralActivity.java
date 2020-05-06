@@ -1,5 +1,6 @@
 package com.mau.chorely.activities;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
@@ -40,8 +41,9 @@ public class CentralActivity extends AppCompatActivity implements UpdatableActiv
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ActionBar ab = getSupportActionBar();
+        ab.setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_central);
-
 
         ViewPager viewPager = findViewById(R.id.viewPager);
         setupViewPager(viewPager);
