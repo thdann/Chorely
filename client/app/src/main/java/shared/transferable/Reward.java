@@ -37,15 +37,7 @@ public class Reward implements Transferable {
         return description;
     }
 
-    public void updateReward(Reward reward){
-        this.name = reward.getName();
-        this.description = reward.getDescription();
-        this.rewardPrice = reward.getRewardPrice();
-    }
 
-    public boolean nameEquals(Reward reward){
-        return reward.getName().equals(this.name);
-    }
 
     @Override
     public boolean equals( Object obj) {

@@ -1,12 +1,8 @@
 package com.mau.chorely.activities.centralFragments;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,17 +17,11 @@ import com.mau.chorely.activities.CentralActivity;
 import com.mau.chorely.activities.CreateChoreActivity;
 import com.mau.chorely.activities.centralFragments.utils.*;
 import com.mau.chorely.activities.utils.BridgeInstances;
-import com.mau.chorely.model.Model;
 
 
 import java.util.ArrayList;
 
 import shared.transferable.Chore;
-import shared.transferable.Group;
-import shared.transferable.Message;
-import shared.transferable.NetCommands;
-import shared.transferable.Transferable;
-import shared.transferable.User;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,7 +33,7 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
     private RecyclerView recyclerView;
     private static CentralActivityRecyclerViewAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
-    private int selectedItem;
+
 
     public FragmentChores() {
         // Required empty public constructor
@@ -79,14 +69,8 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chores, container, false);
         recyclerView = view.findViewById(R.id.fragment_chores_recyclerView);
-        // Create references to buttons in view
         FloatingActionButton createButton = view.findViewById(R.id.fragment_chores_createNewChoreButton);
-        FloatingActionButton claimChoreButton = view.findViewById(R.id.fragment_chores_claimChoreButton);
-        FloatingActionButton editChoreButton = view.findViewById(R.id.fragment_chores_editChoreButton);
-        // Adding listener
         createButton.setOnClickListener(this);
-        claimChoreButton.setOnClickListener(this);
-        editChoreButton.setOnClickListener(this);
         buildRecyclerView();
         return view;
     }

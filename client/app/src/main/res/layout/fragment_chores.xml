@@ -26,8 +26,7 @@
         android:backgroundTint="@color/btnColor"
         android:clickable="true"
         android:focusable="true"
-        android:src="@drawable/action_chore_done"
-        android:visibility="invisible" />
+        android:src="@drawable/action_chore_done" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fragment_chores_editChoreButton"
@@ -40,8 +39,7 @@
         android:backgroundTint="@color/btnColor"
         android:clickable="true"
         android:focusable="true"
-        android:src="@drawable/action_chore_edit"
-        android:visibility="invisible" />
+        android:src="@drawable/action_chore_edit" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fragment_chores_createNewChoreButton"

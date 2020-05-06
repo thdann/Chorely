@@ -4,13 +4,12 @@ package shared.transferable;
  * Group is a class that represent a group in the application.
  * version 2.0 2020-04-08
  *
- * @autor Timothy Denison and Emma Svensson, Angelica Asplund.
+ * @autor Timothy Denison and Emma Svensson.
  */
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class Group implements Transferable {
     private String name;
@@ -20,7 +19,6 @@ public class Group implements Transferable {
     private ArrayList<Chore> chores = new ArrayList<>();
     private ArrayList<Reward> rewards = new ArrayList<>();
     private Map<User, Integer> points = new HashMap<>();
-    private int incomingPoints;
 
     /**
      * CreateEditGroupActivity needs to be able to create a group before name is set.
@@ -62,11 +60,11 @@ public class Group implements Transferable {
         users.add(user);
     }
 
-    public void setName(String name) {
+    public void setName(String name){
         this.name = name;
     }
 
-    public void setDescription(String description) {
+    public void setDescription (String description){
         this.description = description;
     }
 
@@ -110,23 +108,6 @@ public class Group implements Transferable {
         return users.size();
     }
 
-    public void modifyUserPoints(User user, int incomingPoints) {
-
-        if (points.get(user) != null) {
-            int tempPoints = points.get(user);
-            tempPoints += incomingPoints;
-            points.put(user, tempPoints);
-        } else {
-            points.put(user, incomingPoints);
-        }
-
-
-    }
-
-    public Map<User, Integer> getPoints() {
-        return points;
-    }
-
     public boolean allIsEqual(Group group) {
         if (group.getRewards().size() == rewards.size() && group.getChores().size() == chores.size()
                 && group.getUsers().size() == users.size()) {
@@ -137,24 +118,12 @@ public class Group implements Transferable {
             }
 
             for (int i = 0; i < rewards.size(); i++) {
-                if (!group.getRewards().get(i).equals(rewards.get(i))) {
+                if(!group.getRewards().get(i).equals(rewards.get(i))){
                     return false;
                 }
             }
-            for (int i = 0; i < users.size(); i++) {
-                if (!group.getUsers().get(i).equals(users.get(i))) {
-                    return false;
-                }
-            }
-            for (Map.Entry inputEntry : group.getPoints().entrySet()) {
-                boolean foundEntry = false;
-                for (Map.Entry entry : points.entrySet()) {
-                    if (entry.getKey().equals(inputEntry.getKey()) && entry.getValue().equals(inputEntry.getValue()))
-                    {
-                        foundEntry = true;
-                    }
-                }
-                if (!foundEntry) {
+            for(int i = 0; i< users.size(); i++){
+                if(!group.getUsers().get(i).equals(users.get(i))){
                     return false;
                 }
             }
@@ -179,6 +148,4 @@ public class Group implements Transferable {
     public int hashCode() {
         return groupID.hashCode();
     }
-
-
 }
