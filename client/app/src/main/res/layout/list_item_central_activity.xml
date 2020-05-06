@@ -7,15 +7,14 @@
 
     <RelativeLayout
         android:id="@+id/central_list_layout"
-        android:layout_width="447dp"
-        android:layout_height="788dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/background"
         android:paddingHorizontal="10dp"
         android:paddingTop="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0">
+        >
 
 
         <TextView
@@ -41,10 +40,11 @@
             android:id="@+id/central_list_descriptionText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/central_list_titleText"
+            android:layout_below="@id/central_list_description"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="5dp"
             android:text="Senast utförd av: "
+            android:textStyle="italic"
             android:textColor="@color/btnColor"
             android:textSize="17sp"
             app:layout_constraintTop_toBottomOf="@+id/central_list_description"
@@ -55,14 +55,14 @@
             android:id="@+id/central_list_descriptionText2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/central_list_titleText"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="59dp"
-            android:text="Senast använd av: "
+            android:layout_below="@id/central_list_description"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@+id/central_list_descriptionText"
+            android:text="Angelica"
+            android:textStyle="italic"
             android:textColor="@color/btnColor"
-            android:textSize="17sp"
-            app:layout_constraintTop_toBottomOf="@+id/central_list_description"
-            />
+            android:textSize="17sp" />
 
         <TextView
             android:id="@+id/central_list_pointText"
