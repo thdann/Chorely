@@ -12,12 +12,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.CentralActivity">
-        </activity>
-        <activity android:name=".activities.CreateRewardActivity" />
+        <activity
+            android:name=".activities.CentralActivity"
+            android:parentActivityName=".activities.ManageGroupsActivity" />
+        <activity
+            android:name=".activities.CreateRewardActivity"
+            android:label="Lägg till belöning"
+            android:parentActivityName=".activities.CentralActivity" />
         <activity
             android:name=".activities.CreateChoreActivity"
-            android:label="Lägg till syssla" />
+            android:label="Lägg till syssla"
+            android:parentActivityName=".activities.CentralActivity" />
+
         <activity android:name=".activities.CreateEditGroupActivity" />
         <activity
             android:name=".activities.ConnectActivity"

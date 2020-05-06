@@ -67,7 +67,6 @@ public class CreateRewardActivity extends AppCompatActivity implements Updatable
             if (controlTextFields()) {
                 finish();
             }
-
         }
 
         return super.onOptionsItemSelected(item);

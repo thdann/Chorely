@@ -35,7 +35,7 @@ public class RegisterActivity extends AppCompatActivity implements UpdatableActi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActionBar ab = getSupportActionBar();
-        ab.setDisplayHomeAsUpEnabled(true);
+        ab.setDisplayHomeAsUpEnabled(false);
 
         setContentView(R.layout.activity_register);
 
