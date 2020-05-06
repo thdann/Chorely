@@ -5,6 +5,7 @@ import shared.transferable.*;
 import test.util.TestClient;
 import test.util.TestUtils;
 
+import javax.swing.*;
 import java.util.List;
 import java.util.concurrent.*;
 
@@ -92,6 +93,66 @@ public class GroupManagementTests {
             TestUtils.deleteUser(userB);
             TestUtils.deleteGroup(group);
         }
+    }
+
+    /**
+     * Tests the following case:
+     *
+     *      1. User A registers.
+     *      2. User A creates two groups.
+     *      3. User A disconnects.
+     *      4. User A logs in and expects to get 2 updateGroup message: one for each group.
+     */
+    @Test
+    public void testRegisterTwoGroups() {
+        User userA = new User("testA", "secret");
+        Group group1 = new Group("testRegisterTwoGroups1");
+        Group group2 = new Group("testRegisterTwoGroups2");
+        group1.addUser(userA);
+        group2.addUser(userA);
+
+        try {
+            int port = basePort + 3;
+            ServerController serverController = new ServerController(port);
+            List<Message> outgoing = List.of(
+                    new Message(registerUser, userA),
+                    new Message(registerNewGroup, userA, List.of(group1)),
+                    new Message(registerNewGroup, userA, List.of(group2)));
+            List<Message> expected = List.of(
+                    new Message(registrationOk, userA),
+                    new Message(newGroupOk, userA),
+                    new Message(updateGroup, userA, List.of(group1)),
+                    new Message(newGroupOk, userA),
+                    new Message(updateGroup, userA, List.of(group2))
+            );
+
+            List<Message> received = sendAndReceive(outgoing, port);
+            assertEquals(expected, received);
+
+            outgoing = List.of(new Message(login, userA));
+            expected = List.of(
+                    new Message(loginOk, userA),
+                    new Message(updateGroup, userA, List.of(group1)),
+                    new Message(updateGroup, userA, List.of(group2))
+            );
+            received = sendAndReceive(outgoing, port);
+            assertEquals(expected, received);
+
+        } catch (InterruptedException | ExecutionException e) {
+            // What do I do here?
+        } finally {
+            TestUtils.deleteUser(userA);
+            TestUtils.deleteGroup(group1);
+            TestUtils.deleteGroup(group2);
+        }
+
+    }
+
+    private List<Message> sendAndReceive(List<Message> outgoingMessages, int port) throws ExecutionException, InterruptedException {
+        ExecutorService executorService = Executors.newCachedThreadPool();
+        Callable<List<Message>> testClient = TestClient.newTestRun(outgoingMessages, port);
+        Future<List<Message>> received = executorService.submit(testClient);
+        return received.get();
     }
 
     private void updateGroup(User user, Group group, int port) throws ExecutionException, InterruptedException {
