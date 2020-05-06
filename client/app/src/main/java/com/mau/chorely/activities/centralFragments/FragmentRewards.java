@@ -1,5 +1,7 @@
 package com.mau.chorely.activities.centralFragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -22,6 +24,8 @@ import com.mau.chorely.model.Model;
 import java.util.ArrayList;
 
 import shared.transferable.Group;
+import shared.transferable.Message;
+import shared.transferable.NetCommands;
 import shared.transferable.Reward;
 import shared.transferable.Transferable;
 import shared.transferable.User;
@@ -66,7 +70,6 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
     }
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -84,28 +87,28 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
     }
 
 
-    private static void validateAndUpdateListData(ArrayList<Reward> rewards){
-        for(Reward reward : rewards){
+    private static void validateAndUpdateListData(ArrayList<Reward> rewards) {
+        for (Reward reward : rewards) {
             boolean foundItem = false;
-            for(int i = 0; i < itemList.size(); i++){
-                if(itemList.get(i).equals(reward)){
+            for (int i = 0; i < itemList.size(); i++) {
+                if (itemList.get(i).equals(reward)) {
                     foundItem = true;
-                    if(!itemList.get(i).allIsEqual(reward)){
+                    if (!itemList.get(i).allIsEqual(reward)) {
                         itemList.get(i).updateItem(reward);
                     }
                 }
             }
-            if(!foundItem){
+            if (!foundItem) {
                 itemList.add(new ListItemCentral(reward));
             }
         }
     }
 
-    public static void updateList(ArrayList<Reward> rewards){
+    public static void updateList(ArrayList<Reward> rewards) {
         validateAndUpdateListData(rewards);
         adapter.notifyDataSetChanged();
     }
-    //TODO: Dubbelkolla gärna att OK, var ej helt med på vad jag gjorde utan utgick från FragmentChores för nedan 2 metoder
+
     private void buildRecyclerView() {
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getContext());
@@ -145,17 +148,27 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
             startActivity(intent);
         } else if (v.getId() == R.id.fragment_reward_buyRewardButton) {
 
-            int points = Integer.parseInt(itemList.get(selectedItem).getPoints());
-            // Uppdatera poängen för användaren i selected group:
-            Model model = BridgeInstances.getModel(getActivity().getFilesDir());
-            Group group = model.getSelectedGroup();
-            User currentUser = model.getUser();
-            group.getRewards().get(selectedItem).setLastDoneByUser(currentUser.getUsername());
-            ArrayList<Transferable> data = new ArrayList<>();
-            data.add(group);
-//            group.modifyUserPoints(model.getUser(), points);
-//            Message message = new Message(NetCommands.clientInternalGroupUpdate, currentUser, data);
-//            model.handleTask(message);
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage("Vill du lösa ut denna belöning?")
+                    .setPositiveButton("JA", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            int points = Integer.parseInt(itemList.get(selectedItem).getPoints());
+                            // Uppdatera poängen för användaren i selected group:
+                            Model model = BridgeInstances.getModel(getActivity().getFilesDir());
+                            Group group = model.getSelectedGroup();
+                            User currentUser = model.getUser();
+                            group.getRewards().get(selectedItem).setLastDoneByUser(currentUser.getUsername());
+                            ArrayList<Transferable> data = new ArrayList<>();
+                            data.add(group);
+                            group.modifyUserPoints(model.getUser(), points *= -1);
+                            Message message = new Message(NetCommands.clientInternalGroupUpdate, currentUser, data);
+                            model.handleTask(message);
+                        }
+                    }).setNegativeButton("NEJ", null);
+
+            AlertDialog alert = builder.create();
+            alert.show();
 
         } else if (v.getId() == R.id.fragment_reward_changeRewardButton) {
             Intent intent = new Intent(getContext(), CreateRewardActivity.class);
