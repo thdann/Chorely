@@ -26,6 +26,7 @@ import shared.transferable.User;
 /**
  * This is the activity to handle registrations of users.
  * The activity then sends the user to the next activity provided that the registration was successful.
+ *
  * @author Timothy Denison, Fredrik Jeppson
  */
 public class RegisterActivity extends AppCompatActivity implements UpdatableActivity {
@@ -34,8 +35,6 @@ public class RegisterActivity extends AppCompatActivity implements UpdatableActi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActionBar ab = getSupportActionBar();
-        ab.setDisplayHomeAsUpEnabled(false);
 
         setContentView(R.layout.activity_register);
 
@@ -57,6 +56,7 @@ public class RegisterActivity extends AppCompatActivity implements UpdatableActi
 
     /**
      * Method to handle  clicks to register button.
+     *
      * @param view Button clicked.
      */
     public void register(View view) {
@@ -83,22 +83,20 @@ public class RegisterActivity extends AppCompatActivity implements UpdatableActi
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if(BridgeInstances.getModel(getFilesDir()).isConnected()){
-                    if(BridgeInstances.getModel(getFilesDir()).isLoggedIn()) {
+                if (BridgeInstances.getModel(getFilesDir()).isConnected()) {
+                    if (BridgeInstances.getModel(getFilesDir()).isLoggedIn()) {
                         Intent intent = new Intent(RegisterActivity.this, ManageGroupsActivity.class);
                         startActivity(intent);
                         finish();
-                    }
-                    else {
+                    } else {
                         findViewById(R.id.username).setVisibility(View.VISIBLE);
                         findViewById(R.id.password).setVisibility(View.VISIBLE);
                         findViewById(R.id.register).setVisibility(View.VISIBLE);
                         gifImageViewWorking.setVisibility(View.INVISIBLE);
-                        ((EditText)findViewById(R.id.username)).setText("");
-                        ((EditText)findViewById(R.id.password)).setText("");
+                        ((EditText) findViewById(R.id.username)).setText("");
+                        ((EditText) findViewById(R.id.password)).setText("");
                     }
-                }
-                else{
+                } else {
                     Intent intent = new Intent(getApplicationContext(), ConnectActivity.class);
                     startActivity(intent);
                 }
@@ -108,6 +106,7 @@ public class RegisterActivity extends AppCompatActivity implements UpdatableActi
 
     /**
      * Interface method to toast user.
+     *
      * @param message Message to toast.
      */
     @Override

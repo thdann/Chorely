@@ -113,13 +113,12 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
         BridgeInstances.getModel(getFilesDir()).setSelectedGroup(groupList.get(selectedItem));
         Intent intent = new Intent(ManageGroupsActivity.this, CentralActivity.class);
         startActivity(intent);
-        finish();
     }
 
     public void editGroupClick(View v) {
-            Intent intent = new Intent(this, CreateEditGroupActivity.class);
-            intent.putExtra("SELECTED_GROUP", groupList.get(selectedItem));
-            startActivity(intent);
+        Intent intent = new Intent(this, CreateEditGroupActivity.class);
+        intent.putExtra("SELECTED_GROUP", groupList.get(selectedItem));
+        startActivity(intent);
     }
 
     public void newGroupClick(View v) {
@@ -222,10 +221,6 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
                 }
             }
         }
-    }
-
-    public void editGroup(View v) {
-
     }
 
 }
