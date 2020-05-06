@@ -180,5 +180,9 @@ public class Group implements Transferable {
         return groupID.hashCode();
     }
 
-
+    @Override
+    public String toString() {
+        return name;
+    }
 }
+
