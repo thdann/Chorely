@@ -10,21 +10,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mau.chorely.R;
-import com.mau.chorely.activities.CentralActivity;
 import com.mau.chorely.activities.CreateRewardActivity;
 import com.mau.chorely.activities.centralFragments.utils.CentralActivityRecyclerViewAdapter;
 import com.mau.chorely.activities.centralFragments.utils.ListItemCentral;
 import com.mau.chorely.activities.utils.BridgeInstances;
 import com.mau.chorely.model.Model;
 
-import java.nio.file.FileSystemNotFoundException;
 import java.util.ArrayList;
 
-import shared.transferable.Chore;
 import shared.transferable.Group;
 import shared.transferable.Reward;
 import shared.transferable.Transferable;
@@ -67,8 +63,6 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
             ArrayList<Reward> rewards = (ArrayList<Reward>) getArguments().getSerializable("REWARDS");
             validateAndUpdateListData(rewards);
         }
-
-
     }
 
 
@@ -156,6 +150,7 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
             Model model = BridgeInstances.getModel(getActivity().getFilesDir());
             Group group = model.getSelectedGroup();
             User currentUser = model.getUser();
+            group.getRewards().get(selectedItem).setLastDoneByUser(currentUser.getUsername());
             ArrayList<Transferable> data = new ArrayList<>();
             data.add(group);
 //            group.modifyUserPoints(model.getUser(), points);
