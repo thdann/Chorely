@@ -38,12 +38,6 @@ public class MainActivity extends AppCompatActivity implements UpdatableActivity
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        BridgeInstances.getPresenter().deregisterForUpdates(this);
-    }
-
-    @Override
     protected void onStop() {
         super.onStop();
         BridgeInstances.getPresenter().deregisterForUpdates(this);
@@ -53,14 +47,14 @@ public class MainActivity extends AppCompatActivity implements UpdatableActivity
      * Interface method to update activity.
      */
     @Override
-    public void updateActivity() {
-        if (BridgeInstances.getModel(getFilesDir()).isConnected()) {
+    public  void updateActivity() {
+        if (BridgeInstances.getModel(getFilesDir()).isConnected() ) {
             if (BridgeInstances.getModel(getFilesDir()).hasStoredUser()) {
-                if(BridgeInstances.getModel(getFilesDir()).getSelectedGroup() != null){
+                if(BridgeInstances.getModel(getFilesDir()).getSelectedGroup() != null ){
                     Intent intent = new Intent(this, CentralActivity.class);
                     startActivity(intent);
                     finish();
-                } else {
+                } else if(BridgeInstances.getModel(getFilesDir()).isLoggedIn()){
                     Intent intent = new Intent(this, ManageGroupsActivity.class);
                     startActivity(intent);
                     finish();

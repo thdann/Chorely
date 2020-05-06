@@ -160,10 +160,22 @@ public class Model {
      * @param message message containing the new chore.
      */
     public void addNewChore(Message message){
-        //TODO: 1 Plocka ut grupp, är det korrekt på nedan rad?
+        // FIXME: 2020-05-04 Sysslor dupliceras osynligt.
         Group group = storage.getSelectedGroup();
         Chore chore = (Chore) message.getData().get(0);
-        group.addChore(chore);
+        boolean foundSame = false;
+        for(Chore tempChore : group.getChores()){
+            if(tempChore.nameEquals(chore)){
+                foundSame = true;
+                if(!tempChore.equals(chore)){
+                    tempChore.updateChore(chore);
+                }
+            }
+        }
+        if(!foundSame){
+            group.addChore(chore);
+        }
+        System.out.println("CHORE LIST SIZE: " +group.getChores().size());
         ArrayList<Transferable> data = new ArrayList<>();
         data.add(group);
         Message newMessage = new Message(NetCommands.updateGroup, message.getUser(), data);
@@ -177,9 +189,21 @@ public class Model {
      */
     public void addNewReward(Message message) {
         //TODO: 1 Plocka ut grupp, är det gjort på raden nedan?
+
         Group group = storage.getSelectedGroup();
         Reward reward = (Reward) message.getData().get(0);
-        group.addReward(reward);
+        boolean foundSame = false;
+        for(Reward tempReward : group.getRewards()){
+            if(tempReward.nameEquals(reward)){
+                foundSame = true;
+                if(!tempReward.equals(reward)){
+                    tempReward.updateReward(reward);
+                }
+            }
+        }
+        if(!foundSame){
+            group.addReward(reward);
+        }
         ArrayList<Transferable> data = new ArrayList<>();
         data.add(group);
         Message newMessage = new Message(NetCommands.updateGroup, message.getUser(), data);
@@ -270,7 +294,9 @@ public class Model {
 
                         case updateGroup:
                             updateGroupExternal(currentTask);
+                            BridgeInstances.getPresenter().updateCurrent();
                             break;
+
                         default:
                             System.out.println("Unrecognized command: " + command);
                             BridgeInstances.getPresenter().toastCurrent("Unknown command: " +command);
