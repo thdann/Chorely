@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +24,7 @@ import shared.transferable.Group;
 
 /**
  * This is the activity to overview current groups and initiate creation of new ones.
+ *
  * @author Timothy Denison
  */
 public class ManageGroupsActivity extends AppCompatActivity implements UpdatableActivity {
@@ -32,6 +34,7 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
     private static final Object lockObjectGroupList = new Object();
     ArrayList<Group> groupList = new ArrayList<>();
     ArrayList<Group> updatedGroups = new ArrayList<>();
+    private int selectedItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +67,7 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
 
     /**
      * Method to set menu layout file.
+     *
      * @param menu reference to system created menu.
      * @return Returns super response.
      */
@@ -76,7 +80,7 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
     /**
      * Method to initiate the recyclerView.
      */
-    private void buildRecyclerView(){
+    private void buildRecyclerView() {
         mRecyclerView = findViewById(R.id.recyclerViewGroups);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
@@ -86,29 +90,54 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
         mAdapter.setOnItemClickListener(new RecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                if(BridgeInstances.getModel(getFilesDir()).getSelectedGroup() != null) {
-                    Intent intent = new Intent(ManageGroupsActivity.this, CreateEditGroupActivity.class);
-                    intent.putExtra("SELECTED_GROUP", groupList.get(position));
-                    startActivity(intent);
-                } else {
-                    BridgeInstances.getModel(getFilesDir()).setSelectedGroup(groupList.get(position));
-                    Intent intent = new Intent(ManageGroupsActivity.this, CentralActivity.class);
-                    startActivity(intent);
-                    finish();
+                selectedItem = position;
+                View selectedView = mRecyclerView.getChildAt(position);
+
+                for (int i = 0; i < groupList.size(); i++) {
+                    if (i == selectedItem) {
+                        selectedView.findViewById(R.id.group_list_relativeLayout).setBackground(getResources().getDrawable(R.drawable.edit_text_background));
+                    } else {
+                        View unselectedView = mRecyclerView.getChildAt(i);
+                        unselectedView.findViewById(R.id.group_list_relativeLayout).setBackgroundColor(getResources().getColor(R.color.background));
+                    }
                 }
+
+                findViewById(R.id.manage_groups_enterButton).setVisibility(View.VISIBLE);
+                findViewById(R.id.manage_groups_editButton).setVisibility(View.VISIBLE);
+
             }
         });
     }
 
+    public void enterGroupClick(View v) {
+        BridgeInstances.getModel(getFilesDir()).setSelectedGroup(groupList.get(selectedItem));
+        Intent intent = new Intent(ManageGroupsActivity.this, CentralActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    public void editGroupClick(View v) {
+            Intent intent = new Intent(this, CreateEditGroupActivity.class);
+            intent.putExtra("SELECTED_GROUP", groupList.get(selectedItem));
+            startActivity(intent);
+    }
+
+    public void newGroupClick(View v) {
+        startActivity(new Intent(this, CreateEditGroupActivity.class));
+
+    }
+
+
     /**
      * Method to handle action bar events.
+     *
      * @param item Item that initiated event.
      * @return Returns super response.
      */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        if(id == R.id.createGroupMenuButton){
+        if (id == R.id.createGroupMenuButton) {
             startActivity(new Intent(this, CreateEditGroupActivity.class));
         }
         return super.onContextItemSelected(item);
@@ -116,6 +145,7 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
 
     /**
      * Interface method to toast activity.
+     *
      * @param message Message to toast
      */
     @Override
@@ -137,13 +167,13 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if(BridgeInstances.getModel(getFilesDir()).isConnected()){
+                if (BridgeInstances.getModel(getFilesDir()).isConnected()) {
                     synchronized (lockObjectGroupList) {
                         updatedGroups = BridgeInstances.getModel(getFilesDir()).getGroups();
                         updateGroupsList();
                         updateGroupText();
                     }
-                } else{
+                } else {
                     Intent intent = new Intent(ManageGroupsActivity.this, ConnectActivity.class);
                     startActivity(intent);
                 }
@@ -151,11 +181,11 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
         });
     }
 
-    private void updateGroupText(){
-        if(groupList.size() > 0){
-            ((TextView)findViewById(R.id.manage_groups_textViewYourGroups)).setText(R.string.groups);
-        } else{
-            ((TextView)findViewById(R.id.manage_groups_textViewYourGroups)).setText(R.string.noGroup);
+    private void updateGroupText() {
+        if (groupList.size() > 0) {
+            ((TextView) findViewById(R.id.manage_groups_textViewYourGroups)).setText(R.string.groups);
+        } else {
+            ((TextView) findViewById(R.id.manage_groups_textViewYourGroups)).setText(R.string.noGroup);
         }
     }
 
@@ -163,8 +193,8 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
      * Method to check if there are any updates to the client list of groups
      * and if there is set them to the recyclerview.
      */
-    private void updateGroupsList(){
-        if(updatedGroups != null){
+    private void updateGroupsList() {
+        if (updatedGroups != null) {
             synchronized (lockObjectGroupList) {
                 for (int i = 0; i < updatedGroups.size(); i++) {
                     Group group = updatedGroups.get(i);
@@ -182,7 +212,7 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
                 }
 
                 if (updatedGroups.size() < groupList.size()) {
-                    for (int i = 0; i< groupList.size(); i++) {
+                    for (int i = 0; i < groupList.size(); i++) {
                         Group group = groupList.get(i);
                         if (!updatedGroups.contains(group)) {
                             groupList.remove(group);
@@ -193,4 +223,9 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
             }
         }
     }
+
+    public void editGroup(View v) {
+
+    }
+
 }

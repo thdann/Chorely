@@ -16,6 +16,7 @@ import com.mau.chorely.model.Model;
 
 import java.util.ArrayList;
 
+import shared.transferable.Group;
 import shared.transferable.Message;
 import shared.transferable.NetCommands;
 import shared.transferable.Reward;
@@ -29,11 +30,14 @@ import shared.transferable.Transferable;
  * v. 1.0 2020-04-28
  */
 public class CreateRewardActivity extends AppCompatActivity implements UpdatableActivity {
+    private Group selectedGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_reward);
+        selectedGroup = BridgeInstances.getModel(getFilesDir()).getSelectedGroup();
+        setTitle(selectedGroup.getName());
     }
 
     @Override
