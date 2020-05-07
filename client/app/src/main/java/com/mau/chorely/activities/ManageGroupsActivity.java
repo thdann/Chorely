@@ -211,6 +211,7 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
                     }
                 }
 
+                System.out.println("GROUP LIST SIZE AFTER UPDATE: " + updatedGroups.size());
                 if (updatedGroups.size() < groupList.size()) {
                     for (int i = 0; i < groupList.size(); i++) {
                         Group group = groupList.get(i);

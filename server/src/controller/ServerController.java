@@ -156,8 +156,9 @@ public class ServerController implements ClientListener {
             ArrayList<User> members = group.getUsers();
             GenericID groupID = group.getGroupID();
             for (User u : members) {
-                u.addGroupMembership(groupID);
-                registeredUsers.updateUser(u);
+                User userFromFile = registeredUsers.getUserFromFile(u);
+                userFromFile.addGroupMembership(groupID);
+                registeredUsers.updateUser(userFromFile);
             }
             reply = new Message(NetCommands.newGroupOk, request.getUser());
             sendReply(reply);

@@ -12,6 +12,7 @@ public class Chore implements Transferable {
     private String name;
     private int score;
     private String description;
+    private String lastDoneByUser = " ";
 
 
     public Chore(String name, int score) {
@@ -23,6 +24,14 @@ public class Chore implements Transferable {
         this.name = name;
         this.score = score;
         this.description = description;
+    }
+
+    public String getLastDoneByUser() {
+        return lastDoneByUser;
+    }
+
+    public void setLastDoneByUser(String lastDoneByUser) {
+        this.lastDoneByUser = lastDoneByUser;
     }
 
     public String getName() {
@@ -54,7 +63,8 @@ public class Chore implements Transferable {
     public boolean equals(Object obj) {
         if(obj instanceof Chore){
             return (((Chore) obj).getDescription().equals(description) &&
-                    ((Chore) obj).getName().equals(name) && ((Chore) obj).getScore() == score);
+                    ((Chore) obj).getName().equals(name) && ((Chore) obj).getScore() == score &&
+                    ((Chore) obj).getLastDoneByUser().equals(lastDoneByUser));
         }
         else
             return false;
