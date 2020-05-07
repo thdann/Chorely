@@ -155,14 +155,14 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
                     .setPositiveButton("JA", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            int points = Integer.parseInt(itemList.get(selectedItem).getPoints());
+                            int points = (Integer.parseInt(itemList.get(selectedItem).getPoints())) * -1;
                             // Uppdatera poängen för användaren i selected group:
                             Model model = BridgeInstances.getModel(getActivity().getFilesDir());
                             Group group = model.getSelectedGroup();
                             User currentUser = model.getUser();
                             ArrayList<Transferable> data = new ArrayList<>();
                             data.add(group);
-                            group.modifyUserPoints(model.getUser(), points *= -1);
+                            group.modifyUserPoints(model.getUser(), points);
                             Message message = new Message(NetCommands.clientInternalGroupUpdate, currentUser, data);
                             model.handleTask(message);
                         }
