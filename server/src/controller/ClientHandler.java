@@ -67,21 +67,25 @@ public class ClientHandler {
     }
 
     private boolean loginUser(Message message) {
+        boolean success = false;
         User user = message.getUser();
         User userFromFile = registeredUsers.getUserFromFile(user);
         Message reply;
-        boolean success = false;
-        if (user.compareUsernamePassword(userFromFile)) {
+
+        if (userFromFile == null) {  // userFromFile == null when the username isn't found as a registered user.
+            reply = new Message(NetCommands.loginDenied, user, new ErrorMessage("Fel användarnamn eller lösenord, försök igen!"));
+        } else if (user.compareUsernamePassword(userFromFile)) {
             reply = new Message(NetCommands.loginOk, user);
-            success = true;
             controller.addOnlineClient(user, ClientHandler.this);
+            success = true;
         } else {
-            ErrorMessage errorMessage = new ErrorMessage("Fel användarnamn eller lösenord, försök igen!");
-            reply = new Message(NetCommands.loginDenied, user, errorMessage);
+            reply = new Message(NetCommands.loginDenied, user, new ErrorMessage("Fel användarnamn eller lösenord, försök igen!"));
         }
+
         outgoingMessages.add(reply);
         return success;
     }
+
 
     /**
      * The inner class InputThread sets up an InputStream to receive messages from connected client
@@ -116,7 +120,7 @@ public class ClientHandler {
 
                 while (true) {
                     Message msg = (Message) ois.readObject();
-                    messagesLogger.info( "INCOMING MESSAGE: \n" + msg + " received from client " + msg.getUser());
+                    messagesLogger.info("INCOMING MESSAGE: \n" + msg + " received from client " + msg.getUser());
                     controller.sendMessage(msg);
                 }
 
@@ -143,7 +147,7 @@ public class ClientHandler {
                     Message reply = outgoingMessages.take();
                     oos.writeObject(reply);
                     oos.flush();
-                    messagesLogger.info( "OUTGOINg: \n" + reply + " Sent to user " + reply.getUser());
+                    messagesLogger.info("OUTGOINg: \n" + reply + " Sent to user " + reply.getUser());
                 }
             } catch (IOException | InterruptedException ignore) {
                 // We get here when the connection to the client is lost and the input thread interrupts
