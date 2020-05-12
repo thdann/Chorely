@@ -59,9 +59,9 @@ public class CentralActivity extends AppCompatActivity implements UpdatableActiv
     @Override
     protected void onStart() {
         super.onStart();
-
         BridgeInstances.getPresenter().register(this);
-        System.out.println("CENTRAL REGISTRED FOR UPDATES");
+        updateActivity();
+
     }
 
     @Override
@@ -82,10 +82,17 @@ public class CentralActivity extends AppCompatActivity implements UpdatableActiv
                 public void run() {
                     FragmentChores.updateList(selectedGroup.getChores());
                     FragmentRewards.updateList(selectedGroup.getRewards());
-                    updateUserPoints();
+
                 }
             });
         }
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                updateUserPoints();
+            }
+        });
     }
 
     @Override

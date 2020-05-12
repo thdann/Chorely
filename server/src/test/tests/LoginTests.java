@@ -91,4 +91,30 @@ public class LoginTests {
             TestUtils.deleteGroup(group);
         }
     }
+
+    /**
+     *      A client tries to login with a username that doesn't exist.
+     *      The expected outcome is that the client receives a loginDenied message.
+     */
+    @Test
+    public void testLoginUnknownUser() {
+        User user = new User("thisUserDoesntExist", "abcd");
+        try {
+            int port = 6589;
+            ServerController serverController = new ServerController(port);
+            List<Message> outgoing = List.of(new Message(login, user));
+            List<Message> expected = List.of(new Message(loginDenied, user, new ErrorMessage("Fel användarnamn eller lösenord, försök igen!")));
+            List<Message> received = sendAndReceive(outgoing, port);
+            assertEquals(expected, received);
+        } catch (InterruptedException | ExecutionException e) {
+            // What do I do here?
+        }
+    }
+
+    private List<Message> sendAndReceive(List<Message> outgoingMessages, int port) throws ExecutionException, InterruptedException {
+        ExecutorService executorService = Executors.newCachedThreadPool();
+        Callable<List<Message>> testClient = TestClient.newTestRun(outgoingMessages, port);
+        Future<List<Message>> received = executorService.submit(testClient);
+        return received.get();
+    }
 }

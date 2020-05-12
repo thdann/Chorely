@@ -64,6 +64,7 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        itemList = new ArrayList<>();
         if (getArguments() != null) {
             ArrayList<Chore> chores = (ArrayList<Chore>) getArguments().getSerializable("CHORES");
             validateAndUpdateListData(chores);

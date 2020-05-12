@@ -179,7 +179,6 @@ public class ServerController implements ClientListener {
     public void updateGroup(Message request) {
         Group updatedGroup = (Group) request.getData().get(0);
         updateUsersInGroup(updatedGroup);
-
         registeredGroups.updateGroup(updatedGroup);
         notifyGroupChanges(updatedGroup);
     }
@@ -196,8 +195,9 @@ public class ServerController implements ClientListener {
         ArrayList<User> members = group.getUsers();
         GenericID id = group.getGroupID();
         for (User u : members) {
-            u.addGroupMembership(id);
-            registeredUsers.updateUser(u);
+            User userFromFile = registeredUsers.getUserFromFile(u);
+            userFromFile.addGroupMembership(id);
+            registeredUsers.updateUser(userFromFile);
         }
     }
 
