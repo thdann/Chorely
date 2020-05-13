@@ -44,7 +44,6 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
         buildRecyclerView();
         updatedGroups = Model.getInstance(getFilesDir()).getGroups();
         updateGroupsList();
-
     }
 
     @Override
@@ -124,7 +123,6 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
 
     public void newGroupClick(View v) {
         startActivity(new Intent(this, CreateEditGroupActivity.class));
-
     }
 
 
@@ -136,11 +134,12 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
      */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.createGroupMenuButton) {
-            startActivity(new Intent(this, CreateEditGroupActivity.class));
-        }
-        return super.onContextItemSelected(item);
+//        int id = item.getItemId();
+//        if (id == R.id.createGroupMenuButton) {
+//            startActivity(new Intent(this, CreateEditGroupActivity.class));
+//        }
+//        return super.onContextItemSelected(item);
+        return false;
     }
 
     /**

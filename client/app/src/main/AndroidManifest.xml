@@ -12,6 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".activities.utils.ListViewAdapter"></activity>
         <activity
             android:name=".activities.CentralActivity"
             android:parentActivityName=".activities.ManageGroupsActivity" />
@@ -23,7 +24,6 @@
             android:name=".activities.CreateChoreActivity"
             android:label="Lägg till syssla"
             android:parentActivityName=".activities.CentralActivity" />
-
         <activity android:name=".activities.CreateEditGroupActivity" />
         <activity
             android:name=".activities.ConnectActivity"
