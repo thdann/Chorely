@@ -2,13 +2,9 @@ package com.mau.chorely.activities;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,8 +13,9 @@ import com.mau.chorely.R;
 import com.mau.chorely.activities.centralFragments.FragmentChores;
 import com.mau.chorely.activities.centralFragments.FragmentRewards;
 import com.mau.chorely.activities.interfaces.UpdatableActivity;
-import com.mau.chorely.activities.utils.BridgeInstances;
+import com.mau.chorely.activities.utils.Presenter;
 import com.mau.chorely.activities.utils.SectionsPageAdapter;
+import com.mau.chorely.model.Model;
 
 import java.util.ArrayList;
 
@@ -52,14 +49,14 @@ public class CentralActivity extends AppCompatActivity implements UpdatableActiv
         setupViewPager(viewPager);
         TabLayout tabLayout = findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
-        selectedGroup = BridgeInstances.getModel(getFilesDir()).getSelectedGroup();
+        selectedGroup = Model.getInstance(getFilesDir()).getSelectedGroup();
         setTitle(selectedGroup.getName());
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        BridgeInstances.getPresenter().register(this);
+        Presenter.getInstance().register(this);
         updateActivity();
 
     }
@@ -67,12 +64,12 @@ public class CentralActivity extends AppCompatActivity implements UpdatableActiv
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        BridgeInstances.getPresenter().deregisterForUpdates(this);
+        Presenter.getInstance().deregisterForUpdates(this);
     }
 
     @Override
     public void updateActivity() {
-        final Group updatedGroup = BridgeInstances.getModel(getFilesDir()).getSelectedGroup();
+        final Group updatedGroup = Model.getInstance(getFilesDir()).getSelectedGroup();
         System.out.println("UPDATING FRAGMENTS OUTSIDE IF");
         if(!selectedGroup.allIsEqual(updatedGroup)){
             selectedGroup = updatedGroup;
@@ -110,8 +107,8 @@ public class CentralActivity extends AppCompatActivity implements UpdatableActiv
 
 
         // Test data to make it compile.
-        ArrayList<Chore> chores = BridgeInstances.getModel(getFilesDir()).getSelectedGroup().getChores();
-        ArrayList<Reward> rewards = BridgeInstances.getModel(getFilesDir()).getSelectedGroup().getRewards();
+        ArrayList<Chore> chores = Model.getInstance(getFilesDir()).getSelectedGroup().getChores();
+        ArrayList<Reward> rewards = Model.getInstance(getFilesDir()).getSelectedGroup().getRewards();
 
         adapter.addFragment(FragmentChores.newInstance(chores), "Sysslor");
         adapter.addFragment(FragmentRewards.newInstance(rewards), "Belöningar");
@@ -119,7 +116,7 @@ public class CentralActivity extends AppCompatActivity implements UpdatableActiv
     }
 
     private void updateUserPoints() {
-        User user = BridgeInstances.getModel(getFilesDir()).getUser();
+        User user = Model.getInstance(getFilesDir()).getUser();
         int points = selectedGroup.getUserPoints(user);
 
         ((TextView)findViewById(R.id.nameAndPointsLayout_userName)).setText(user.getUsername());
