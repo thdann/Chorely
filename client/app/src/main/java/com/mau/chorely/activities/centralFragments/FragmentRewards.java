@@ -18,7 +18,6 @@ import com.mau.chorely.R;
 import com.mau.chorely.activities.CreateRewardActivity;
 import com.mau.chorely.activities.centralFragments.utils.CentralActivityRecyclerViewAdapter;
 import com.mau.chorely.activities.centralFragments.utils.ListItemCentral;
-import com.mau.chorely.activities.utils.BridgeInstances;
 import com.mau.chorely.model.Model;
 
 import java.util.ArrayList;
@@ -156,7 +155,7 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
                         public void onClick(DialogInterface dialog, int which) {
                             int points = Integer.parseInt(itemList.get(selectedItem).getPoints());
                             // Uppdatera poängen för användaren i selected group:
-                            Model model = BridgeInstances.getModel(getActivity().getFilesDir());
+                            Model model = Model.getInstance(getActivity().getFilesDir());
                             Group group = model.getSelectedGroup();
                             User currentUser = model.getUser();
                             group.getRewards().get(selectedItem).setLastDoneByUser(currentUser.getUsername());

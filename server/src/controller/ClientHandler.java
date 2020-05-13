@@ -49,6 +49,14 @@ public class ClientHandler {
         outgoingMessages.add(reply);
     }
 
+    public void logout(User user) {
+        try {
+            socket.close();
+        } catch (IOException ignore) {
+        }
+        messagesLogger.info(user + " logged out.");
+    }
+
     private boolean registerUser(Message message) {
         User user = message.getUser();
         Message reply;
@@ -120,14 +128,19 @@ public class ClientHandler {
 
                 while (true) {
                     Message msg = (Message) ois.readObject();
-                    messagesLogger.info("INCOMING MESSAGE: \n" + msg + " received from client " + msg.getUser());
+                    messagesLogger.info("incoming message: " + msg + " received from client " + msg.getUser());
                     controller.sendMessage(msg);
                 }
 
             } catch (ClassNotFoundException | IOException e) {
+                try {
+                    socket.close();
+                } catch (IOException ignore) {}
+
                 if (user != null) {
                     controller.removeOnlineClient(user);
                 }
+
                 outputThread.interrupt();
                 messagesLogger.info(user + " disconnected from server.");
             }
@@ -147,7 +160,7 @@ public class ClientHandler {
                     Message reply = outgoingMessages.take();
                     oos.writeObject(reply);
                     oos.flush();
-                    messagesLogger.info("OUTGOINg: \n" + reply + " Sent to user " + reply.getUser());
+                    messagesLogger.info("outgoing message: " + reply + " sent to user " + reply.getUser());
                 }
             } catch (IOException | InterruptedException ignore) {
                 // We get here when the connection to the client is lost and the input thread interrupts

@@ -1,25 +1,20 @@
 package com.mau.chorely.activities;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mau.chorely.R;
 import com.mau.chorely.activities.interfaces.UpdatableActivity;
-import com.mau.chorely.activities.utils.BridgeInstances;
+import com.mau.chorely.activities.utils.Presenter;
 import com.mau.chorely.activities.utils.SpinnerAdapterMembers;
 import com.mau.chorely.model.Model;
 
@@ -50,7 +45,7 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
     @Override
     protected void onStart() {
         super.onStart();
-        BridgeInstances.getPresenter().register(this);
+        Presenter.getInstance().register(this);
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             selectedGroup = (Group) bundle.get("SELECTED_GROUP");
@@ -60,7 +55,7 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
 
     @Override
     protected void onStop() {
-        BridgeInstances.getPresenter().deregisterForUpdates(this);
+        Presenter.getInstance().deregisterForUpdates(this);
         super.onStop();
     }
 
@@ -83,7 +78,7 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Model model = BridgeInstances.getModel(getFilesDir());
+                Model model = Model.getInstance(getFilesDir());
                 if (model.isConnected()) {
                     if (lastSearchedUser == null) {
                         lastSearchedUser = model.removeLastSearchedUser();
@@ -168,7 +163,7 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
             findViewById(R.id.edit_group_edit_description_button).setVisibility(View.INVISIBLE);
             selectedGroup = new Group();
             newGroup = true;
-            selectedGroup.addUser(BridgeInstances.getModel(getFilesDir()).getUser());
+            selectedGroup.addUser(Model.getInstance(getFilesDir()).getUser());
             initSpinner();
         }
     }
@@ -188,7 +183,7 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
                 } else{
                     command = NetCommands.clientInternalGroupUpdate;
                 }
-                Model model = BridgeInstances.getModel(getFilesDir());
+                Model model = Model.getInstance(getFilesDir());
                 ArrayList<Transferable> data = new ArrayList<>();
                 selectedGroup.setName(groupName);
                 selectedGroup.setDescription(groupDescription);
@@ -234,7 +229,7 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
             if(!selectedGroup.getUsers().contains(new User(searchString, ""))) {
                 findViewById(R.id.edit_group_searchMemberButton).setVisibility(View.INVISIBLE);
                 findViewById(R.id.edit_group_memberSearchWorkingGif).setVisibility(View.VISIBLE);
-                Model model = BridgeInstances.getModel(getFilesDir());
+                Model model = Model.getInstance(getFilesDir());
                 User user = new User(searchString, "");
                 ArrayList<Transferable> data = new ArrayList<>();
                 data.add(user);
