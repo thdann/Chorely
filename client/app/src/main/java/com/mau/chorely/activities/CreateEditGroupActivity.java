@@ -172,6 +172,7 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
      */
     private void initActivity() {
         if (selectedGroup != null) {
+            setTitle("Redigera grupp");
             EditText groupName = (EditText) findViewById(R.id.edit_group_current_name);
             groupName.setText(selectedGroup.getName());
             groupName.setBackground(getDrawable(R.color.background));
