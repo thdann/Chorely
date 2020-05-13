@@ -12,10 +12,5 @@
 
             />
 
-        <item
-            android:id="@+id/menu_central_pointsText"
-            android:title="100"
-            app:showAsAction="always"
-            />
     </group>
 </menu>

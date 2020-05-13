@@ -25,6 +25,7 @@ public class CentralActivityRecyclerViewAdapter extends RecyclerView.Adapter<Cen
         this.itemList = itemList;
     }
 
+
     @NonNull
     @Override
     public RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

@@ -108,9 +108,11 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
             }
         }
 
-        if(itemList.size() > chores.size()){
-            for(ListItemCentral item : itemList){
-                if(! chores.contains(item)){
+        if (itemList.size() > chores.size()) {
+            for (int i = 0; i < itemList.size(); i++) {
+                ListItemCentral item = itemList.get(i);
+                if (!chores.contains(item)) {
+                    itemList.remove(i);
 
                 }
             }
@@ -186,15 +188,25 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
             alert.show();
 
 
-
-
         } else if (v.getId() == R.id.fragment_chores_editChoreButton) {
             Intent intent = new Intent(getContext(), CreateChoreActivity.class);
             intent.putExtra("chore", itemList.get(selectedItem).getChore());
             startActivity(intent);
-        } else if(v.getId() == R.id.fragment_chores_deleteChoreButton){
+        } else if (v.getId() == R.id.fragment_chores_deleteChoreButton) {
             deleteChore();
         }
+    }
+
+    private void resetSelected(){
+        getView().findViewById(R.id.fragment_chores_claimChoreButton).setVisibility(View.INVISIBLE);
+        getView().findViewById(R.id.fragment_chores_editChoreButton).setVisibility(View.INVISIBLE);
+        getView().findViewById(R.id.fragment_chores_deleteChoreButton).setVisibility(View.INVISIBLE);
+
+        for(int i = 0; i < recyclerView.getChildCount(); i++){
+            View unselectedView = recyclerView.getChildAt(i);
+            unselectedView.findViewById(R.id.central_list_layout).setBackgroundColor(getResources().getColor(R.color.background));
+        }
+
     }
 
     private void deleteChore() {
@@ -206,6 +218,7 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
         data.add(selectedGroup);
         Message message = new Message(NetCommands.clientInternalGroupUpdate, model.getUser(), data);
         model.handleTask(message);
+        resetSelected();
     }
 
 
