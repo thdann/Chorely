@@ -10,18 +10,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.mau.chorely.R;
 import com.mau.chorely.activities.interfaces.UpdatableActivity;
-import com.mau.chorely.activities.utils.BridgeInstances;
 import com.mau.chorely.activities.utils.ListViewAdapter;
-import com.mau.chorely.activities.utils.SpinnerAdapterMembers;
+import com.mau.chorely.activities.utils.Presenter;
 import com.mau.chorely.model.Model;
 
 import java.util.ArrayList;
@@ -192,7 +189,7 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
         } else {
             selectedGroup = new Group();
             newGroup = true;
-            selectedGroup.addUser(BridgeInstances.getModel(getFilesDir()).getUser());
+            selectedGroup.addUser(Model.getInstance(getFilesDir()).getUser());
 //            initSpinner();
             initListView();
         }
@@ -265,7 +262,7 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
         if (!searchString.equals("")) {
             if (!selectedGroup.getUsers().contains(new User(searchString, ""))) {
                 findViewById(R.id.edit_group_searchMemberButton).setVisibility(View.INVISIBLE);
-                Model model = BridgeInstances.getModel(getFilesDir());
+                Model model = Model.getInstance(getFilesDir());
                 User user = new User(searchString, "");
                 ArrayList<Transferable> data = new ArrayList<>();
                 data.add(user);
