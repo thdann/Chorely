@@ -27,6 +27,7 @@
     <string name="setPointsChore">Poängvärde för syssla:</string>
     <string name="doneByChore">Senast utförd av: </string>
     <string name="doneByReward">Senast köpt av</string>
+    <string name="logOut">Logga ut</string>
 
 
 </resources>

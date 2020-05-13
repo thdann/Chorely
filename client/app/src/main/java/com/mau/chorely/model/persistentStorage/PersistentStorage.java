@@ -48,9 +48,19 @@ public class PersistentStorage {
         deleteAllGroups();
 
     }
+    public void deleteSelectedGroup() {
+     if(selectedGroup.exists()) {
+         selectedGroup.delete();
+     }
+    }
 
+    public void deleteUser() {
+        if(userFile.exists()) {
+            userFile.delete();
+        }
+    }
 
-    private void deleteAllGroups(){
+    public void deleteAllGroups(){
         if(groupDir.exists()) {
             File[] groupFiles = groupDir.listFiles();
             for(File file : groupFiles){

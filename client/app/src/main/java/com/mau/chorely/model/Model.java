@@ -170,6 +170,15 @@ public class Model {
 
     }
 
+    private void logOut(Message msg) {
+        network.sendMessage(msg);
+        isLoggedIn = false;
+        storage.deleteAllGroups();
+        storage.deleteSelectedGroup();
+        storage.deleteUser();
+
+    }
+
     /**
      * This method handles creation of new groups on the client side.
      *
@@ -337,6 +346,10 @@ public class Model {
 
                         case newGroupOk:
                             Presenter.getInstance().updateCurrent();
+                            break;
+
+                        case logout:
+                            logOut(currentTask);
                             break;
 
                         default:
