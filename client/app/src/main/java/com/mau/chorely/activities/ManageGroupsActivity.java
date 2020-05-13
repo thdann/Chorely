@@ -43,7 +43,6 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
         buildRecyclerView();
         updatedGroups = BridgeInstances.getModel(getFilesDir()).getGroups();
         updateGroupsList();
-
     }
 
     @Override
@@ -123,7 +122,6 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
 
     public void newGroupClick(View v) {
         startActivity(new Intent(this, CreateEditGroupActivity.class));
-
     }
 
 

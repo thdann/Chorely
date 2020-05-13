@@ -7,6 +7,7 @@ package shared.transferable;
  * @autor Timothy Denison and Emma Svensson, Angelica Asplund.
  */
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -57,6 +58,7 @@ public class Group implements Transferable {
     public ArrayList<User> getUsers() {
         return users;
     }
+
 
     public void addUser(User user) {
         users.add(user);
@@ -133,7 +135,6 @@ public class Group implements Transferable {
         }
 
     }
-
 
     public Map<User, Integer> getPoints() {
         return points;
