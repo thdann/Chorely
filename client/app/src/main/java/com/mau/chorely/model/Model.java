@@ -161,7 +161,6 @@ public class Model {
      * @param message message containing the new chore.
      */
     public void addNewChore(Message message){
-        // FIXME: 2020-05-04 Sysslor dupliceras osynligt.
         Group group = storage.getSelectedGroup();
         Chore chore = (Chore) message.getData().get(0);
         boolean foundSame = false;
@@ -189,8 +188,6 @@ public class Model {
      * @param message message containing the new reward.
      */
     public void addNewReward(Message message) {
-        //TODO: 1 Plocka ut grupp, är det gjort på raden nedan?
-
         Group group = storage.getSelectedGroup();
         Reward reward = (Reward) message.getData().get(0);
         boolean foundSame = false;
