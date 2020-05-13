@@ -3,7 +3,6 @@ package com.mau.chorely.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,7 +11,6 @@ import android.widget.Toast;
 
 import com.mau.chorely.R;
 import com.mau.chorely.activities.interfaces.UpdatableActivity;
-import com.mau.chorely.activities.utils.BridgeInstances;
 import com.mau.chorely.model.Model;
 
 import java.util.ArrayList;
@@ -36,7 +34,7 @@ public class CreateChoreActivity extends AppCompatActivity implements UpdatableA
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_chore);
-        selectedGroup = BridgeInstances.getModel(getFilesDir()).getSelectedGroup();
+        selectedGroup = Model.getInstance(getFilesDir()).getSelectedGroup();
         setTitle(selectedGroup.getName());
     }
 
@@ -83,7 +81,7 @@ public class CreateChoreActivity extends AppCompatActivity implements UpdatableA
     }
 
     public boolean createMessageNewChore(Chore newChore) {
-        Model model = BridgeInstances.getModel(getFilesDir());
+        Model model = Model.getInstance(getFilesDir());
         ArrayList<Transferable> data = new ArrayList<>();
         data.add(newChore);
         Message message = new Message(NetCommands.addNewChore, model.getUser(), data);
