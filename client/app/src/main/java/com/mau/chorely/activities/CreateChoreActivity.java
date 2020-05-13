@@ -28,14 +28,12 @@ import shared.transferable.Transferable;
  * v. 1.0 2020-04-23
  */
 public class CreateChoreActivity extends AppCompatActivity implements UpdatableActivity {
-    private Group selectedGroup;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_chore);
-        selectedGroup = Model.getInstance(getFilesDir()).getSelectedGroup();
-        setTitle(selectedGroup.getName());
     }
 
     @Override

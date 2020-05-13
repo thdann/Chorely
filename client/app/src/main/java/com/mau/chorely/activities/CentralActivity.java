@@ -1,10 +1,14 @@
 package com.mau.chorely.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,12 +35,23 @@ public class CentralActivity extends AppCompatActivity implements UpdatableActiv
     SectionsPageAdapter adapter = new SectionsPageAdapter(getSupportFragmentManager(),
             BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
 
-  /*  @Override
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_central_activity, menu);
-
         return super.onCreateOptionsMenu(menu);
-    } */
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId() == R.id.menu_central_edit){
+            Intent intent = new Intent(this, CreateEditGroupActivity.class);
+            intent.putExtra("SELECTED_GROUP", selectedGroup);
+            startActivity(intent);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,9 +119,6 @@ public class CentralActivity extends AppCompatActivity implements UpdatableActiv
     }
 
     private void setupViewPager(ViewPager viewPager) {
-
-
-        // Test data to make it compile.
         ArrayList<Chore> chores = Model.getInstance(getFilesDir()).getSelectedGroup().getChores();
         ArrayList<Reward> rewards = Model.getInstance(getFilesDir()).getSelectedGroup().getRewards();
 

@@ -29,14 +29,12 @@ import shared.transferable.Transferable;
  * v. 1.0 2020-04-28
  */
 public class CreateRewardActivity extends AppCompatActivity implements UpdatableActivity {
-    private Group selectedGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_reward);
-        selectedGroup = Model.getInstance(getFilesDir()).getSelectedGroup();
-        setTitle(selectedGroup.getName());
+
     }
 
     @Override
@@ -46,6 +44,7 @@ public class CreateRewardActivity extends AppCompatActivity implements Updatable
 
         if (bundle != null) {
             Reward reward = (Reward) bundle.get("reward");
+            setTitle("Ändra belöning");
             ((EditText) (findViewById(R.id.activity_register_editText_nameReward))).setText(reward.getName());
             ((EditText) (findViewById(R.id.activity_register_editText_descriptionReward))).setText(reward.getDescription());
             ((EditText) (findViewById(R.id.activity_register_editText_pointsReward))).setText("" + reward.getRewardPrice());

@@ -90,6 +90,7 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
         mAdapter.setOnItemClickListener(new RecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
+                /*
                 selectedItem = position;
                 View selectedView = mRecyclerView.getChildAt(position);
 
@@ -105,20 +106,22 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
                 findViewById(R.id.manage_groups_enterButton).setVisibility(View.VISIBLE);
                 findViewById(R.id.manage_groups_editButton).setVisibility(View.VISIBLE);
 
+
+                 */
+
+                Model.getInstance(getFilesDir()).setSelectedGroup(groupList.get(position));
+                Intent intent = new Intent(ManageGroupsActivity.this, CentralActivity.class);
+                startActivity(intent);
             }
         });
     }
 
     public void enterGroupClick(View v) {
-        Model.getInstance(getFilesDir()).setSelectedGroup(groupList.get(selectedItem));
-        Intent intent = new Intent(ManageGroupsActivity.this, CentralActivity.class);
-        startActivity(intent);
+
     }
 
     public void editGroupClick(View v) {
-        Intent intent = new Intent(this, CreateEditGroupActivity.class);
-        intent.putExtra("SELECTED_GROUP", groupList.get(selectedItem));
-        startActivity(intent);
+
     }
 
     public void newGroupClick(View v) {
