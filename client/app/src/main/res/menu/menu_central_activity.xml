@@ -2,15 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <group>
 
-        <item
-            android:id="@+id/menu_central_star"
-            android:icon="@drawable/central_menu_star"
-            android:title=""
-            app:showAsAction="always"
+    <item
+        android:id="@+id/menu_central_edit"
+        android:icon="@drawable/central_menu_edit"
+        android:title="Spara"
+        app:showAsAction="always"
+        />
 
-            />
 
-    </group>
 </menu>

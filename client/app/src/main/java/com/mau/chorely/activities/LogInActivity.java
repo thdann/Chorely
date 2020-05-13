@@ -1,8 +1,6 @@
 package com.mau.chorely.activities;
 
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -10,7 +8,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.material.snackbar.Snackbar;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.mau.chorely.R;
 import com.mau.chorely.activities.interfaces.UpdatableActivity;
 import com.mau.chorely.activities.utils.Presenter;
@@ -25,20 +24,20 @@ import shared.transferable.Transferable;
 import shared.transferable.User;
 
 /**
- * This is the activity to handle registrations of users.
- * The activity then sends the user to the next activity provided that the registration was successful.
+ * This is the activity to handle log in of users.
+ * The activity then sends the user to the next activity provided that the log in was successful.
  *
- * @author Timothy Denison, Fredrik Jeppson
+ * @author Emma Svensson
  */
-public class RegisterActivity extends AppCompatActivity implements UpdatableActivity {
+public class LogInActivity extends AppCompatActivity implements UpdatableActivity {
+
+
     GifImageView gifImageViewWorking;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_register);
-
+        setContentView(R.layout.activity_login);
         gifImageViewWorking = findViewById(R.id.gifImageViewWorking);
         gifImageViewWorking.setVisibility(GifImageView.INVISIBLE);
     }
@@ -56,24 +55,29 @@ public class RegisterActivity extends AppCompatActivity implements UpdatableActi
     }
 
     /**
-     * Method to handle  clicks to register button.
+     * Method to handle  clicks to logga in button.
      *
      * @param view Button clicked.
      */
-    public void register(View view) {
+    public void logIn(View view) {
         EditText user = findViewById(R.id.username);
         EditText pass = findViewById(R.id.password);
         String username = user.getText().toString();
         String password = pass.getText().toString();
-        User userToRegister = new User(username, password);
 
-        Message registerMsg = new Message(NetCommands.registerUser, userToRegister, new ArrayList<Transferable>());
-        Model.getInstance(getFilesDir()).handleTask(registerMsg);
-        user.setVisibility(View.INVISIBLE);
-        pass.setVisibility(View.INVISIBLE);
-        Button buttonRegister = findViewById(R.id.register);
-        buttonRegister.setVisibility(Button.INVISIBLE);
-        gifImageViewWorking.setVisibility(View.VISIBLE);
+        if(!username.equals("") && !password.equals("")) {
+            User userToLogIn = new User(username, password);
+
+            Message logInMsg = new Message(NetCommands.login, userToLogIn, new ArrayList<Transferable>());
+            Model.getInstance(getFilesDir()).handleTask(logInMsg);
+            user.setVisibility(View.INVISIBLE);
+            pass.setVisibility(View.INVISIBLE);
+            Button buttonRegister = findViewById(R.id.logIn);
+            buttonRegister.setVisibility(Button.INVISIBLE);
+            gifImageViewWorking.setVisibility(View.VISIBLE);
+        } else {
+            doToast("Du måste fylla i användarnamn och lösenord");
+        }
     }
 
     /**
@@ -86,13 +90,13 @@ public class RegisterActivity extends AppCompatActivity implements UpdatableActi
             public void run() {
                 if (Model.getInstance(getFilesDir()).isConnected()) {
                     if (Model.getInstance(getFilesDir()).isLoggedIn()) {
-                        Intent intent = new Intent(RegisterActivity.this, ManageGroupsActivity.class);
+                        Intent intent = new Intent(LogInActivity.this, ManageGroupsActivity.class);
                         startActivity(intent);
                         finish();
                     } else {
                         findViewById(R.id.username).setVisibility(View.VISIBLE);
                         findViewById(R.id.password).setVisibility(View.VISIBLE);
-                        findViewById(R.id.register).setVisibility(View.VISIBLE);
+                        findViewById(R.id.logIn).setVisibility(View.VISIBLE);
                         gifImageViewWorking.setVisibility(View.INVISIBLE);
                         ((EditText) findViewById(R.id.username)).setText("");
                         ((EditText) findViewById(R.id.password)).setText("");
@@ -115,16 +119,11 @@ public class RegisterActivity extends AppCompatActivity implements UpdatableActi
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                final Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_INDEFINITE);
-                snackbar.setDuration(7000);
-                snackbar.setAction("ok", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        snackbar.dismiss();
-                    }
-                });
-                snackbar.show();
+                Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT);
+                toast.show();
             }
         });
     }
 }
+
+

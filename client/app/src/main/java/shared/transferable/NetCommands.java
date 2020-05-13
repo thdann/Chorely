@@ -7,6 +7,8 @@ public enum NetCommands implements Transferable {
     registerNewGroup,
     newGroupOk,
     newGroupDenied,
+    deleteGroup,
+    groupDeleted,
     addUserToGroup,
     removeUserFromGroup,
     updateGroup,
@@ -28,6 +30,7 @@ public enum NetCommands implements Transferable {
     login,
     loginOk,
     loginDenied,
+    logout,
     clientInternalGroupUpdate
     ;
 }

@@ -9,8 +9,9 @@ import javax.swing.*;
 import java.util.List;
 import java.util.concurrent.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static shared.transferable.NetCommands.*;
+import static test.util.TestUtils.sendAndReceive;
 
 public class GroupManagementTests {
     private static final int basePort = 6600;
@@ -18,11 +19,11 @@ public class GroupManagementTests {
 
     /**
      * Tests the following case:
-     *
-     *      1. User A registers.
-     *      2. User B registers.
-     *      3. User A creates a group and adds itself and user B to this group.
-     *      4. User A and B's user files are updated with the new group membership.
+     * <p>
+     * 1. User A registers.
+     * 2. User B registers.
+     * 3. User A creates a group and adds itself and user B to this group.
+     * 4. User A and B's user files are updated with the new group membership.
      */
     @Test
     public void testAddingUserToGroup() {
@@ -52,12 +53,11 @@ public class GroupManagementTests {
 
     /**
      * Tests the following case:
-     *
-     *      1. User A registers.
-     *      2. User B registers.
-     *      3. User A creates a group and adds itself and user B to the group.
-     *      4. User A removes user B from the group.
-     *
+     * <p>
+     * 1. User A registers.
+     * 2. User B registers.
+     * 3. User A creates a group and adds itself and user B to the group.
+     * 4. User A removes user B from the group.
      */
     @Test
     public void testRemovingUserFromGroup() {
@@ -97,11 +97,11 @@ public class GroupManagementTests {
 
     /**
      * Tests the following case:
-     *
-     *      1. User A registers.
-     *      2. User A creates two groups.
-     *      3. User A disconnects.
-     *      4. User A logs in and expects to get 2 updateGroup message: one for each group.
+     * <p>
+     * 1. User A registers.
+     * 2. User A creates two groups.
+     * 3. User A disconnects.
+     * 4. User A logs in and expects to get 2 updateGroup message: one for each group.
      */
     @Test
     public void testRegisterTwoGroups() {
@@ -145,14 +145,40 @@ public class GroupManagementTests {
             TestUtils.deleteGroup(group1);
             TestUtils.deleteGroup(group2);
         }
-
     }
 
-    private List<Message> sendAndReceive(List<Message> outgoingMessages, int port) throws ExecutionException, InterruptedException {
-        ExecutorService executorService = Executors.newCachedThreadPool();
-        Callable<List<Message>> testClient = TestClient.newTestRun(outgoingMessages, port);
-        Future<List<Message>> received = executorService.submit(testClient);
-        return received.get();
+    /**
+     * Simple test of delete group. Registers a group with a single user and then deletes it.
+     */
+    @Test
+    public void testDeleteGroup() {
+        User user = new User("testDeleteGroup", "secret");
+        Group group = new Group("testDeletionGroup");
+        group.addUser(user);
+        try {
+            int port = basePort + 3;
+            ServerController serverController = new ServerController(port);
+            List<Message> outgoing = List.of(
+                    new Message(registerUser, user),
+                    new Message(registerNewGroup, user, List.of(group)),
+                    new Message(deleteGroup, user, List.of(group)));
+            List<Message> expected = List.of(
+                    new Message(registrationOk, user),
+                    new Message(newGroupOk, user),
+                    new Message(updateGroup, user, List.of(group)),
+                    new Message(groupDeleted, user, List.of(group))
+            );
+            List<Message> received = sendAndReceive(outgoing, port);
+            assertEquals(expected, received);
+            RegisteredUsers registeredUsers = new RegisteredUsers();
+            User userFromFile = registeredUsers.getUserFromFile(user);
+            List<GenericID> groups = userFromFile.getGroups();
+            assertFalse(groups.contains(group.getGroupID()));
+        } catch (InterruptedException | ExecutionException e) {
+            // What do I do here?
+        } finally {
+            TestUtils.deleteUser(user);
+        }
     }
 
     private void updateGroup(User user, Group group, int port) throws ExecutionException, InterruptedException {
