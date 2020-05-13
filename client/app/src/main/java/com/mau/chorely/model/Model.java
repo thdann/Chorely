@@ -21,6 +21,7 @@ import java.util.concurrent.LinkedBlockingDeque;
  * It will together with the different activities hold most, if not all business logic.
  * The focus of the class is to recieve requests from both the activities, and the network, in the
  * form of messages.
+ *
  * @author Timothy Denison, Emma Svensson, Theresa Dannberg
  * @version 2.0
  */
@@ -34,11 +35,14 @@ public class Model {
     private Thread modelThread; // TODO: 2020-04-16 Se över om vi ska stoppa den hör tråden nånstans, annars behövs ingen referens.
     private static Model model;
 
-    private Model(){};
+    private Model() {
+    }
+
+    ;
 
 
-    public static Model getInstance(File appFilesDir){
-        if(model == null){
+    public static Model getInstance(File appFilesDir) {
+        if (model == null) {
             model = new Model(appFilesDir);
             Exception e = new Exception("MODEL UNREFERENCED");
             e.printStackTrace();
@@ -55,22 +59,24 @@ public class Model {
 
     /**
      * Getter to get the stored client user.
+     *
      * @return current user.
      */
     public User getUser() {
         return storage.getUser();
     }
 
-    public Group getSelectedGroup(){
+    public Group getSelectedGroup() {
         return storage.getSelectedGroup();
     }
 
-    public void setSelectedGroup(Group group){
+    public void setSelectedGroup(Group group) {
         storage.setSelectedGroup(group);
     }
 
     /**
      * Getter to get all stored groups.
+     *
      * @return arraylist of groups.
      */
     public ArrayList<Group> getGroups() {
@@ -79,13 +85,14 @@ public class Model {
 
     /**
      * Method checks if there is a stored user on the client.
+     *
      * @return true if there is a stored user.
      */
     public boolean isLoggedIn() {
         return isLoggedIn;
     }
 
-    public boolean hasStoredUser(){
+    public boolean hasStoredUser() {
         return storage.getUser() != null;
     }
 
@@ -95,9 +102,10 @@ public class Model {
 
     /**
      * This method returns a reference to the last searched user, and sets it to null.
+     *
      * @return last searched User.
      */
-    public User removeLastSearchedUser(){
+    public User removeLastSearchedUser() {
         User temp = lastSearchedUser;
         lastSearchedUser = null;
         return temp;
@@ -105,6 +113,7 @@ public class Model {
 
     /**
      * Callback method. Puts the message in a queue to be handled by the model thread.
+     *
      * @param msg this is the task to handle, complete with a command, and data.
      */
     public void handleTask(Message msg) {
@@ -117,11 +126,12 @@ public class Model {
 
     /**
      * This method handles updates to existing groups on the client side.
+     *
      * @param message message containing the group to update.
      */
-    private void updateGroup (Message message){
-        Group currentGroup = (Group)message.getData().get(0);
-        if(currentGroup.getUsers().contains(storage.getUser())) {
+    private void updateGroup(Message message) {
+        Group currentGroup = (Group) message.getData().get(0);
+        if (currentGroup.getUsers().contains(storage.getUser())) {
 
             if (storage.saveOrUpdateGroup(currentGroup)) {
                 message.setCommand(NetCommands.updateGroup);
@@ -135,9 +145,9 @@ public class Model {
         }
     }
 
-    private void updateGroupExternal (Message message){
-        Group currentGroup = (Group)message.getData().get(0);
-        if(currentGroup.getUsers().contains(storage.getUser())) {
+    private void updateGroupExternal(Message message) {
+        Group currentGroup = (Group) message.getData().get(0);
+        if (currentGroup.getUsers().contains(storage.getUser())) {
 
             if (storage.saveOrUpdateGroup(currentGroup)) {
                 Presenter.getInstance().updateCurrent();
@@ -149,18 +159,24 @@ public class Model {
         }
     }
 
-    private void loginClient(){
-        if(hasStoredUser()){
+    private void automaticLogIn() {
+        if (hasStoredUser()) {
             network.sendMessage(new Message(NetCommands.login, getUser()));
         }
     }
 
+    private void manualLogIn(Message msg) {
+        network.sendMessage(msg);
+
+    }
+
     /**
      * This method handles creation of new groups on the client side.
+     *
      * @param message message containing the new group.
      */
-    private void createGroup(Message message){
-        if(storage.saveOrUpdateGroup((Group)message.getData().get(0))){
+    private void createGroup(Message message) {
+        if (storage.saveOrUpdateGroup((Group) message.getData().get(0))) {
             System.out.println("SENDING NEW GROUP TO SERVER");
             network.sendMessage(message);
             Presenter.getInstance().updateCurrent();
@@ -169,24 +185,25 @@ public class Model {
 
     /**
      * This method updates current group with new chores.
+     *
      * @param message message containing the new chore.
      */
-    public void addNewChore(Message message){
+    public void addNewChore(Message message) {
         Group group = storage.getSelectedGroup();
         Chore chore = (Chore) message.getData().get(0);
         boolean foundSame = false;
-        for(Chore tempChore : group.getChores()){
-            if(tempChore.nameEquals(chore)){
+        for (Chore tempChore : group.getChores()) {
+            if (tempChore.nameEquals(chore)) {
                 foundSame = true;
-                if(!tempChore.equals(chore)){
+                if (!tempChore.equals(chore)) {
                     tempChore.updateChore(chore);
                 }
             }
         }
-        if(!foundSame){
+        if (!foundSame) {
             group.addChore(chore);
         }
-        System.out.println("CHORE LIST SIZE: " +group.getChores().size());
+        System.out.println("CHORE LIST SIZE: " + group.getChores().size());
         ArrayList<Transferable> data = new ArrayList<>();
         data.add(group);
         Message newMessage = new Message(NetCommands.updateGroup, message.getUser(), data);
@@ -196,21 +213,22 @@ public class Model {
 
     /**
      * This method updates current group with new reward.
+     *
      * @param message message containing the new reward.
      */
     public void addNewReward(Message message) {
         Group group = storage.getSelectedGroup();
         Reward reward = (Reward) message.getData().get(0);
         boolean foundSame = false;
-        for(Reward tempReward : group.getRewards()){
-            if(tempReward.nameEquals(reward)){
+        for (Reward tempReward : group.getRewards()) {
+            if (tempReward.nameEquals(reward)) {
                 foundSame = true;
-                if(!tempReward.equals(reward)){
+                if (!tempReward.equals(reward)) {
                     tempReward.updateReward(reward);
                 }
             }
         }
-        if(!foundSame){
+        if (!foundSame) {
             group.addReward(reward);
         }
         ArrayList<Transferable> data = new ArrayList<>();
@@ -237,7 +255,15 @@ public class Model {
 
                     switch (command) {
                         case login:
-                            /*Falls through*/
+                            manualLogIn(currentTask);
+                            break;
+
+                        case loginDenied:
+                            isLoggedIn = false;
+                            Presenter.getInstance().updateCurrent();
+                            Presenter.getInstance().toastCurrent(currentTask.getErrorMessage().getMessage());
+                            break;
+
                         case searchForUser:
                             /*Falls through*/
                         case registerUser:
@@ -276,7 +302,7 @@ public class Model {
 
                         case connected:
                             isConnected = true;
-                            loginClient();
+                            automaticLogIn();
                             Presenter.getInstance().updateCurrent();
                             break;
 
@@ -308,7 +334,7 @@ public class Model {
 
                         default:
                             System.out.println("Unrecognized command: " + command);
-                            Presenter.getInstance().toastCurrent("Unknown command: " +command);
+                            Presenter.getInstance().toastCurrent("Unknown command: " + command);
                     }
                 } catch (InterruptedException e) {
                     System.out.println("Thread interrupted in main model queue");
