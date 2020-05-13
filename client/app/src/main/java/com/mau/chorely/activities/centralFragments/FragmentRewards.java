@@ -18,6 +18,7 @@ import com.mau.chorely.R;
 import com.mau.chorely.activities.CreateRewardActivity;
 import com.mau.chorely.activities.centralFragments.utils.CentralActivityRecyclerViewAdapter;
 import com.mau.chorely.activities.centralFragments.utils.ListItemCentral;
+import com.mau.chorely.activities.utils.Presenter;
 import com.mau.chorely.model.Model;
 
 import java.util.ArrayList;
@@ -153,7 +154,7 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
                 claimReward(costOfReward);
             } else {
 
-                // Meddelande om att ej tillräckligt med poäng.
+                Presenter.getInstance().toastCurrent("Du har inte tillräckligt med poäng");
             }
 
         } else if (v.getId() == R.id.fragment_reward_changeRewardButton) {
@@ -189,5 +190,6 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
         AlertDialog alert = builder.create();
         alert.show();
     }
+
 
 }
