@@ -43,6 +43,7 @@ public class CreateChoreActivity extends AppCompatActivity implements UpdatableA
 
         if (bundle != null) {
             Chore chore = (Chore) bundle.get("chore");
+            setTitle("Ändra syssla");
             ((EditText) (findViewById(R.id.activity_register_editText_nameChore))).setText(chore.getName());
             findViewById(R.id.activity_register_editText_nameChore).setBackground(getDrawable(R.color.background));
             findViewById(R.id.activity_register_editText_nameChore).setFocusable(false);
