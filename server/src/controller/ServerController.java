@@ -134,9 +134,19 @@ public class ServerController implements ClientListener {
             case searchForUser:
                 searchForUser(msg);
                 break;
-            default:
-                //TODO:  kod för default case. Vad kan man skriva här?
+            case logout:
+                logoutUser(msg);
                 break;
+            default:
+                break;
+        }
+    }
+
+    public void logoutUser(Message msg) {
+        User user = msg.getUser();
+        ClientHandler clientHandler = onlineClients.get(user);
+        if (clientHandler != null) {
+            clientHandler.logout(user);
         }
     }
 

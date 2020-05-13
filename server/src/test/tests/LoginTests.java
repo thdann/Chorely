@@ -110,6 +110,28 @@ public class LoginTests {
             // What do I do here?
         }
     }
+    
+    @Test
+    public void testLogout() {
+        User user = new User("logoutUser", "abcdefg");
+        try {
+            int port = 6590;
+            ServerController serverController = new ServerController(port);
+            List<Message> outgoing = List.of(
+                    new Message(registerUser, user),
+                    new Message(logout, user)
+            );
+            List<Message> expected = List.of(
+                    new Message(registrationOk, user)
+            );
+            List<Message> received = sendAndReceive(outgoing, port);
+            assertEquals(expected, received);
+        } catch (InterruptedException | ExecutionException e) {
+            // What do I do here?
+        } finally {
+            TestUtils.deleteUser(user);
+        }
+    }
 
     private List<Message> sendAndReceive(List<Message> outgoingMessages, int port) throws ExecutionException, InterruptedException {
         ExecutorService executorService = Executors.newCachedThreadPool();
