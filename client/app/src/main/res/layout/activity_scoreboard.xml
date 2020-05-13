@@ -4,9 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.utils.ScoreboardActivity">
+    tools:context=".activities.utils.ScoreboardActivity"
+    android:background="@color/background"
+    >
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+        <TextView
+            android:id="@+id/testText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SCOREBOARD:"
+            android:textColor="@color/btnColor"
+
+            />
     <androidx.recyclerview.widget.RecyclerView
+        android:layout_below="@id/testText"
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -14,4 +29,5 @@
         android:scrollbars="vertical"
         android:background="@drawable/edit_text_background"
         />
+    </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
