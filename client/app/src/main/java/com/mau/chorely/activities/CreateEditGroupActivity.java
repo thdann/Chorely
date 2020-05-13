@@ -157,6 +157,8 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 selectedMemberIndex = position;
+                ImageButton deleteButton = findViewById(R.id.edit_group_deleteMemberButton);
+                deleteButton.setVisibility(View.VISIBLE);
             }
         });
         lv.setAdapter(adapter);

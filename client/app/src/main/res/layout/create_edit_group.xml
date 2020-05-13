@@ -194,7 +194,7 @@
                     android:background="@color/background"
                     android:baselineAligned="false"
                     android:onClick="removeMemberFromGroup"
-                    android:visibility="visible"
+                    android:visibility="invisible"
                     app:srcCompat="@drawable/delete_icon"
                     />
             </RelativeLayout>
