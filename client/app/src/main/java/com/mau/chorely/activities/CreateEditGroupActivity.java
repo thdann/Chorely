@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -46,13 +47,15 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
     private User lastSearchedUser;
     private boolean newGroup = false;
 
+    private ListView lv;
     private ArrayAdapter adapter;
+    int selectedMemberIndex;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_edit_group);
-
     }
 
     @Override
@@ -148,10 +151,14 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
     }
 
     private void initListView() {
-        ListView lv = (ListView) findViewById(R.id.my_listView);
+        lv = (ListView) findViewById(R.id.my_listView);
         adapter = new ListViewAdapter(this, selectedGroup.getUsers());
-//        ArrayList<String> arrayList = groupMembersToStringArray();
-//        adapter = new ArrayAdapter<>(CreateEditGroupActivity.this, R.layout.activity_list_view_adapter, selectedGroup.getUsers());
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                selectedMemberIndex = position;
+            }
+        });
         lv.setAdapter(adapter);
     }
 
@@ -236,6 +243,11 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
         if (adapter.getCount() > 1) {
             //int selectedUserIndex = ((Spinner) findViewById(R.id.spinnerMembers)).getSelectedItemPosition();
             //selectedGroup.getUsers().remove(selectedUserIndex);
+
+            System.out.println(selectedMemberIndex);
+            selectedGroup.getUsers().remove(selectedMemberIndex);
+
+
             adapter.notifyDataSetChanged();
         } else {
             Toast.makeText(this, "Varje grupp måste ha minst en användare. Om du vill " +
@@ -282,7 +294,6 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
         findViewById(R.id.edit_group_memberSearchText).setFocusable(true);
         findViewById(R.id.edit_group_memberSearchText).setFocusableInTouchMode(true);
         ((EditText) findViewById(R.id.edit_group_memberSearchText)).setText("");
-
     }
 
     /**
