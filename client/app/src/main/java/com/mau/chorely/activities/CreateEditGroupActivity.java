@@ -1,12 +1,9 @@
 package com.mau.chorely.activities;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,7 +15,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mau.chorely.R;
@@ -61,7 +57,7 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
     @Override
     protected void onStart() {
         super.onStart();
-        BridgeInstances.getPresenter().register(this);
+        Presenter.getInstance().register(this);
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             selectedGroup = (Group) bundle.get("SELECTED_GROUP");
@@ -71,7 +67,7 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
 
     @Override
     protected void onStop() {
-        BridgeInstances.getPresenter().deregisterForUpdates(this);
+        Presenter.getInstance().deregisterForUpdates(this);
         super.onStop();
     }
 
@@ -95,7 +91,7 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Model model = BridgeInstances.getModel(getFilesDir());
+                Model model = Model.getInstance(getFilesDir());
                 if (model.isConnected()) {
                     if (lastSearchedUser == null) {
                         lastSearchedUser = model.removeLastSearchedUser();
@@ -217,7 +213,7 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
                 } else {
                     command = NetCommands.clientInternalGroupUpdate;
                 }
-                Model model = BridgeInstances.getModel(getFilesDir());
+                Model model = Model.getInstance(getFilesDir());
                 ArrayList<Transferable> data = new ArrayList<>();
                 selectedGroup.setName(groupName);
                 selectedGroup.setDescription(groupDescription);

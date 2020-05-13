@@ -2,17 +2,13 @@ package com.mau.chorely.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
 import com.mau.chorely.R;
 import com.mau.chorely.activities.interfaces.UpdatableActivity;
-import com.mau.chorely.activities.utils.BridgeInstances;
+import com.mau.chorely.activities.utils.Presenter;
 import com.mau.chorely.model.Model;
-
-import shared.transferable.Message;
-import shared.transferable.NetCommands;
 
 /**
  * This activity gets invoked if the client looses its connection to the server.
@@ -31,7 +27,7 @@ public class ConnectActivity extends AppCompatActivity implements UpdatableActiv
     @Override
     protected void onStart() {
         super.onStart();
-        BridgeInstances.getPresenter().register(this);
+        Presenter.getInstance().register(this);
         setContentView(R.layout.activity_connect2);
         updateActivity();
     }
@@ -39,16 +35,15 @@ public class ConnectActivity extends AppCompatActivity implements UpdatableActiv
     @Override
     protected void onStop() {
         super.onStop();
-        BridgeInstances.getPresenter().deregisterForUpdates(this);
+        Presenter.getInstance().deregisterForUpdates(this);
     }
 
     @Override
     public void updateActivity() {
-        Model model = BridgeInstances.getModel(getFilesDir());
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (BridgeInstances.getModel(getFilesDir()).isConnected()) {
+                if (Model.getInstance(getFilesDir()).isConnected()) {
                     finish();
                 }
             }

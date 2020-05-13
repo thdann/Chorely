@@ -17,7 +17,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mau.chorely.R;
 import com.mau.chorely.activities.CreateChoreActivity;
 import com.mau.chorely.activities.centralFragments.utils.*;
-import com.mau.chorely.activities.utils.BridgeInstances;
 import com.mau.chorely.model.Model;
 
 
@@ -157,7 +156,7 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
                         public void onClick(DialogInterface dialog, int which) {
                             int points = Integer.parseInt(itemList.get(selectedItem).getPoints());
                             // Uppdatera poängen för användaren i selected group:
-                            Model model = BridgeInstances.getModel(getActivity().getFilesDir());
+                            Model model = Model.getInstance(getActivity().getFilesDir());
                             Group group = model.getSelectedGroup();
                             User currentUser = model.getUser();
                             group.getChores().get(selectedItem).setLastDoneByUser(currentUser.getUsername());

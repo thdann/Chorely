@@ -12,11 +12,20 @@ import java.util.concurrent.ConcurrentLinkedDeque;
  * @author Timothy Denison
  */
 public class Presenter {
-
+    private static Presenter presenter;
     private ConcurrentLinkedDeque<UpdatableActivity> registeredListeners = new ConcurrentLinkedDeque<>();
 
-    Presenter() {
+    private Presenter() {
     }
+
+    public static Presenter getInstance(){
+        if (presenter == null){
+            presenter = new Presenter();
+        }
+        return presenter;
+    }
+
+
 
     /**
      * Callback method to let the current activity know to update itself.

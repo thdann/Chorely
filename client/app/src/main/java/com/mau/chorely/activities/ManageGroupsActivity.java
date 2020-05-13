@@ -15,8 +15,9 @@ import android.widget.Toast;
 
 import com.mau.chorely.R;
 import com.mau.chorely.activities.interfaces.UpdatableActivity;
+import com.mau.chorely.activities.utils.Presenter;
 import com.mau.chorely.activities.utils.RecyclerViewAdapter;
-import com.mau.chorely.activities.utils.BridgeInstances;
+import com.mau.chorely.model.Model;
 
 import java.util.ArrayList;
 
@@ -41,27 +42,27 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_groups);
         buildRecyclerView();
-        updatedGroups = BridgeInstances.getModel(getFilesDir()).getGroups();
+        updatedGroups = Model.getInstance(getFilesDir()).getGroups();
         updateGroupsList();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        BridgeInstances.getPresenter().register(this);
+        Presenter.getInstance().register(this);
         updateActivity();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        BridgeInstances.getPresenter().deregisterForUpdates(this);
+        Presenter.getInstance().deregisterForUpdates(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        BridgeInstances.getPresenter().deregisterForUpdates(this);
+        Presenter.getInstance().deregisterForUpdates(this);
     }
 
     /**
@@ -109,7 +110,7 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
     }
 
     public void enterGroupClick(View v) {
-        BridgeInstances.getModel(getFilesDir()).setSelectedGroup(groupList.get(selectedItem));
+        Model.getInstance(getFilesDir()).setSelectedGroup(groupList.get(selectedItem));
         Intent intent = new Intent(ManageGroupsActivity.this, CentralActivity.class);
         startActivity(intent);
     }
@@ -165,9 +166,9 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (BridgeInstances.getModel(getFilesDir()).isConnected()) {
+                if (Model.getInstance(getFilesDir()).isConnected()) {
                     synchronized (lockObjectGroupList) {
-                        updatedGroups = BridgeInstances.getModel(getFilesDir()).getGroups();
+                        updatedGroups = Model.getInstance(getFilesDir()).getGroups();
                         updateGroupsList();
                         updateGroupText();
                     }
