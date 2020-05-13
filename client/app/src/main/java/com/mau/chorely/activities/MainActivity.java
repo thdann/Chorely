@@ -9,11 +9,8 @@ import android.widget.Toast;
 
 import com.mau.chorely.R;
 import com.mau.chorely.activities.interfaces.UpdatableActivity;
-import com.mau.chorely.activities.utils.BridgeInstances;
+import com.mau.chorely.activities.utils.Presenter;
 import com.mau.chorely.model.Model;
-
-import shared.transferable.Message;
-import shared.transferable.NetCommands;
 
 /**
  * This is the main activity of the application. It launches the program and sends the user to
@@ -26,21 +23,21 @@ public class MainActivity extends AppCompatActivity implements UpdatableActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        BridgeInstances.getPresenter().register(this);
-        BridgeInstances.getModel(getFilesDir()); // startar modellen.
+        Presenter.getInstance().register(this);
+        Model.getInstance(getFilesDir()); // startar modellen.
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        BridgeInstances.getPresenter().register(this);
+        Presenter.getInstance().register(this);
         updateActivity();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        BridgeInstances.getPresenter().deregisterForUpdates(this);
+        Presenter.getInstance().deregisterForUpdates(this);
     }
 
     /**
@@ -48,13 +45,13 @@ public class MainActivity extends AppCompatActivity implements UpdatableActivity
      */
     @Override
     public  void updateActivity() {
-        if (BridgeInstances.getModel(getFilesDir()).isConnected() ) {
-            if (BridgeInstances.getModel(getFilesDir()).hasStoredUser()) {
-                if(BridgeInstances.getModel(getFilesDir()).getSelectedGroup() != null ){
+        if (Model.getInstance(getFilesDir()).isConnected() ) {
+            if (Model.getInstance(getFilesDir()).hasStoredUser()) {
+                if(Model.getInstance(getFilesDir()).getSelectedGroup() != null ){
                     Intent intent = new Intent(this, CentralActivity.class);
                     startActivity(intent);
                     finish();
-                } else if(BridgeInstances.getModel(getFilesDir()).isLoggedIn()){
+                } else if(Model.getInstance(getFilesDir()).isLoggedIn()){
                     Intent intent = new Intent(this, ManageGroupsActivity.class);
                     startActivity(intent);
                     finish();

@@ -1,7 +1,6 @@
 package com.mau.chorely.activities;
 
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -11,9 +10,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.mau.chorely.R;
 import com.mau.chorely.activities.interfaces.UpdatableActivity;
-import com.mau.chorely.activities.utils.BridgeInstances;
+import com.mau.chorely.activities.utils.Presenter;
+import com.mau.chorely.model.Model;
 
 import java.util.ArrayList;
 
@@ -45,13 +46,13 @@ public class RegisterActivity extends AppCompatActivity implements UpdatableActi
     @Override
     protected void onStart() {
         super.onStart();
-        BridgeInstances.getPresenter().register(this);
+        Presenter.getInstance().register(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        BridgeInstances.getPresenter().deregisterForUpdates(this);
+        Presenter.getInstance().deregisterForUpdates(this);
     }
 
     /**
@@ -67,7 +68,7 @@ public class RegisterActivity extends AppCompatActivity implements UpdatableActi
         User userToRegister = new User(username, password);
 
         Message registerMsg = new Message(NetCommands.registerUser, userToRegister, new ArrayList<Transferable>());
-        BridgeInstances.getModel(getFilesDir()).handleTask(registerMsg);
+        Model.getInstance(getFilesDir()).handleTask(registerMsg);
         user.setVisibility(View.INVISIBLE);
         pass.setVisibility(View.INVISIBLE);
         Button buttonRegister = findViewById(R.id.register);
@@ -83,8 +84,8 @@ public class RegisterActivity extends AppCompatActivity implements UpdatableActi
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (BridgeInstances.getModel(getFilesDir()).isConnected()) {
-                    if (BridgeInstances.getModel(getFilesDir()).isLoggedIn()) {
+                if (Model.getInstance(getFilesDir()).isConnected()) {
+                    if (Model.getInstance(getFilesDir()).isLoggedIn()) {
                         Intent intent = new Intent(RegisterActivity.this, ManageGroupsActivity.class);
                         startActivity(intent);
                         finish();
@@ -114,8 +115,15 @@ public class RegisterActivity extends AppCompatActivity implements UpdatableActi
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT);
-                toast.show();
+                final Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_INDEFINITE);
+                snackbar.setDuration(7000);
+                snackbar.setAction("ok", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        snackbar.dismiss();
+                    }
+                });
+                snackbar.show();
             }
         });
     }

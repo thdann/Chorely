@@ -1,26 +1,24 @@
 package com.mau.chorely.activities;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Spinner;
-import android.widget.TextView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.mau.chorely.R;
 import com.mau.chorely.activities.interfaces.UpdatableActivity;
-import com.mau.chorely.activities.utils.BridgeInstances;
-import com.mau.chorely.activities.utils.SpinnerAdapterMembers;
+import com.mau.chorely.activities.utils.ListViewAdapter;
+import com.mau.chorely.activities.utils.Presenter;
 import com.mau.chorely.model.Model;
 
 import java.util.ArrayList;
@@ -33,13 +31,19 @@ import shared.transferable.User;
 
 /**
  * This activity handles all creations of groups and editing to already existing groups.
+ *
  * @author Timothy Denison
  */
 public class CreateEditGroupActivity extends AppCompatActivity implements UpdatableActivity {
     private Group selectedGroup;
-    private SpinnerAdapterMembers spinnerAdapter;
+    //private SpinnerAdapterMembers spinnerAdapter;
     private User lastSearchedUser;
     private boolean newGroup = false;
+
+    private ListView lv;
+    private ArrayAdapter adapter;
+    int selectedMemberIndex;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +54,7 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
     @Override
     protected void onStart() {
         super.onStart();
-        BridgeInstances.getPresenter().register(this);
+        Presenter.getInstance().register(this);
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             selectedGroup = (Group) bundle.get("SELECTED_GROUP");
@@ -60,12 +64,13 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
 
     @Override
     protected void onStop() {
-        BridgeInstances.getPresenter().deregisterForUpdates(this);
+        Presenter.getInstance().deregisterForUpdates(this);
         super.onStop();
     }
 
     /**
      * Method to set menu recource file.
+     *
      * @param menu system set action-bar.
      * @return super response.
      */
@@ -83,20 +88,18 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Model model = BridgeInstances.getModel(getFilesDir());
+                Model model = Model.getInstance(getFilesDir());
                 if (model.isConnected()) {
                     if (lastSearchedUser == null) {
                         lastSearchedUser = model.removeLastSearchedUser();
                         if (lastSearchedUser != null) {
                             findViewById(R.id.edit_group_memberSearchCancelButton).setVisibility(View.VISIBLE);
                             findViewById(R.id.edit_group_addMemberButton).setVisibility(View.VISIBLE);
-                            findViewById(R.id.edit_group_memberSearchWorkingGif).setVisibility(View.INVISIBLE);
                             findViewById(R.id.edit_group_memberSearchText).setFocusable(false);
                             findViewById(R.id.edit_group_memberSearchText).setFocusableInTouchMode(false);
                         } else {
                             findViewById(R.id.edit_group_memberSearchCancelButton).setVisibility(View.INVISIBLE);
                             findViewById(R.id.edit_group_addMemberButton).setVisibility(View.INVISIBLE);
-                            findViewById(R.id.edit_group_memberSearchWorkingGif).setVisibility(View.INVISIBLE);
                             findViewById(R.id.edit_group_searchMemberButton).setVisibility(View.VISIBLE);
                             findViewById(R.id.edit_group_memberSearchText).setFocusable(true);
                             findViewById(R.id.edit_group_memberSearchText).setFocusableInTouchMode(true);
@@ -112,6 +115,7 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
 
     /**
      * Interface method to toast user.
+     *
      * @param message message to toast.
      */
     @Override
@@ -126,6 +130,7 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
 
     /**
      * Callback for menu items
+     *
      * @param item item clicked.
      * @return super response.
      */
@@ -138,14 +143,28 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * Method to initiate spinner of group members.
-     */
-    private void initSpinner() {
-        Spinner memberSpinner = findViewById(R.id.spinnerMembers);
-        spinnerAdapter = new SpinnerAdapterMembers(this, selectedGroup.getUsers());
-        memberSpinner.setAdapter(spinnerAdapter);
+    private void initListView() {
+        lv = (ListView) findViewById(R.id.my_listView);
+        adapter = new ListViewAdapter(this, selectedGroup.getUsers());
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                selectedMemberIndex = position;
+                ImageButton deleteButton = findViewById(R.id.edit_group_deleteMemberButton);
+                deleteButton.setVisibility(View.VISIBLE);
+            }
+        });
+        lv.setAdapter(adapter);
     }
+
+//    /**
+//     * Method to initiate spinner of group members.
+//     */
+//    private void initSpinner() {
+//        Spinner memberSpinner = findViewById(R.id.spinnerMembers);
+//        spinnerAdapter = new SpinnerAdapterMembers(this, selectedGroup.getUsers());
+//        memberSpinner.setAdapter(spinnerAdapter);
+//    }
 
     /**
      * Method to put the activity in different initial states depending on if the user was sent here
@@ -153,23 +172,27 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
      */
     private void initActivity() {
         if (selectedGroup != null) {
+            setTitle("Redigera grupp");
             EditText groupName = (EditText) findViewById(R.id.edit_group_current_name);
             groupName.setText(selectedGroup.getName());
+            groupName.setBackground(getDrawable(R.color.background));
             groupName.setFocusable(false);
             groupName.setFocusableInTouchMode(false);
             EditText groupDescription = (EditText) findViewById(R.id.edit_group_edit_description_text);
             groupDescription.setText(selectedGroup.getDescription());
-            groupDescription.setFocusable(false);
-            if (spinnerAdapter == null) {
-                initSpinner();
+//            groupDescription.setFocusable(false);
+//            if (spinnerAdapter == null) {
+//                initSpinner();
+//            }
+            if (adapter == null) {
+                initListView();
             }
         } else {
-            findViewById(R.id.edit_group_edit_name_button).setVisibility(View.INVISIBLE);
-            findViewById(R.id.edit_group_edit_description_button).setVisibility(View.INVISIBLE);
             selectedGroup = new Group();
             newGroup = true;
-            selectedGroup.addUser(BridgeInstances.getModel(getFilesDir()).getUser());
-            initSpinner();
+            selectedGroup.addUser(Model.getInstance(getFilesDir()).getUser());
+//            initSpinner();
+            initListView();
         }
     }
 
@@ -183,12 +206,12 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
         if (!groupName.equals("")) {
             if (!groupDescription.equals("")) {
                 NetCommands command;
-                if(newGroup){
+                if (newGroup) {
                     command = NetCommands.registerNewGroup;
-                } else{
+                } else {
                     command = NetCommands.clientInternalGroupUpdate;
                 }
-                Model model = BridgeInstances.getModel(getFilesDir());
+                Model model = Model.getInstance(getFilesDir());
                 ArrayList<Transferable> data = new ArrayList<>();
                 selectedGroup.setName(groupName);
                 selectedGroup.setDescription(groupDescription);
@@ -208,14 +231,20 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
 
     /**
      * Method to remove a user from a group.
+     *
      * @param view button pressed.
      */
     public void removeMemberFromGroup(View view) {
         // TODO: 2020-04-12 POPUP DIALOG ask for confirmation?
-        if (spinnerAdapter.getCount() > 1) {
-            int selectedUserIndex = ((Spinner) findViewById(R.id.spinnerMembers)).getSelectedItemPosition();
-            selectedGroup.getUsers().remove(selectedUserIndex);
-            spinnerAdapter.notifyDataSetChanged();
+        if (adapter.getCount() > 1) {
+            //int selectedUserIndex = ((Spinner) findViewById(R.id.spinnerMembers)).getSelectedItemPosition();
+            //selectedGroup.getUsers().remove(selectedUserIndex);
+
+            System.out.println(selectedMemberIndex);
+            selectedGroup.getUsers().remove(selectedMemberIndex);
+
+
+            adapter.notifyDataSetChanged();
         } else {
             Toast.makeText(this, "Varje grupp måste ha minst en användare. Om du vill " +
                             "radera gruppen kan du göra det i menyn.",
@@ -226,15 +255,15 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
     /**
      * Method to handle search events.
      * puts activity in a searching state in wait for reply.
+     *
      * @param view Button clicked.
      */
     public void searchForMember(View view) {
-        String searchString = ((EditText)findViewById(R.id.edit_group_memberSearchText)).getText().toString();
+        String searchString = ((EditText) findViewById(R.id.edit_group_memberSearchText)).getText().toString();
         if (!searchString.equals("")) {
-            if(!selectedGroup.getUsers().contains(new User(searchString, ""))) {
+            if (!selectedGroup.getUsers().contains(new User(searchString, ""))) {
                 findViewById(R.id.edit_group_searchMemberButton).setVisibility(View.INVISIBLE);
-                findViewById(R.id.edit_group_memberSearchWorkingGif).setVisibility(View.VISIBLE);
-                Model model = BridgeInstances.getModel(getFilesDir());
+                Model model = Model.getInstance(getFilesDir());
                 User user = new User(searchString, "");
                 ArrayList<Transferable> data = new ArrayList<>();
                 data.add(user);
@@ -250,49 +279,50 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
 
     /**
      * Method to return activity to searchable state. Invoked by a clock on the cancel button.
+     *
      * @param view button clicked.
      */
     public void cancelFoundMember(View view) {
         lastSearchedUser = null;
         findViewById(R.id.edit_group_memberSearchCancelButton).setVisibility(View.INVISIBLE);
         findViewById(R.id.edit_group_addMemberButton).setVisibility(View.INVISIBLE);
-        findViewById(R.id.edit_group_memberSearchWorkingGif).setVisibility(View.INVISIBLE);
         findViewById(R.id.edit_group_searchMemberButton).setVisibility(View.VISIBLE);
         findViewById(R.id.edit_group_memberSearchText).setFocusable(true);
         findViewById(R.id.edit_group_memberSearchText).setFocusableInTouchMode(true);
         ((EditText) findViewById(R.id.edit_group_memberSearchText)).setText("");
-
     }
 
     /**
      * Method to handle clicks on add button.
+     *
      * @param view
      */
     public void addMember(View view) {
         selectedGroup.addUser(lastSearchedUser);
-        spinnerAdapter.notifyDataSetChanged();
+//        spinnerAdapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
         cancelFoundMember(null);
     }
 
-    /**
-     * Method to handle click on edit name button.
-     * @param view Button klicked.
-     */
-    public void editGroupName(View view) {
-        EditText groupName = findViewById(R.id.edit_group_current_name);
-        groupName.setFocusableInTouchMode(true);
-        groupName.setFocusable(true);
-        groupName.requestFocus();
-    }
+//    /**
+//     * Method to handle click on edit name button.
+//     * @param view Button klicked.
+//     */
+//    public void editGroupName(View view) {
+//        EditText groupName = findViewById(R.id.edit_group_current_name);
+//        groupName.setFocusableInTouchMode(true);
+//        groupName.setFocusable(true);
+//        groupName.requestFocus();
+//    }
 
-    /**
-     * Method to handle clicks on edit button for group description.
-     * @param view view clicked.
-     */
-    public void editGroupDescription(View view) {
-        EditText groupDescription = findViewById(R.id.edit_group_edit_description_text);
-        groupDescription.setFocusableInTouchMode(true);
-        groupDescription.setFocusable(true);
-        groupDescription.requestFocus();
-    }
+//    /**
+//     * Method to handle clicks on edit button for group description.
+//     * @param view view clicked.
+//     */
+//    public void editGroupDescription(View view) {
+//        EditText groupDescription = findViewById(R.id.edit_group_edit_description_text);
+//        groupDescription.setFocusableInTouchMode(true);
+//        groupDescription.setFocusable(true);
+//        groupDescription.requestFocus();
+//    }
 }

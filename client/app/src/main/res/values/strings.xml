@@ -17,7 +17,7 @@
     <string name="members">Medlemmar:</string>
     <string name="reconnecting">Återansluter till servern</string>
     <string name="editGroupTitle">Redigera grupp</string>
-    <string name="textAddMembers">Lägg till ny:</string>
+    <string name="textAddMembers">Lägg till medlem:</string>
     <string name="hintSearchMember">Sök efter medlem</string>
     <string name="deleteMember">Ta bort medlem</string>
     <string name="leaveGroup">Lämna grupp</string>

@@ -52,7 +52,7 @@
             android:layout_alignBaseline="@id/textViewGroupTitle"
             android:layout_toStartOf="@id/textViewMembersNumber"
             android:layout_marginEnd="2dp"
-            android:text="Members:"
+            android:text="Medlemmar:"
             android:textColor="@color/btnColor"
             android:textSize="15sp"
             android:textStyle="bold" />

@@ -9,7 +9,7 @@ import shared.transferable.Reward;
 import shared.transferable.Transferable;
 import shared.transferable.User;
 
-import com.mau.chorely.activities.utils.BridgeInstances;
+import com.mau.chorely.activities.utils.Presenter;
 import com.mau.chorely.model.persistentStorage.PersistentStorage;
 
 import java.io.File;
@@ -32,8 +32,19 @@ public class Model {
     private ClientNetworkManager network;
     private User lastSearchedUser;
     private Thread modelThread; // TODO: 2020-04-16 Se över om vi ska stoppa den hör tråden nånstans, annars behövs ingen referens.
+    private static Model model;
 
     private Model(){};
+
+
+    public static Model getInstance(File appFilesDir){
+        if(model == null){
+            model = new Model(appFilesDir);
+            Exception e = new Exception("MODEL UNREFERENCED");
+            e.printStackTrace();
+        }
+        return model;
+    }
 
     public Model(File filesDir) {
         network = new ClientNetworkManager(this);
@@ -115,12 +126,12 @@ public class Model {
             if (storage.saveOrUpdateGroup(currentGroup)) {
                 message.setCommand(NetCommands.updateGroup);
                 network.sendMessage(message);
-                BridgeInstances.getPresenter().updateCurrent();
+                Presenter.getInstance().updateCurrent();
             }
             //If not, group is already up to date.
         } else {
             storage.deleteGroup(currentGroup);
-            BridgeInstances.getPresenter().updateCurrent();
+            Presenter.getInstance().updateCurrent();
         }
     }
 
@@ -129,12 +140,12 @@ public class Model {
         if(currentGroup.getUsers().contains(storage.getUser())) {
 
             if (storage.saveOrUpdateGroup(currentGroup)) {
-                BridgeInstances.getPresenter().updateCurrent();
+                Presenter.getInstance().updateCurrent();
             }
             //If not, group is already up to date.
         } else {
             storage.deleteGroup(currentGroup);
-            BridgeInstances.getPresenter().updateCurrent();
+            Presenter.getInstance().updateCurrent();
         }
     }
 
@@ -152,7 +163,7 @@ public class Model {
         if(storage.saveOrUpdateGroup((Group)message.getData().get(0))){
             System.out.println("SENDING NEW GROUP TO SERVER");
             network.sendMessage(message);
-            BridgeInstances.getPresenter().updateCurrent();
+            Presenter.getInstance().updateCurrent();
         }
     }
 
@@ -238,7 +249,7 @@ public class Model {
 
                         case loginOk:
                             isLoggedIn = true;
-                            BridgeInstances.getPresenter().updateCurrent();
+                            Presenter.getInstance().updateCurrent();
                             break;
 
                         case registerNewGroup:
@@ -252,37 +263,37 @@ public class Model {
                         case registrationOk:
                             isLoggedIn = true;
                             storage.updateUser(currentTask.getUser());
-                            BridgeInstances.getPresenter().updateCurrent();
+                            Presenter.getInstance().updateCurrent();
                             break;
 
                         case internalClientError:
-                            BridgeInstances.getPresenter().toastCurrent("Error.");
+                            Presenter.getInstance().toastCurrent("Error.");
                             break;
 
                         case connectionFailed:
                             isConnected = false;
                             isLoggedIn = false;
-                            BridgeInstances.getPresenter().updateCurrent();
-                            BridgeInstances.getPresenter().toastCurrent("Återansluter till servern.");
+                            Presenter.getInstance().updateCurrent();
+                            Presenter.getInstance().toastCurrent("Återansluter till servern.");
                             break;
 
                         case connected:
                             isConnected = true;
                             loginClient();
-                            BridgeInstances.getPresenter().updateCurrent();
+                            Presenter.getInstance().updateCurrent();
                             break;
 
                         case userExists:
                             lastSearchedUser = (User) currentTask.getData().get(0);
-                            BridgeInstances.getPresenter().updateCurrent();
-                            BridgeInstances.getPresenter().toastCurrent("Användare hittad!");
+                            Presenter.getInstance().updateCurrent();
+                            Presenter.getInstance().toastCurrent("Användare hittad!");
                             break;
 
                         case registrationDenied:
                             /*Falls through*/
                         case userDoesNotExist:
-                            BridgeInstances.getPresenter().updateCurrent();
-                            BridgeInstances.getPresenter().toastCurrent(currentTask.getErrorMessage().getMessage());
+                            Presenter.getInstance().updateCurrent();
+                            Presenter.getInstance().toastCurrent(currentTask.getErrorMessage().getMessage());
                             break;
 
                         case addNewChore:
@@ -295,12 +306,12 @@ public class Model {
 
                         case updateGroup:
                             updateGroupExternal(currentTask);
-                            BridgeInstances.getPresenter().updateCurrent();
+                            Presenter.getInstance().updateCurrent();
                             break;
 
                         default:
                             System.out.println("Unrecognized command: " + command);
-                            BridgeInstances.getPresenter().toastCurrent("Unknown command: " +command);
+                            Presenter.getInstance().toastCurrent("Unknown command: " +command);
                     }
                 } catch (InterruptedException e) {
                     System.out.println("Thread interrupted in main model queue");

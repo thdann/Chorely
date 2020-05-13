@@ -3,7 +3,6 @@ package com.mau.chorely.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,7 +11,6 @@ import android.widget.Toast;
 
 import com.mau.chorely.R;
 import com.mau.chorely.activities.interfaces.UpdatableActivity;
-import com.mau.chorely.activities.utils.BridgeInstances;
 import com.mau.chorely.model.Model;
 
 import java.util.ArrayList;
@@ -30,14 +28,12 @@ import shared.transferable.Transferable;
  * v. 1.0 2020-04-23
  */
 public class CreateChoreActivity extends AppCompatActivity implements UpdatableActivity {
-    private Group selectedGroup;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_chore);
-        selectedGroup = BridgeInstances.getModel(getFilesDir()).getSelectedGroup();
-        setTitle(selectedGroup.getName());
     }
 
     @Override
@@ -47,6 +43,7 @@ public class CreateChoreActivity extends AppCompatActivity implements UpdatableA
 
         if (bundle != null) {
             Chore chore = (Chore) bundle.get("chore");
+            setTitle("Redigera syssla");
             ((EditText) (findViewById(R.id.activity_register_editText_nameChore))).setText(chore.getName());
             findViewById(R.id.activity_register_editText_nameChore).setBackground(getDrawable(R.color.background));
             findViewById(R.id.activity_register_editText_nameChore).setFocusable(false);
@@ -83,7 +80,7 @@ public class CreateChoreActivity extends AppCompatActivity implements UpdatableA
     }
 
     public boolean createMessageNewChore(Chore newChore) {
-        Model model = BridgeInstances.getModel(getFilesDir());
+        Model model = Model.getInstance(getFilesDir());
         ArrayList<Transferable> data = new ArrayList<>();
         data.add(newChore);
         Message message = new Message(NetCommands.addNewChore, model.getUser(), data);

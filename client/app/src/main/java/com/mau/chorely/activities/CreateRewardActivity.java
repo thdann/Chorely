@@ -11,7 +11,6 @@ import android.widget.Toast;
 
 import com.mau.chorely.R;
 import com.mau.chorely.activities.interfaces.UpdatableActivity;
-import com.mau.chorely.activities.utils.BridgeInstances;
 import com.mau.chorely.model.Model;
 
 import java.util.ArrayList;
@@ -30,14 +29,12 @@ import shared.transferable.Transferable;
  * v. 1.0 2020-04-28
  */
 public class CreateRewardActivity extends AppCompatActivity implements UpdatableActivity {
-    private Group selectedGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_reward);
-        selectedGroup = BridgeInstances.getModel(getFilesDir()).getSelectedGroup();
-        setTitle(selectedGroup.getName());
+
     }
 
     @Override
@@ -47,6 +44,7 @@ public class CreateRewardActivity extends AppCompatActivity implements Updatable
 
         if (bundle != null) {
             Reward reward = (Reward) bundle.get("reward");
+            setTitle("Redigera belöning");
             ((EditText) (findViewById(R.id.activity_register_editText_nameReward))).setText(reward.getName());
             ((EditText) (findViewById(R.id.activity_register_editText_descriptionReward))).setText(reward.getDescription());
             ((EditText) (findViewById(R.id.activity_register_editText_pointsReward))).setText("" + reward.getRewardPrice());
@@ -87,7 +85,7 @@ public class CreateRewardActivity extends AppCompatActivity implements Updatable
     }
 
     public boolean createMessageNewReward(Reward newReward) {
-        Model model = BridgeInstances.getModel(getFilesDir());
+        Model model = Model.getInstance(getFilesDir());
         ArrayList<Transferable> data = new ArrayList<>();
         data.add(newReward);
         Message message = new Message(NetCommands.addNewReward, model.getUser(), data);
