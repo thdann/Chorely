@@ -63,12 +63,11 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        itemList = new ArrayList<>();
         if (getArguments() != null) {
             ArrayList<Reward> rewards = (ArrayList<Reward>) getArguments().getSerializable("REWARDS");
             validateAndUpdateListData(rewards);
         }
-
-
     }
 
 
@@ -160,6 +159,7 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
                             Model model = BridgeInstances.getModel(getActivity().getFilesDir());
                             Group group = model.getSelectedGroup();
                             User currentUser = model.getUser();
+                            group.getRewards().get(selectedItem).setLastDoneByUser(currentUser.getUsername());
                             ArrayList<Transferable> data = new ArrayList<>();
                             data.add(group);
                             group.modifyUserPoints(model.getUser(), points *= -1);

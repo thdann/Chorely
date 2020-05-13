@@ -150,6 +150,7 @@ public class Model {
      */
     private void createGroup(Message message){
         if(storage.saveOrUpdateGroup((Group)message.getData().get(0))){
+            System.out.println("SENDING NEW GROUP TO SERVER");
             network.sendMessage(message);
             BridgeInstances.getPresenter().updateCurrent();
         }

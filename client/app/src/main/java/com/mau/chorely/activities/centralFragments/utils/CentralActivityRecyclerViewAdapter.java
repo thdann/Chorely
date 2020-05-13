@@ -40,6 +40,8 @@ public class CentralActivityRecyclerViewAdapter extends RecyclerView.Adapter<Cen
         holder.textViewTitle.setText(item.getTitle());
         holder.textViewDescription.setText(item.getDescription());
         holder.textViewPoints.setText(item.getPoints());
+        holder.textViewLastDoneBy.setText(item.getDoneBy());
+        holder.textViewUserName.setText(item.getUsername());
     }
 
     @Override
@@ -55,12 +57,17 @@ public class CentralActivityRecyclerViewAdapter extends RecyclerView.Adapter<Cen
         private TextView textViewTitle;
         private TextView textViewDescription;
         private TextView textViewPoints;
+        private TextView textViewUserName;
+        private TextView textViewLastDoneBy;
 
         private RecyclerViewHolder(View itemView, final OnitemClickListener clickListener) {
             super(itemView);
             textViewTitle = itemView.findViewById(R.id.central_list_titleText);
             textViewDescription = itemView.findViewById(R.id.central_list_description);
             textViewPoints = itemView.findViewById(R.id.central_list_pointText);
+            textViewUserName = itemView.findViewById(R.id.central_list_lastDoneByName);
+            textViewLastDoneBy = itemView.findViewById(R.id.central_list_lastDoneBy);
+
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
