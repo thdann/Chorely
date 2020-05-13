@@ -9,7 +9,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -80,10 +82,12 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
         FloatingActionButton createButton = view.findViewById(R.id.fragment_chores_createNewChoreButton);
         FloatingActionButton claimChoreButton = view.findViewById(R.id.fragment_chores_claimChoreButton);
         FloatingActionButton editChoreButton = view.findViewById(R.id.fragment_chores_editChoreButton);
+        FloatingActionButton deleteChoreButton = view.findViewById(R.id.fragment_chores_deleteChoreButton);
         // Adding listener
         createButton.setOnClickListener(this);
         claimChoreButton.setOnClickListener(this);
         editChoreButton.setOnClickListener(this);
+        deleteChoreButton.setOnClickListener(this);
         buildRecyclerView();
         return view;
     }
@@ -101,6 +105,14 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
             }
             if (!foundItem) {
                 itemList.add(new ListItemCentral(chore));
+            }
+        }
+
+        if(itemList.size() > chores.size()){
+            for(ListItemCentral item : itemList){
+                if(! chores.contains(item)){
+
+                }
             }
         }
     }
@@ -136,6 +148,7 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
 
                 getView().findViewById(R.id.fragment_chores_claimChoreButton).setVisibility(View.VISIBLE);
                 getView().findViewById(R.id.fragment_chores_editChoreButton).setVisibility(View.VISIBLE);
+                getView().findViewById(R.id.fragment_chores_deleteChoreButton).setVisibility(View.VISIBLE);
 
             }
         });
@@ -179,7 +192,20 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
             Intent intent = new Intent(getContext(), CreateChoreActivity.class);
             intent.putExtra("chore", itemList.get(selectedItem).getChore());
             startActivity(intent);
+        } else if(v.getId() == R.id.fragment_chores_deleteChoreButton){
+            deleteChore();
         }
+    }
+
+    private void deleteChore() {
+        Model model = Model.getInstance(getActivity().getFilesDir());
+        Group selectedGroup = model.getSelectedGroup();
+        Chore chore = selectedGroup.getSingleChore(selectedItem);
+        selectedGroup.deleteChore(chore);
+        ArrayList<Transferable> data = new ArrayList<>();
+        data.add(selectedGroup);
+        Message message = new Message(NetCommands.clientInternalGroupUpdate, model.getUser(), data);
+        model.handleTask(message);
     }
 
 
