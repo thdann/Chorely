@@ -171,9 +171,9 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
 
             AlertDialog alert = builder.create();
             alert.show();
-
-
-
+            alert.getWindow().setBackgroundDrawable(getResources().getDrawable(R.drawable.button_background));
+            alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.background));
+            alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.background));
 
         } else if (v.getId() == R.id.fragment_chores_editChoreButton) {
             Intent intent = new Intent(getContext(), CreateChoreActivity.class);
