@@ -37,6 +37,9 @@
             android:name=".activities.RegisterActivity"
             android:label="@string/register_title"
             android:parentActivityName=".activities.MainActivity" />
+
+        <activity android:name=".activities.LogInActivity"
+            android:label="Logga in"/>
         <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

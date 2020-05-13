@@ -6,8 +6,9 @@
     <item
         android:id="@+id/menu_central_edit"
         android:icon="@drawable/central_menu_edit"
-        android:title=""
+        android:title="Spara"
         app:showAsAction="always"
         />
+
 
 </menu>
