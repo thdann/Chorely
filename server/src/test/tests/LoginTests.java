@@ -93,8 +93,8 @@ public class LoginTests {
     }
 
     /**
-     *      A client tries to login with a username that doesn't exist.
-     *      The expected outcome is that the client receives a loginDenied message.
+     * A client tries to login with a username that doesn't exist.
+     * The expected outcome is that the client receives a loginDenied message.
      */
     @Test
     public void testLoginUnknownUser() {
@@ -104,39 +104,27 @@ public class LoginTests {
             ServerController serverController = new ServerController(port);
             List<Message> outgoing = List.of(new Message(login, user));
             List<Message> expected = List.of(new Message(loginDenied, user, new ErrorMessage("Fel användarnamn eller lösenord, försök igen!")));
-            List<Message> received = sendAndReceive(outgoing, port);
+            List<Message> received = TestUtils.sendAndReceive(outgoing, port);
             assertEquals(expected, received);
         } catch (InterruptedException | ExecutionException e) {
             // What do I do here?
         }
     }
-    
+
     @Test
     public void testLogout() {
         User user = new User("logoutUser", "abcdefg");
         try {
             int port = 6590;
             ServerController serverController = new ServerController(port);
-            List<Message> outgoing = List.of(
-                    new Message(registerUser, user),
-                    new Message(logout, user)
-            );
-            List<Message> expected = List.of(
-                    new Message(registrationOk, user)
-            );
-            List<Message> received = sendAndReceive(outgoing, port);
+            List<Message> outgoing = List.of(new Message(registerUser, user), new Message(logout, user));
+            List<Message> expected = List.of(new Message(registrationOk, user));
+            List<Message> received = TestUtils.sendAndReceive(outgoing, port);
             assertEquals(expected, received);
         } catch (InterruptedException | ExecutionException e) {
             // What do I do here?
         } finally {
             TestUtils.deleteUser(user);
         }
-    }
-
-    private List<Message> sendAndReceive(List<Message> outgoingMessages, int port) throws ExecutionException, InterruptedException {
-        ExecutorService executorService = Executors.newCachedThreadPool();
-        Callable<List<Message>> testClient = TestClient.newTestRun(outgoingMessages, port);
-        Future<List<Message>> received = executorService.submit(testClient);
-        return received.get();
     }
 }
