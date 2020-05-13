@@ -88,6 +88,8 @@ public class MainActivity extends AppCompatActivity implements UpdatableActivity
     }
 
     public void login(View view) {
+        Intent intent = new Intent(this, LogInActivity.class);
+        startActivity(intent);
     }
 
 

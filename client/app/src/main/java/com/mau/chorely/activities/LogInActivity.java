@@ -37,9 +37,7 @@ public class LogInActivity extends AppCompatActivity implements UpdatableActivit
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_login);
-
         gifImageViewWorking = findViewById(R.id.gifImageViewWorking);
         gifImageViewWorking.setVisibility(GifImageView.INVISIBLE);
     }

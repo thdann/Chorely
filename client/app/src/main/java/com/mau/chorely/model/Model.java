@@ -238,6 +238,8 @@ public class Model {
 
     }
 
+
+
     /**
      * Main model thread. This contains the main switch statement of the client, and all tasks
      * are diverted throughout the application.
@@ -271,6 +273,7 @@ public class Model {
                             break;
 
                         case loginOk:
+                            storage.updateUser(currentTask.getUser());
                             isLoggedIn = true;
                             Presenter.getInstance().updateCurrent();
                             break;
@@ -329,6 +332,10 @@ public class Model {
 
                         case updateGroup:
                             updateGroupExternal(currentTask);
+                            Presenter.getInstance().updateCurrent();
+                            break;
+
+                        case newGroupOk:
                             Presenter.getInstance().updateCurrent();
                             break;
 
