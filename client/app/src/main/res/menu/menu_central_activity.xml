@@ -6,9 +6,25 @@
     <item
         android:id="@+id/menu_central_edit"
         android:icon="@drawable/central_menu_edit"
-        android:title="Spara"
-        app:showAsAction="always"
+        android:title="Ändra grupp"
+        app:showAsAction="never"
         />
+
+    <item
+        android:id="@+id/menu_central_deleteGroup"
+        android:icon="@drawable/delete_icon"
+        android:title="Radera grupp"
+        app:showAsAction="never"
+        />
+
+    <item
+        android:id="@+id/logOut"
+        android:title="@string/logOut"
+        android:icon="@drawable/save_icon_white"
+        app:showAsAction="never"
+        />
+
+
 
 
 </menu>

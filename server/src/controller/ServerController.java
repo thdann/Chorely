@@ -154,7 +154,8 @@ public class ServerController implements ClientListener {
      */
     private void deleteGroup(Message msg) {
         List<Transferable> data = msg.getData();
-        Group group = (Group) data.get(0);
+        Group groupFromMessage = (Group) data.get(0);
+        Group group = new Group(groupFromMessage);   // defensive copy.
         List<User> users = group.getUsers();
         GenericID id = group.getGroupID();
 
@@ -166,8 +167,9 @@ public class ServerController implements ClientListener {
 
         registeredGroups.deleteGroup(group);
 
+        group.deleteAllUsers();
         for (User user : users) {
-            Message message = new Message(NetCommands.groupDeleted, user, data);
+            Message message = new Message(NetCommands.updateGroup, user, List.of(group));
             sendReply(message);
         }
     }

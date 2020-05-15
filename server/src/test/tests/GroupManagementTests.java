@@ -166,10 +166,13 @@ public class GroupManagementTests {
                     new Message(registrationOk, user),
                     new Message(newGroupOk, user),
                     new Message(updateGroup, user, List.of(group)),
-                    new Message(groupDeleted, user, List.of(group))
+                    new Message(updateGroup, user, List.of(group))
             );
             List<Message> received = sendAndReceive(outgoing, port);
+            Group deletedGroup = (Group) received.get(3).getData().get(0);
+            List<User> users = deletedGroup.getUsers();
             assertEquals(expected, received);
+            assertEquals(0, users.size());
             RegisteredUsers registeredUsers = RegisteredUsers.getInstance();
             User userFromFile = registeredUsers.getUserFromFile(user);
             List<GenericID> groups = userFromFile.getGroups();

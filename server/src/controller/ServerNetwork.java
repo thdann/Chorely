@@ -1,10 +1,6 @@
 package controller;
 
-import model.RegisteredUsers;
-
 import java.io.IOException;
-
-import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.logging.Logger;
@@ -18,7 +14,7 @@ import java.util.logging.Logger;
 public class ServerNetwork implements Runnable {
     private final static Logger messagesLogger = Logger.getLogger("messages");
     private final int port;
-    private ServerController controller;
+    private final ServerController controller;
     private ServerSocket serverSocket;
 
     public ServerNetwork(ServerController controller, int port) {

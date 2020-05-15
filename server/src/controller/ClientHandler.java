@@ -22,10 +22,10 @@ import java.util.logging.Logger;
 public class ClientHandler {
     private final static Logger messagesLogger = Logger.getLogger("messages");
     private final RegisteredUsers registeredUsers = RegisteredUsers.getInstance();
-    private Socket socket;
-    private OutputThread outputThread;
-    private ServerController controller;
-    private LinkedBlockingQueue<Message> outgoingMessages;
+    private final Socket socket;
+    private final OutputThread outputThread;
+    private final ServerController controller;
+    private final LinkedBlockingQueue<Message> outgoingMessages;
 
     public ClientHandler(Socket socket, ServerController controller) {
         this.controller = controller;

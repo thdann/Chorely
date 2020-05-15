@@ -275,6 +275,9 @@ public class Model {
                             Presenter.getInstance().toastCurrent(currentTask.getErrorMessage().getMessage());
                             break;
 
+                        case deleteGroup:
+                            storage.deleteSelectedGroup();
+                            /*Falls through*/
                         case searchForUser:
                             /*Falls through*/
                         case registerUser:
@@ -348,6 +351,8 @@ public class Model {
                         case logout:
                             logOut(currentTask);
                             break;
+
+
 
                         default:
                             System.out.println("Unrecognized command: " + command);
