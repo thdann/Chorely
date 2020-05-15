@@ -59,9 +59,10 @@ public class CentralActivity extends AppCompatActivity implements UpdatableActiv
             startActivity(intent);
         } else if (item.getItemId() == R.id.logOut) {
             logOut();
-        } else if(item.getItemId() == R.id.edit_group_menu_deleteGroup) {
+        } else if(item.getItemId() == R.id.menu_central_deleteGroup) {
             deleteGroup();
-        }
+        } else
+            System.out.println("ITEM: " + item);
         return super.onOptionsItemSelected(item);
     }
 
@@ -78,6 +79,7 @@ public class CentralActivity extends AppCompatActivity implements UpdatableActiv
 
 
     private void deleteGroup() {
+        Presenter.getInstance().deregisterForUpdates(this);
         Model model = Model.getInstance(getFilesDir());
         ArrayList<Transferable> data = new ArrayList<>();
         data.add(model.getSelectedGroup());
