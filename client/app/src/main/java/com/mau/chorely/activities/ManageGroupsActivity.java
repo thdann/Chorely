@@ -30,7 +30,7 @@ import shared.transferable.User;
 /**
  * This is the activity to overview current groups and initiate creation of new ones.
  *
- * @author Timothy Denison
+ * @author Timothy Denison, Emma Svensson
  */
 public class ManageGroupsActivity extends AppCompatActivity implements UpdatableActivity {
     private RecyclerView mRecyclerView;
