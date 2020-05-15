@@ -95,7 +95,7 @@ public class CentralActivity extends AppCompatActivity implements UpdatableActiv
                 public void run() {
                     FragmentChores.updateList(selectedGroup.getChores());
                     FragmentRewards.updateList(selectedGroup.getRewards());
-
+                    FragmentScore.updateList(selectedGroup.getPoints());
                 }
             });
         }

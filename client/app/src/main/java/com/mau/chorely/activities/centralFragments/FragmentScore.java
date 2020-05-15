@@ -22,7 +22,7 @@ import java.util.Map;
 import shared.transferable.User;
 
 public class FragmentScore extends Fragment {
-    private HashMap<User, Integer> scoreMap;
+    private static HashMap<User, Integer> scoreMap;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private static CentralActivityRecyclerViewAdapter adapter;
@@ -39,7 +39,7 @@ public class FragmentScore extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        itemList = new ArrayList<>();
         if (getArguments() != null) {
             scoreMap = (HashMap<User, Integer>) getArguments().getSerializable("SCORE");
             initList();
@@ -60,12 +60,22 @@ public class FragmentScore extends Fragment {
     public void buildRecyclerView() {
         recyclerView.hasFixedSize();
         layoutManager = new LinearLayoutManager(getActivity());
-        adapter = new CentralActivityRecyclerViewAdapter(itemList);
+        adapter = new CentralActivityRecyclerViewAdapter(itemList, R.layout.scoreboard_item);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
     }
 
-    private void initList() {
+    public static void updateList(HashMap<User, Integer> newMap) {
+        if (adapter != null) {
+            scoreMap = newMap;
+            itemList = new ArrayList<>();
+            initList();
+            adapter.notifyDataSetChanged();
+            System.out.println("SCORELIST UPDATED");
+        }
+    }
+
+    private static void initList() {
 
         for (Map.Entry<User, Integer> entry : scoreMap.entrySet()) {
 
