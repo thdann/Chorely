@@ -67,7 +67,7 @@ public class RegisterActivity extends AppCompatActivity implements UpdatableActi
         String password = pass.getText().toString();
         User userToRegister = new User(username, password);
 
-        if (!username.equals("") && password.equals("")) {
+        if (!username.equals("") && !password.equals("")) {
             Message registerMsg = new Message(NetCommands.registerUser, userToRegister, new ArrayList<Transferable>());
             Model.getInstance(getFilesDir()).handleTask(registerMsg);
             user.setVisibility(View.INVISIBLE);
