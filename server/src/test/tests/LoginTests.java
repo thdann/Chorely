@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static shared.transferable.NetCommands.*;
 
 public class LoginTests {
+    private static final int basePort = 6700;
 
     @Test
     public void testSimpleLogin() {
@@ -18,7 +19,7 @@ public class LoginTests {
         Group group = new Group("testLoginGroup");
         group.addUser(user);
         try {
-            int port = 6587;
+            int port = basePort + 1;
             ExecutorService executorService = Executors.newCachedThreadPool();
             ServerController serverController = new ServerController(port);
 
@@ -58,7 +59,7 @@ public class LoginTests {
         Group group = new Group("testLoginGroup");
         group.addUser(user);
         try {
-            int port = 6588;
+            int port = basePort + 2;
             ExecutorService executorService = Executors.newCachedThreadPool();
             ServerController serverController = new ServerController(port);
 
@@ -100,7 +101,7 @@ public class LoginTests {
     public void testLoginUnknownUser() {
         User user = new User("thisUserDoesntExist", "abcd");
         try {
-            int port = 6589;
+            int port = basePort + 3;
             ServerController serverController = new ServerController(port);
             List<Message> outgoing = List.of(new Message(login, user));
             List<Message> expected = List.of(new Message(loginDenied, user, new ErrorMessage("Fel användarnamn eller lösenord, försök igen!")));
@@ -115,7 +116,7 @@ public class LoginTests {
     public void testLogout() {
         User user = new User("logoutUser", "abcdefg");
         try {
-            int port = 6590;
+            int port = basePort + 4;
             ServerController serverController = new ServerController(port);
             List<Message> outgoing = List.of(new Message(registerUser, user), new Message(logout, user));
             List<Message> expected = List.of(new Message(registrationOk, user));
