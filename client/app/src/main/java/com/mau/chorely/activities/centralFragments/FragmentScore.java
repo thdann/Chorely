@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.mau.chorely.R;
 import com.mau.chorely.activities.centralFragments.utils.CentralActivityRecyclerViewAdapter;
 import com.mau.chorely.activities.centralFragments.utils.ListItemCentral;
+import com.mau.chorely.model.Model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,6 +56,12 @@ public class FragmentScore extends Fragment {
         return view;
 
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateList(Model.getInstance(getActivity().getFilesDir()).getSelectedGroup().getPoints());
     }
 
     public void buildRecyclerView() {
