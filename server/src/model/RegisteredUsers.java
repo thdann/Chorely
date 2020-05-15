@@ -14,13 +14,17 @@ import java.util.logging.Logger;
  */
 public class RegisteredUsers {
     private final static Logger messagesLogger = Logger.getLogger("messages");
-    private final String filePath;
+    private final static String filePath = "files/users/";
+    private final static RegisteredUsers instance = new RegisteredUsers();
 
     /**
      * Constructor
      */
-    public RegisteredUsers() {
-        this.filePath = "files/users/";
+    private RegisteredUsers() {
+    }
+
+    public static RegisteredUsers getInstance() {
+        return instance;
     }
 
     /**
@@ -33,30 +37,26 @@ public class RegisteredUsers {
         try (ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filename)))) {
             oos.writeObject(user);
             oos.flush();
-            System.out.println("write user to file " + filename);
-
+            messagesLogger.info("wrote user to file " + filename);
         } catch (IOException e) {
             messagesLogger.info("writeUserToFile(user): " + e.getMessage());
         }
-
     }
 
     /**
      * Searches among registered users and returns the requested user if it exists, otherwise return null.
      *
-     * @param dummyUser the user searched for.
+     * @param userToFind the user searched for.
      * @return the requested User-object
      */
-    public synchronized User getUserFromFile(User dummyUser) {
-        String filename = String.format("%s%s.dat", filePath, dummyUser.getUsername());
+    public synchronized User getUserFromFile(User userToFind) {
+        String filename = String.format("%s%s.dat", filePath, userToFind.getUsername());
         User foundUser = null;
 
         try (ObjectInputStream ois = new ObjectInputStream((new BufferedInputStream(new FileInputStream(filename))))) {
             foundUser = (User) ois.readObject();
-            System.out.println(foundUser.toString());
-
         } catch (IOException | ClassNotFoundException e) {
-            messagesLogger.info("getUserFromFile(dummyUser): " + e.getMessage());
+            messagesLogger.info("getUserFromFile(userToFind): " + e.getMessage());
             return null;
         }
 
@@ -70,9 +70,8 @@ public class RegisteredUsers {
      */
     public synchronized void updateUser(User user) {
         File file = new File(filePath + user.getUsername() + ".dat");
-        System.out.println("updatemetoden " + file.getPath());
         if (file.exists()) {
-            messagesLogger.info("File deleted = " + file.delete());
+            file.delete();
         }
         writeUserToFile(user);
     }
