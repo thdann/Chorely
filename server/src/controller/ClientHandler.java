@@ -21,16 +21,15 @@ import java.util.logging.Logger;
  */
 public class ClientHandler {
     private final static Logger messagesLogger = Logger.getLogger("messages");
-    private final RegisteredUsers registeredUsers;
+    private final RegisteredUsers registeredUsers = RegisteredUsers.getInstance();
     private Socket socket;
     private OutputThread outputThread;
     private ServerController controller;
     private LinkedBlockingQueue<Message> outgoingMessages;
 
-    public ClientHandler(Socket socket, ServerController controller, RegisteredUsers registeredUsers) {
+    public ClientHandler(Socket socket, ServerController controller) {
         this.controller = controller;
         this.socket = socket;
-        this.registeredUsers = registeredUsers;
         outgoingMessages = new LinkedBlockingQueue<>();
         InputThread inputThread1 = new InputThread();
         outputThread = new OutputThread();

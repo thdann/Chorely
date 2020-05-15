@@ -17,15 +17,13 @@ import java.util.logging.Logger;
  */
 public class ServerNetwork implements Runnable {
     private final static Logger messagesLogger = Logger.getLogger("messages");
-    private final RegisteredUsers registeredUsers;
     private final int port;
     private ServerController controller;
     private ServerSocket serverSocket;
 
-    public ServerNetwork(ServerController controller, int port, RegisteredUsers registeredUsers) {
+    public ServerNetwork(ServerController controller, int port) {
         this.controller = controller;
         this.port = port;
-        this.registeredUsers = registeredUsers;
         startServer();
     }
 
@@ -45,7 +43,7 @@ public class ServerNetwork implements Runnable {
         while (true) {
             try {
                 Socket socket = serverSocket.accept();
-                ClientHandler newClient = new ClientHandler(socket, controller, registeredUsers);
+                ClientHandler newClient = new ClientHandler(socket, controller);
             } catch (IOException e) {
                 e.printStackTrace();
             }
