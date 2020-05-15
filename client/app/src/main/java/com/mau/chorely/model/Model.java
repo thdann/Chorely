@@ -301,9 +301,6 @@ public class Model {
                             Presenter.getInstance().updateCurrent();
                             break;
 
-                        case internalClientError:
-                            Presenter.getInstance().toastCurrent("Error.");
-                            break;
 
                         case connectionFailed:
                             isConnected = false;

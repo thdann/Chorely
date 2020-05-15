@@ -17,7 +17,6 @@ public enum NetCommands implements Transferable {
     addNewReward,
     newRewardOk,
     claimReward,
-    internalClientError,
     connectionStatus,
     notConnected,
     connected,
