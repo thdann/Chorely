@@ -17,12 +17,14 @@ import com.google.android.material.tabs.TabLayout;
 import com.mau.chorely.R;
 import com.mau.chorely.activities.centralFragments.FragmentChores;
 import com.mau.chorely.activities.centralFragments.FragmentRewards;
+import com.mau.chorely.activities.centralFragments.FragmentScore;
 import com.mau.chorely.activities.interfaces.UpdatableActivity;
 import com.mau.chorely.activities.utils.Presenter;
 import com.mau.chorely.activities.utils.SectionsPageAdapter;
 import com.mau.chorely.model.Model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import shared.transferable.Chore;
 import shared.transferable.Group;
@@ -130,7 +132,7 @@ public class CentralActivity extends AppCompatActivity implements UpdatableActiv
                 public void run() {
                     FragmentChores.updateList(selectedGroup.getChores());
                     FragmentRewards.updateList(selectedGroup.getRewards());
-
+                    FragmentScore.updateList(selectedGroup.getPoints());
                 }
             });
         }
@@ -155,13 +157,24 @@ public class CentralActivity extends AppCompatActivity implements UpdatableActiv
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        ArrayList<Chore> chores = Model.getInstance(getFilesDir()).getSelectedGroup().getChores();
-        ArrayList<Reward> rewards = Model.getInstance(getFilesDir()).getSelectedGroup().getRewards();
+        Group selectedGroup = null;
+        ArrayList<Chore> chores = null;
+        ArrayList<Reward> rewards = null;
+        HashMap<User, Integer> points = null;
 
-        adapter.addFragment(FragmentChores.newInstance(chores), "Sysslor");
-        adapter.addFragment(FragmentRewards.newInstance(rewards), "Belöningar");
-        viewPager.setAdapter(adapter);
-    }
+        if(Model.getInstance(getFilesDir()).getSelectedGroup() != null){
+            selectedGroup = Model.getInstance(getFilesDir()).getSelectedGroup();
+            chores = selectedGroup.getChores();
+            rewards = selectedGroup.getRewards();
+            points = selectedGroup.getPoints();
+        }
+            adapter.addFragment(FragmentChores.newInstance(chores), "Sysslor");
+            adapter.addFragment(FragmentRewards.newInstance(rewards), "Belöningar");
+            adapter.addFragment(FragmentScore.newInstance(points), "Poängtavla");
+            viewPager.setAdapter(adapter);
+
+        }
+
 
     private void updateUserPoints() {
         User user = Model.getInstance(getFilesDir()).getUser();
