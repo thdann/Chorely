@@ -147,18 +147,6 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
         });
     }
 
-    private void resetSelected(){
-        getView().findViewById(R.id.fragment_chores_claimChoreButton).setVisibility(View.INVISIBLE);
-        getView().findViewById(R.id.fragment_chores_editChoreButton).setVisibility(View.INVISIBLE);
-        getView().findViewById(R.id.fragment_chores_deleteChoreButton).setVisibility(View.INVISIBLE);
-
-        for(int i = 0; i < recyclerView.getChildCount(); i++){
-            View unselectedView = recyclerView.getChildAt(i);
-            unselectedView.findViewById(R.id.central_list_layout).setBackgroundColor(getResources().getColor(R.color.background));
-        }
-
-    }
-
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.fragment_rewards_addNewRewardButton) {
