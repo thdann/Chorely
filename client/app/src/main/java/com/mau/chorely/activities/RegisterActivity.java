@@ -67,13 +67,17 @@ public class RegisterActivity extends AppCompatActivity implements UpdatableActi
         String password = pass.getText().toString();
         User userToRegister = new User(username, password);
 
-        Message registerMsg = new Message(NetCommands.registerUser, userToRegister, new ArrayList<Transferable>());
-        Model.getInstance(getFilesDir()).handleTask(registerMsg);
-        user.setVisibility(View.INVISIBLE);
-        pass.setVisibility(View.INVISIBLE);
-        Button buttonRegister = findViewById(R.id.register);
-        buttonRegister.setVisibility(Button.INVISIBLE);
-        gifImageViewWorking.setVisibility(View.VISIBLE);
+        if (!username.equals("") && password.equals("")) {
+            Message registerMsg = new Message(NetCommands.registerUser, userToRegister, new ArrayList<Transferable>());
+            Model.getInstance(getFilesDir()).handleTask(registerMsg);
+            user.setVisibility(View.INVISIBLE);
+            pass.setVisibility(View.INVISIBLE);
+            Button buttonRegister = findViewById(R.id.register);
+            buttonRegister.setVisibility(Button.INVISIBLE);
+            gifImageViewWorking.setVisibility(View.VISIBLE);
+        } else {
+        doToast("Fyll i både användarnamn och lösenord");
+        }
     }
 
     /**

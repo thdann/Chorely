@@ -10,5 +10,12 @@
         app:showAsAction="always"
         />
 
+    <item
+        android:id="@+id/logOut"
+        android:title="@string/logOut"
+        android:icon="@drawable/save_icon_white"
+        app:showAsAction="never"
+        />
+
 
 </menu>
