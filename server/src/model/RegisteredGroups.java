@@ -69,7 +69,7 @@ public class RegisteredGroups {
     }
 
     /**
-     * Returns a rrequested group based on group ID.
+     * Returns a requested group based on group ID.
      *
      * @param id the group ID.
      * @return the requested group.
