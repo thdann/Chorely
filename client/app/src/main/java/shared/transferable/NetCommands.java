@@ -7,6 +7,8 @@ public enum NetCommands implements Transferable {
     registerNewGroup,
     newGroupOk,
     newGroupDenied,
+    deleteGroup,
+    groupDeleted,
     addUserToGroup,
     removeUserFromGroup,
     updateGroup,

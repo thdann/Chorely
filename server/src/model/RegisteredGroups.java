@@ -122,4 +122,12 @@ public class RegisteredGroups {
 
     }
 
+    /**
+     * Removes a group from the saved groups.
+     * @param group the group that is removed.
+     */
+    public void deleteGroup(Group group) {
+        File file = new File(filePath + group.getGroupID() + ".dat");
+        file.delete();
+    }
 }

@@ -137,8 +137,38 @@ public class ServerController implements ClientListener {
             case logout:
                 logoutUser(msg);
                 break;
+            case deleteGroup:
+                deleteGroup(msg);
+                break;
             default:
                 break;
+        }
+    }
+
+    /**
+     * Removes group membership from the users that belong to the group at the time
+     * of deletion and then deletes the group. Sends a groupDeleted message to
+     * all users that belonged to the group.
+     *
+     * @param msg the message that contains the group that is deleted.
+     */
+    private void deleteGroup(Message msg) {
+        List<Transferable> data = msg.getData();
+        Group group = (Group) data.get(0);
+        List<User> users = group.getUsers();
+        GenericID id = group.getGroupID();
+
+        for (User user : users) {
+            User userFromFile = registeredUsers.getUserFromFile(user);
+            userFromFile.removeGroupMembership(id);
+            registeredUsers.updateUser(userFromFile);
+        }
+
+        registeredGroups.deleteGroup(group);
+
+        for (User user : users) {
+            Message message = new Message(NetCommands.groupDeleted, user, data);
+            sendReply(message);
         }
     }
 
