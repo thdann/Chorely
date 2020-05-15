@@ -22,14 +22,14 @@ import java.util.logging.Logger;
  */
 public class ServerController implements ClientListener {
     private final static Logger messagesLogger = Logger.getLogger("messages");
-    private final RegisteredUsers registeredUsers = new RegisteredUsers();
-    private final RegisteredGroups registeredGroups = new RegisteredGroups();
+    private final RegisteredUsers registeredUsers = RegisteredUsers.getInstance();
+    private final RegisteredGroups registeredGroups = RegisteredGroups.getInstance();
     private final LinkedBlockingQueue<Message> clientTaskBuffer = new LinkedBlockingQueue<>();
     private final ConcurrentHashMap<User, ClientHandler> onlineClients = new ConcurrentHashMap<>();
 
     public ServerController(int port) {
         MessageHandler messageHandler = new MessageHandler();
-        new ServerNetwork(this, port, registeredUsers);
+        new ServerNetwork(this, port);
         Thread t1 = new Thread(messageHandler);
         t1.start();
     }

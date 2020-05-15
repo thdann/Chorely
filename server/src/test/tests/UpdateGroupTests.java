@@ -14,6 +14,7 @@ import static shared.transferable.NetCommands.*;
 
 
 public class UpdateGroupTests {
+    private static final int basePort = 6900;
 
     /**
      * When a user logs in they should receive groups they belong to.
@@ -25,7 +26,7 @@ public class UpdateGroupTests {
         group.addUser(user);
 
         try {
-            int port = 6586;
+            int port = basePort + 1;
             ExecutorService executorService = Executors.newCachedThreadPool();
             ServerController serverController = new ServerController(port);
 

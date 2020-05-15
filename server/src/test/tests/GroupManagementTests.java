@@ -15,7 +15,7 @@ import static test.util.TestUtils.sendAndReceive;
 
 public class GroupManagementTests {
     private static final int basePort = 6600;
-    private static final RegisteredUsers registeredUsers = new RegisteredUsers();
+    private static final RegisteredUsers registeredUsers = RegisteredUsers.getInstance();
 
     /**
      * Tests the following case:
@@ -156,7 +156,7 @@ public class GroupManagementTests {
         Group group = new Group("testDeletionGroup");
         group.addUser(user);
         try {
-            int port = basePort + 3;
+            int port = basePort + 4;
             ServerController serverController = new ServerController(port);
             List<Message> outgoing = List.of(
                     new Message(registerUser, user),
@@ -170,7 +170,7 @@ public class GroupManagementTests {
             );
             List<Message> received = sendAndReceive(outgoing, port);
             assertEquals(expected, received);
-            RegisteredUsers registeredUsers = new RegisteredUsers();
+            RegisteredUsers registeredUsers = RegisteredUsers.getInstance();
             User userFromFile = registeredUsers.getUserFromFile(user);
             List<GenericID> groups = userFromFile.getGroups();
             assertFalse(groups.contains(group.getGroupID()));

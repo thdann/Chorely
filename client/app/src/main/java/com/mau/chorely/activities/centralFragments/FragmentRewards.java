@@ -18,6 +18,7 @@ import com.mau.chorely.R;
 import com.mau.chorely.activities.CreateRewardActivity;
 import com.mau.chorely.activities.centralFragments.utils.CentralActivityRecyclerViewAdapter;
 import com.mau.chorely.activities.centralFragments.utils.ListItemCentral;
+import com.mau.chorely.activities.utils.Presenter;
 import com.mau.chorely.model.Model;
 
 import java.util.ArrayList;
@@ -69,7 +70,6 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
         }
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -86,7 +86,6 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
         return view;
     }
 
-
     private static void validateAndUpdateListData(ArrayList<Reward> rewards) {
         for (Reward reward : rewards) {
             boolean foundItem = false;
@@ -100,6 +99,15 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
             }
             if (!foundItem) {
                 itemList.add(new ListItemCentral(reward));
+            }
+        }
+
+        if (itemList.size() > rewards.size()) {
+            for (int i = 0; i < itemList.size(); i++) {
+                ListItemCentral item = itemList.get(i);
+                if (!rewards.contains(item)) {
+                    itemList.remove(i);
+                }
             }
         }
     }
@@ -139,36 +147,24 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
         });
     }
 
-
     @Override
     public void onClick(View v) {
-
         if (v.getId() == R.id.fragment_rewards_addNewRewardButton) {
             Intent intent = new Intent(getContext(), CreateRewardActivity.class);
             startActivity(intent);
+
         } else if (v.getId() == R.id.fragment_reward_buyRewardButton) {
+            Model model = Model.getInstance(getActivity().getFilesDir());
+            User currentUser = model.getUser();
+            int userPoints = model.getSelectedGroup().getUserPoints(currentUser);
+            int costOfReward = (Integer.parseInt(itemList.get(selectedItem).getPoints())) * -1;
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setMessage("Vill du lösa ut denna belöning?")
-                    .setPositiveButton("JA", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            int points = (Integer.parseInt(itemList.get(selectedItem).getPoints())) * -1;
-                            // Uppdatera poängen för användaren i selected group:
-                            Model model = Model.getInstance(getActivity().getFilesDir());
-                            Group group = model.getSelectedGroup();
-                            User currentUser = model.getUser();
-                            group.getRewards().get(selectedItem).setLastDoneByUser(currentUser.getUsername());
-                            ArrayList<Transferable> data = new ArrayList<>();
-                            data.add(group);
-                            group.modifyUserPoints(model.getUser(), points);
-                            Message message = new Message(NetCommands.clientInternalGroupUpdate, currentUser, data);
-                            model.handleTask(message);
-                        }
-                    }).setNegativeButton("NEJ", null);
+            if (enoughPoints(userPoints, costOfReward)) {
+                claimReward(costOfReward);
+            } else {
 
-            AlertDialog alert = builder.create();
-            alert.show();
+                Presenter.getInstance().toastCurrent("Du har inte tillräckligt med poäng");
+            }
 
         } else if (v.getId() == R.id.fragment_reward_changeRewardButton) {
             Intent intent = new Intent(getContext(), CreateRewardActivity.class);
@@ -176,5 +172,33 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
             startActivity(intent);
         }
     }
+
+    private boolean enoughPoints(int userPoints, int costOfReward) {
+        return (userPoints + costOfReward) >= 0;
+    }
+
+    public void claimReward(final int costOfReward) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage("Vill du lösa ut denna belöning?")
+                .setPositiveButton("JA", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Uppdatera poängen för användaren i selected group:
+                        Model model = Model.getInstance(getActivity().getFilesDir());
+                        Group group = model.getSelectedGroup();
+                        User currentUser = model.getUser();
+                        group.getRewards().get(selectedItem).setLastDoneByUser(currentUser.getUsername());
+                        ArrayList<Transferable> data = new ArrayList<>();
+                        data.add(group);
+                        group.modifyUserPoints(model.getUser(), costOfReward);
+                        Message message = new Message(NetCommands.clientInternalGroupUpdate, currentUser, data);
+                        model.handleTask(message);
+                    }
+                }).setNegativeButton("NEJ", null);
+
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
 
 }

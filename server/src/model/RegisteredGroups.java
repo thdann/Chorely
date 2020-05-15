@@ -18,15 +18,18 @@ import java.util.logging.Logger;
  */
 public class RegisteredGroups {
     private final static Logger messagesLogger = Logger.getLogger("messages");
-    private String filePath;
-    private File directory;
+    private final static String filePath ="files/groups/";
+    private final static File directory = new File(filePath);
+    private final static RegisteredGroups instance = new RegisteredGroups();
 
     /**
      * Constructor
      */
-    public RegisteredGroups() {
-        this.filePath = "files/groups/";
-        directory = new File(filePath);
+    private RegisteredGroups() {
+    }
+
+    public static RegisteredGroups getInstance() {
+        return instance;
     }
 
     /**
@@ -34,15 +37,14 @@ public class RegisteredGroups {
      *
      * @param group the Group object to be saved to file
      */
-    public void writeGroupToFile(Group group) {
+    public synchronized void writeGroupToFile(Group group) {
         String filename = String.format("%s%s.dat", filePath, group.getGroupID());
         try (ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filename)))) {
             oos.writeObject(group);
             oos.flush();
-            System.out.println("write group to file " + filename);
-
+            messagesLogger.info("wrote group to file: " + filename);
         } catch (IOException e) {
-            messagesLogger.info("writeGropuToFile(group): " + e.getMessage());
+            messagesLogger.info("writeGroupToFile(group): " + e.getMessage());
         }
     }
 
@@ -52,27 +54,27 @@ public class RegisteredGroups {
      * @param id the id of the requested group.
      * @return the requested group.
      */
-    public Group getGroupFromFile(GenericID id) {
+    public synchronized Group getGroupFromFile(GenericID id) {
         String filename = String.format("%s%s.dat", filePath, id);
         Group foundGroup;
 
         try (ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filename)))) {
             foundGroup = (Group) ois.readObject();
-            System.out.println(foundGroup.toString());
+            messagesLogger.info("retrieved group from file: " + foundGroup.toString());
         } catch (IOException | ClassNotFoundException e) {
-            messagesLogger.info("getGropuToFile(id): " + e.getMessage());
+            messagesLogger.info("getGroupToFile(id): " + e.getMessage());
             return null;
         }
         return foundGroup;
     }
 
     /**
-     * Returns a rrequested group based on group ID.
+     * Returns a requested group based on group ID.
      *
      * @param id the group ID.
      * @return the requested group.
      */
-    public Group getGroupByID(GenericID id) {
+    public synchronized Group getGroupByID(GenericID id) {
         Group foundGroup;
         if (groupIdAvailable(id)) {
             return null;
@@ -87,9 +89,8 @@ public class RegisteredGroups {
      *
      * @param group is the new updated version of the Group object to be saved to file.
      */
-    public void updateGroup(Group group) {
+    public synchronized void updateGroup(Group group) {
         File file = new File(filePath + group.getGroupID() + ".dat");
-        System.out.println("updatemetoden " + file.getPath());
         if (file.exists()) {
             file.delete();
         }
@@ -102,31 +103,19 @@ public class RegisteredGroups {
      * @param newGroupId the requested groupID of a new group.
      * @return true if groupID is available and false if it already exists.
      */
-    public boolean groupIdAvailable(GenericID newGroupId) {
+    public synchronized boolean groupIdAvailable(GenericID newGroupId) {
         File file = new File(filePath + newGroupId + ".dat");
-        System.out.println(file.getPath());
         if (file.exists()) {
             return false;
         }
         return true;
     }
 
-    public void compareMembers(Group group) {
-        Group oldGroup = getGroupByID(group.getGroupID());
-        Group newGroup = group;
-
-        ArrayList<User> removedUsers = new ArrayList<>();
-        ArrayList<User> oldGroupUsers = oldGroup.getUsers();
-        ArrayList<User> newGroupUsers = newGroup.getUsers();
-
-
-    }
-
     /**
      * Removes a group from the saved groups.
      * @param group the group that is removed.
      */
-    public void deleteGroup(Group group) {
+    public synchronized void deleteGroup(Group group) {
         File file = new File(filePath + group.getGroupID() + ".dat");
         file.delete();
     }

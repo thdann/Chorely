@@ -13,6 +13,5 @@ public class StartProgram {
         }
 
         ServerController prog = new ServerController(6583);
-        //TODO: Sätt upp servertråd i controller (extenda thread) Eller se till att main fortsätter köra...?
     }
 }

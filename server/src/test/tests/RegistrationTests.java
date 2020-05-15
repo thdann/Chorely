@@ -15,7 +15,8 @@ import java.util.concurrent.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class RegistrationTests {
-    private static final String IP = "127.0.0.1";
+    private static final int basePort = 6800;
+
 
     /**
      * Registration of a single user.
@@ -23,7 +24,7 @@ public class RegistrationTests {
     @Test
     public void testRegistration() {
         try {
-            int port = 6583;
+            int port = basePort + 1;
             ExecutorService executorService = Executors.newCachedThreadPool();
             ServerController serverController = new ServerController(port);
             User user = new User("testRegistration", "secret");
@@ -46,7 +47,7 @@ public class RegistrationTests {
     @Test
     public void testMultiRegistration() {
         try {
-            int port = 6584;
+            int port = basePort + 2;
             ExecutorService executor = Executors.newCachedThreadPool();
             ServerController serverController = new ServerController(port);
             User user1 = new User("testMultiUsers1", "password");
@@ -94,7 +95,7 @@ public class RegistrationTests {
     @Test
     public void testRegistrationDenied() {
         try {
-            int port = 6585;
+            int port = basePort + 3;
             ExecutorService executorService = Executors.newCachedThreadPool();
             ServerController serverController = new ServerController(port);
             User user = new User("testRegistration", "secret");
