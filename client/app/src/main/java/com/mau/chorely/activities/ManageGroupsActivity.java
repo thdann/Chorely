@@ -22,6 +22,10 @@ import com.mau.chorely.model.Model;
 import java.util.ArrayList;
 
 import shared.transferable.Group;
+import shared.transferable.Message;
+import shared.transferable.NetCommands;
+import shared.transferable.Transferable;
+import shared.transferable.User;
 
 /**
  * This is the activity to overview current groups and initiate creation of new ones.
@@ -137,14 +141,22 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
      */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-//        int id = item.getItemId();
-//        if (id == R.id.createGroupMenuButton) {
-//            startActivity(new Intent(this, CreateEditGroupActivity.class));
-//        }
-//        return super.onContextItemSelected(item);
-        return false;
-    }
+        if(item.getItemId() == R.id.logOut) {
+        logOut();
+        }
+       return super.onContextItemSelected(item);
 
+    }
+    public void logOut() {
+        Model model = Model.getInstance(getFilesDir());
+
+        Message logOutMsg = new Message(NetCommands.logout, model.getUser(), new ArrayList<Transferable>());
+        model.handleTask(logOutMsg);
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
+
+    }
     /**
      * Interface method to toast activity.
      *
@@ -213,7 +225,6 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
                     }
                 }
 
-                System.out.println("GROUP LIST SIZE AFTER UPDATE: " + updatedGroups.size());
                 if (updatedGroups.size() < groupList.size()) {
                     for (int i = 0; i < groupList.size(); i++) {
                         Group group = groupList.get(i);

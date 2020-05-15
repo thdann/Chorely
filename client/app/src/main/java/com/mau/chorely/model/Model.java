@@ -170,6 +170,15 @@ public class Model {
 
     }
 
+    private void logOut(Message msg) {
+        network.sendMessage(msg);
+        isLoggedIn = false;
+        storage.deleteAllGroups();
+        storage.deleteSelectedGroup();
+        storage.deleteUser();
+
+    }
+
     /**
      * This method handles creation of new groups on the client side.
      *
@@ -292,9 +301,6 @@ public class Model {
                             Presenter.getInstance().updateCurrent();
                             break;
 
-                        case internalClientError:
-                            Presenter.getInstance().toastCurrent("Error.");
-                            break;
 
                         case connectionFailed:
                             isConnected = false;
@@ -337,6 +343,10 @@ public class Model {
 
                         case newGroupOk:
                             Presenter.getInstance().updateCurrent();
+                            break;
+
+                        case logout:
+                            logOut(currentTask);
                             break;
 
                         default:
