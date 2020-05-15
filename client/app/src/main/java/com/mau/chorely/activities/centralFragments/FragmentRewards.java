@@ -102,6 +102,15 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
                 itemList.add(new ListItemCentral(reward));
             }
         }
+
+        if (itemList.size() > rewards.size()) {
+            for (int i = 0; i < itemList.size(); i++) {
+                ListItemCentral item = itemList.get(i);
+                if (!rewards.contains(item)) {
+                    itemList.remove(i);
+                }
+            }
+        }
     }
 
     public static void updateList(ArrayList<Reward> rewards) {
@@ -139,6 +148,17 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
         });
     }
 
+    private void resetSelected(){
+        getView().findViewById(R.id.fragment_chores_claimChoreButton).setVisibility(View.INVISIBLE);
+        getView().findViewById(R.id.fragment_chores_editChoreButton).setVisibility(View.INVISIBLE);
+        getView().findViewById(R.id.fragment_chores_deleteChoreButton).setVisibility(View.INVISIBLE);
+
+        for(int i = 0; i < recyclerView.getChildCount(); i++){
+            View unselectedView = recyclerView.getChildAt(i);
+            unselectedView.findViewById(R.id.central_list_layout).setBackgroundColor(getResources().getColor(R.color.background));
+        }
+
+    }
 
     @Override
     public void onClick(View v) {
