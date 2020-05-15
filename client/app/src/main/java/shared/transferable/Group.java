@@ -20,7 +20,7 @@ public class Group implements Transferable {
     private GenericID groupID = new GenericID();
     private ArrayList<Chore> chores = new ArrayList<>();
     private ArrayList<Reward> rewards = new ArrayList<>();
-    private Map<User, Integer> points = new HashMap<>();
+    private HashMap<User, Integer> points = new HashMap<>();
     private int incomingPoints;
 
     /**
@@ -136,7 +136,7 @@ public class Group implements Transferable {
 
     }
 
-    public Map<User, Integer> getPoints() {
+    public HashMap<User, Integer> getPoints() {
         return points;
     }
 

@@ -16,6 +16,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.mau.chorely.R;
 import com.mau.chorely.activities.centralFragments.FragmentChores;
 import com.mau.chorely.activities.centralFragments.FragmentRewards;
+import com.mau.chorely.activities.centralFragments.FragmentScore;
 import com.mau.chorely.activities.interfaces.UpdatableActivity;
 import com.mau.chorely.activities.utils.Presenter;
 import com.mau.chorely.activities.utils.SectionsPageAdapter;
@@ -119,12 +120,16 @@ public class CentralActivity extends AppCompatActivity implements UpdatableActiv
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        ArrayList<Chore> chores = Model.getInstance(getFilesDir()).getSelectedGroup().getChores();
-        ArrayList<Reward> rewards = Model.getInstance(getFilesDir()).getSelectedGroup().getRewards();
+        Group selectedGroup =  Model.getInstance(getFilesDir()).getSelectedGroup();
+        ArrayList<Chore> chores = selectedGroup.getChores();
+        ArrayList<Reward> rewards = selectedGroup.getRewards();
 
         adapter.addFragment(FragmentChores.newInstance(chores), "Sysslor");
         adapter.addFragment(FragmentRewards.newInstance(rewards), "Belöningar");
+        adapter.addFragment(FragmentScore.newInstance(selectedGroup.getPoints()), "Poängtavla");
         viewPager.setAdapter(adapter);
+
+
     }
 
     private void updateUserPoints() {
