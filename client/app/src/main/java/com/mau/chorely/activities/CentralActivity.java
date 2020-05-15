@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,8 +59,9 @@ public class CentralActivity extends AppCompatActivity implements UpdatableActiv
             startActivity(intent);
         } else if (item.getItemId() == R.id.logOut) {
             logOut();
+        } else if(item.getItemId() == R.id.edit_group_menu_deleteGroup) {
+            deleteGroup();
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -73,6 +75,17 @@ public class CentralActivity extends AppCompatActivity implements UpdatableActiv
         finish();
 
     }
+
+
+    private void deleteGroup() {
+        Model model = Model.getInstance(getFilesDir());
+        ArrayList<Transferable> data = new ArrayList<>();
+        data.add(model.getSelectedGroup());
+        Message deleteGroupMsg = new Message(NetCommands.deleteGroup, model.getUser(), data);
+        model.handleTask(deleteGroupMsg);
+        finish();
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
