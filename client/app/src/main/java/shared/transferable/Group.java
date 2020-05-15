@@ -7,11 +7,9 @@ package shared.transferable;
  * @autor Timothy Denison and Emma Svensson, Angelica Asplund.
  */
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class Group implements Transferable {
     private String name;
@@ -74,6 +72,10 @@ public class Group implements Transferable {
 
     public void deleteUser(User user) {
         users.remove(user);
+    }
+
+    public void deleteAllUsers() {
+        users = new ArrayList<>();
     }
 
     public void addChore(Chore chore) {
