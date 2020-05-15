@@ -166,7 +166,7 @@ public class GroupManagementTests {
                     new Message(registrationOk, user),
                     new Message(newGroupOk, user),
                     new Message(updateGroup, user, List.of(group)),
-                    new Message(groupDeleted, user, List.of(group))
+                    new Message(updateGroup, user, List.of(group))
             );
             List<Message> received = sendAndReceive(outgoing, port);
             assertEquals(expected, received);
