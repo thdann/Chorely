@@ -166,8 +166,9 @@ public class ServerController implements ClientListener {
 
         registeredGroups.deleteGroup(group);
 
+        group.deleteAllUsers();
         for (User user : users) {
-            Message message = new Message(NetCommands.groupDeleted, user, data);
+            Message message = new Message(NetCommands.updateGroup, user, data);
             sendReply(message);
         }
     }
