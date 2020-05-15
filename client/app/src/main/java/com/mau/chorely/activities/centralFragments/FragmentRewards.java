@@ -101,6 +101,15 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
                 itemList.add(new ListItemCentral(reward));
             }
         }
+
+        if (itemList.size() > rewards.size()) {
+            for (int i = 0; i < itemList.size(); i++) {
+                ListItemCentral item = itemList.get(i);
+                if (!rewards.contains(item)) {
+                    itemList.remove(i);
+                }
+            }
+        }
     }
 
     public static void updateList(ArrayList<Reward> rewards) {
