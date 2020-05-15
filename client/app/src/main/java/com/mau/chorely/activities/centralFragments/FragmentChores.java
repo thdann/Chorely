@@ -136,14 +136,14 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
                 selectedItem = position;
                 View selectedView = recyclerView.getChildAt(position);
 
-                for (int i = 0; i < itemList.size(); i++) {
-                    if (i == selectedItem) {
-                        selectedView.findViewById(R.id.central_list_layout).setBackground(getResources().getDrawable(R.drawable.edit_text_background));
-                    } else {
-                        View unselectedView = recyclerView.getChildAt(i);
-                        unselectedView.findViewById(R.id.central_list_layout).setBackgroundColor(getResources().getColor(R.color.background));
-                    }
-                }
+//                for (int i = 0; i < itemList.size(); i++) {
+//                    if (i == selectedItem) {
+//                        selectedView.findViewById(R.id.central_list_layout).setBackground(getResources().getDrawable(R.drawable.edit_text_background));
+//                    } else {
+//                        View unselectedView = recyclerView.getChildAt(i);
+//                        unselectedView.findViewById(R.id.central_list_layout).setBackgroundColor(getResources().getColor(R.color.background));
+//                    }
+//                }
 
                 System.out.println(selectedView.toString());
                 System.out.println(selectedView.getRootView().toString());

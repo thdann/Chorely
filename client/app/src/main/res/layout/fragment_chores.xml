@@ -15,68 +15,68 @@
         android:text="REPLACE ME WITH @strings noChores"
         android:textColor="@color/btnColor" />
 
-
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fragment_chores_claimChoreButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/fragment_chores_editChoreButton"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        android:backgroundTint="@color/btnColor"
-        android:clickable="true"
-        android:focusable="true"
-        android:src="@drawable/action_chore_done"
-        android:visibility="invisible" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fragment_chores_editChoreButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/fragment_chores_deleteChoreButton"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        android:backgroundTint="@color/btnColor"
-        android:clickable="true"
-        android:focusable="true"
-        android:src="@drawable/action_chore_edit"
-        android:visibility="invisible" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fragment_chores_deleteChoreButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/fragment_chores_createNewChoreButton"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        android:backgroundTint="@color/btnColor"
-        android:clickable="true"
-        android:focusable="true"
-        android:src="@drawable/icon_delete_purple"
-        android:visibility="invisible" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fragment_chores_createNewChoreButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        android:backgroundTint="@color/btnColor"
-        android:clickable="true"
-        android:focusable="true"
-        android:src="@drawable/central_panel_add" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/fragment_chores_recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:scrollbars="vertical" />
+        android:scrollbars="vertical"
+        android:layout_above="@+id/fragment_chores_buttonView"/>
+
+    <RelativeLayout
+        android:id="@+id/fragment_chores_buttonView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:padding="10dp">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fragment_chores_deleteChoreButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_toLeftOf="@+id/fragment_chores_editChoreButton"
+            android:backgroundTint="@color/btnColor"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/icon_delete_purple"
+            android:visibility="visible" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fragment_chores_editChoreButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_toLeftOf="@+id/fragment_chores_claimChoreButton"
+            android:backgroundTint="@color/btnColor"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/action_chore_edit"
+            android:visibility="visible" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fragment_chores_claimChoreButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_toLeftOf="@+id/fragment_chores_createNewChoreButton"
+            android:backgroundTint="@color/btnColor"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/action_chore_done"
+            android:visibility="visible" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fragment_chores_createNewChoreButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="10dp"
+            android:backgroundTint="@color/btnColor"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/central_panel_add" />
+
+    </RelativeLayout>
 
 </RelativeLayout>
