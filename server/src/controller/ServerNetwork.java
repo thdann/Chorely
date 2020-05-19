@@ -7,7 +7,6 @@ import java.util.logging.Logger;
 
 /**
  * ServerNetwork sets up the network between the server and connecting clients.
- * version 1.0 2020-03-23
  *
  * @author Angelica Asplund, Emma Svensson and Theresa Dannberg
  */
@@ -23,17 +22,24 @@ public class ServerNetwork implements Runnable {
         startServer();
     }
 
+    /**
+     * Starts a thread that accepts incoming sockets using a ServerSocket object.
+     */
     private void startServer() {
         try {
             serverSocket = new ServerSocket(port);
             Thread serverThread = new Thread(this);
             serverThread.start();
         } catch (IOException e1) {
-            // todo: not being able to start the server thread is a critical error. log this to a future error log.
+            messagesLogger.severe("ServerNetwork could not be started.");
             System.exit(0);
         }
     }
 
+    /**
+     * Waits for new connections from clients and starts a ClientHandler for each
+     * established socket.
+     */
     @Override
     public void run() {
         while (true) {

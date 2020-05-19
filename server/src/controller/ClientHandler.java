@@ -15,7 +15,6 @@ import java.util.logging.Logger;
 
 /**
  * ClientHandler
- * version 2.0 2020-03-23
  *
  * @author Angelica Asplund, Emma Svensson, Theresa Dannberg, Fredrik Jeppsson
  */
@@ -39,8 +38,7 @@ public class ClientHandler {
     }
 
     /**
-     * Adds an Message object to a list of outgoing messages if the
-     * receiving user is currently offline.
+     * Adds an Message object to the queue of outgoing messages for this client.
      *
      * @param reply the Message object to be placed in queue.
      */
@@ -48,6 +46,11 @@ public class ClientHandler {
         outgoingMessages.add(reply);
     }
 
+    /**
+     * Called by controller to log out a user by closing the socket.
+     *
+     * @param user the user that is logged out.
+     */
     public void logout(User user) {
         try {
             socket.close();
@@ -56,6 +59,12 @@ public class ClientHandler {
         messagesLogger.info(user + " logged out.");
     }
 
+    /**
+     * Handles an attempt to register a new user.
+     *
+     * @param message the registration message received from the client.
+     * @return true if registration is successful.
+     */
     private boolean registerUser(Message message) {
         User user = message.getUser();
         Message reply;
@@ -73,6 +82,12 @@ public class ClientHandler {
         return success;
     }
 
+    /**
+     * Handles an attempt to login.
+     *
+     * @param message the login message received from the client.
+     * @return true if login is successful.
+     */
     private boolean loginUser(Message message) {
         boolean success = false;
         User user = message.getUser();
@@ -95,7 +110,13 @@ public class ClientHandler {
 
 
     /**
-     * The inner class InputThread sets up an InputStream to receive messages from connected client
+     * The inner class InputThread sets up an InputStream to receive messages from a connected client.
+     *
+     * InputThread makes sure that a client is either registered or logged in before allowing it to
+     * proceed and send other types of messages to the server.
+     *
+     * Once a client is logged in, an infinite loop receives messages until the client connection is
+     * closed.
      */
     private class InputThread implements Runnable {
 
@@ -128,13 +149,14 @@ public class ClientHandler {
                 while (true) {
                     Message msg = (Message) ois.readObject();
                     messagesLogger.info("incoming message: " + msg + " received from client " + msg.getUser());
-                    controller.sendMessage(msg);
+                    controller.handleMessage(msg);
                 }
 
             } catch (ClassNotFoundException | IOException e) {
                 try {
                     socket.close();
-                } catch (IOException ignore) {}
+                } catch (IOException ignore) {
+                }
 
                 if (user != null) {
                     controller.removeOnlineClient(user);
@@ -147,7 +169,8 @@ public class ClientHandler {
     }
 
     /**
-     * The inner class OutputThread sets up an OutputStream
+     * The inner class OutputThread sets up an OutputStream and sends message to the client.
+     * The outgoing messages are put in an output queue by the controller.
      */
     private class OutputThread extends Thread {
 

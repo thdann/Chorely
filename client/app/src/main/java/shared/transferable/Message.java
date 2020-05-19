@@ -3,6 +3,11 @@ package shared.transferable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Objects of the Message class are used for communication between server and client.
+ *
+ * @author Angelica Asplund, Emma Svensson, Theresa Dannberg, Timothy Denison, Fredrik Jeppsson
+ */
 public class Message implements Transferable {
     private NetCommands command;
     private User user;

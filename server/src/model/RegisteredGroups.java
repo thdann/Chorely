@@ -12,22 +12,20 @@ import java.util.logging.Logger;
 /**
  * RegisteredGroups handles all registered groups by reading and writing each Group object to a
  * separate file stored on the server.
- * version 1.0 2020-04-08
  *
- * @author Theresa Dannberg
+ * @author Theresa Dannberg, Fredrik Jeppsson
  */
 public class RegisteredGroups {
     private final static Logger messagesLogger = Logger.getLogger("messages");
     private final static String filePath ="files/groups/";
-    private final static File directory = new File(filePath);
     private final static RegisteredGroups instance = new RegisteredGroups();
 
-    /**
-     * Constructor
-     */
     private RegisteredGroups() {
     }
 
+    /**
+     * @return the singleton instance of RegisteredGroups.
+     */
     public static RegisteredGroups getInstance() {
         return instance;
     }
