@@ -34,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:layout_toLeftOf="@+id/fragment_rewards_editRewardButton"
+            android:layout_toLeftOf="@+id/fragment_reward_changeRewardButton"
             android:backgroundTint="@color/btnColor"
             android:clickable="true"
             android:focusable="true"
@@ -42,11 +42,11 @@
             android:visibility="visible" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fragment_rewards_editRewardButton"
+            android:id="@+id/fragment_reward_changeRewardButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:layout_toLeftOf="@+id/fragment_rewards_claimRewardButton"
+            android:layout_toLeftOf="@+id/fragment_reward_buyRewardButton"
             android:backgroundTint="@color/btnColor"
             android:clickable="true"
             android:focusable="true"
@@ -55,11 +55,11 @@
 
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fragment_rewards_claimRewardButton"
+            android:id="@+id/fragment_reward_buyRewardButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:layout_toLeftOf="@+id/fragment_rewards_createNewRewardButton"
+            android:layout_toLeftOf="@+id/fragment_rewards_addNewRewardButton"
             android:backgroundTint="@color/btnColor"
             android:clickable="true"
             android:focusable="true"
@@ -67,7 +67,7 @@
             android:visibility="visible" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fragment_rewards_createNewRewardButton"
+            android:id="@+id/fragment_rewards_addNewRewardButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
