@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:gravity="center"
-        android:text="REPLACE ME WITH @strings noChores"
+        android:text="Du har inte lagt till några sysslor"
         android:textColor="@color/btnColor" />
 
     <androidx.recyclerview.widget.RecyclerView

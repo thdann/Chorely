@@ -47,7 +47,6 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
         // Required empty public constructor
     }
 
-
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -71,7 +70,6 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
             validateAndUpdateListData(chores);
         }
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -221,6 +219,5 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
         model.handleTask(message);
         resetSelected();
     }
-
 
 }
