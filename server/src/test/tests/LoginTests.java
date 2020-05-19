@@ -13,6 +13,9 @@ import static shared.transferable.NetCommands.*;
 public class LoginTests {
     private static final int basePort = 6700;
 
+    /**
+     * Tests that a user receives loginOk and updateGroup when they successfully login.
+     */
     @Test
     public void testSimpleLogin() {
         User user = new User("testLoginAndReceiveGroup", "secret");
@@ -45,14 +48,16 @@ public class LoginTests {
                     new Message(loginOk, user),
                     new Message(updateGroup, user, List.of(group)));
             assertEquals(expected, receivedMessages);
-        } catch (InterruptedException | ExecutionException e) {
-            // What do I do here?
+        } catch (InterruptedException | ExecutionException ignore) {
         } finally {
             TestUtils.deleteUser(user);
             TestUtils.deleteGroup(group);
         }
     }
 
+    /**
+     * Tests that a loginDenied message is received when user tries to login with an incorrect password.
+     */
     @Test
     public void testLoginDenied() {
         User user = new User("testLoginAndReceiveGroup", "secret");
@@ -85,8 +90,7 @@ public class LoginTests {
             expected = List.of(new Message(loginDenied, incorrectPassword,
                     new ErrorMessage("Fel användarnamn eller lösenord, försök igen!")));
             assertEquals(expected, receivedMessages);
-        } catch (InterruptedException | ExecutionException e) {
-            // What do I do here?
+        } catch (InterruptedException | ExecutionException ignore) {
         } finally {
             TestUtils.deleteUser(user);
             TestUtils.deleteGroup(group);
@@ -107,11 +111,13 @@ public class LoginTests {
             List<Message> expected = List.of(new Message(loginDenied, user, new ErrorMessage("Fel användarnamn eller lösenord, försök igen!")));
             List<Message> received = TestUtils.sendAndReceive(outgoing, port);
             assertEquals(expected, received);
-        } catch (InterruptedException | ExecutionException e) {
-            // What do I do here?
+        } catch (InterruptedException | ExecutionException ignore) {
         }
     }
 
+    /**
+     * Tests logging out a user by sending a logout message.
+     */
     @Test
     public void testLogout() {
         User user = new User("logoutUser", "abcdefg");
@@ -122,8 +128,7 @@ public class LoginTests {
             List<Message> expected = List.of(new Message(registrationOk, user));
             List<Message> received = TestUtils.sendAndReceive(outgoing, port);
             assertEquals(expected, received);
-        } catch (InterruptedException | ExecutionException e) {
-            // What do I do here?
+        } catch (InterruptedException | ExecutionException ignore) {
         } finally {
             TestUtils.deleteUser(user);
         }

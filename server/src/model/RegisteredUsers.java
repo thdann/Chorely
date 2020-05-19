@@ -8,21 +8,20 @@ import java.util.logging.Logger;
 /**
  * RegisteredUser handles all registered users by reading and writing each User object to a
  * separate file stored on the server.
- * version 2.0 2020-04-08
  *
- * @author Theresa Dannberg
+ * @author Theresa Dannberg, Fredrik Jeppsson
  */
 public class RegisteredUsers {
     private final static Logger messagesLogger = Logger.getLogger("messages");
     private final static String filePath = "files/users/";
     private final static RegisteredUsers instance = new RegisteredUsers();
 
-    /**
-     * Constructor
-     */
     private RegisteredUsers() {
     }
 
+    /**
+     * @return the singleton instance of RegisteredUsers.
+     */
     public static RegisteredUsers getInstance() {
         return instance;
     }

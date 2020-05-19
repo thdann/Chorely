@@ -1,16 +1,14 @@
 package shared.transferable;
 
-/**
- * Group is a class that represent a group in the application.
- * version 2.0 2020-04-08
- *
- * @author Timothy Denison and Emma Svensson, Angelica Asplund, Fredrik Jeppsson
- */
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Group is a class that represent a group in the application.
+ *
+ * @author Timothy Denison and Emma Svensson, Angelica Asplund, Fredrik Jeppsson
+ */
 public class Group implements Transferable {
     private String name;
     private String description;

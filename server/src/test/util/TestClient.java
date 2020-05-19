@@ -42,8 +42,6 @@ public class TestClient {
                             out.flush();
                         }
                     } catch (IOException ignore) {
-                        // How do I handle the case where I don't manage to send all outgoing messages?
-                        // In that case I won't get everything either and the test will fail.
                     }
                 };
 
@@ -63,7 +61,6 @@ public class TestClient {
                 in.close();
                 executor.shutdown();
             } catch (IOException ignore) {
-                // Will most likely lead to returning an empty List.
             }
 
             return received;

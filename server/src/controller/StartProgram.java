@@ -2,6 +2,10 @@ package controller;
 
 import java.io.File;
 
+/**
+ * Main method of the server.
+ * Sets up logging properties and then launches a ServerController.
+ */
 public class StartProgram {
     public static void main(String[] args) {
         File f = new File("logs/logging.properties");

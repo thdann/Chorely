@@ -8,12 +8,18 @@ import java.io.File;
 import java.util.List;
 import java.util.concurrent.*;
 
+/**
+ * Utility methods that are used in the automated tests.
+ *
+ * @author Fredrik Jeppsson
+ */
 public class TestUtils {
 
     /**
-     * Deletes a User from file. This is used after the User has been created during a test.
+     * Deletes a User by deleting its corresponding file.
+     * Used after having created a User during a test.
      *
-     * @param user the user that you want to delete from file.
+     * @param user the user whose file is deleted.
      */
     public static void deleteUser(User user) {
         String username = user.getUsername();
@@ -22,12 +28,22 @@ public class TestUtils {
         file.delete();
     }
 
+    /**
+     * Deletes a Group by deleting its corresponding file.
+     * Used after having created a Group during a test.
+     *
+     * @param group the group that is deleted.
+     */
     public static void deleteGroup(Group group) {
         String filename = "files/groups/" + group.getGroupID() + ".dat";
         File file = new File(filename);
         file.delete();
     }
 
+    /**
+     * Helper method that runs a TestClient and returns the list of messages that the
+     * client received during its connection.
+     */
     public static List<Message> sendAndReceive(List<Message> outgoingMessages, int port) throws ExecutionException, InterruptedException {
         ExecutorService executorService = Executors.newCachedThreadPool();
         Callable<List<Message>> testClient = TestClient.newTestRun(outgoingMessages, port);
