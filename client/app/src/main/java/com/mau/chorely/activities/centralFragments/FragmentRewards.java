@@ -84,7 +84,6 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
         editRewardButton.setOnClickListener(this);
         deleteRewardButton.setOnClickListener(this);
         buildRecyclerView();
-
         return view;
     }
 
@@ -213,8 +212,13 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
                     }
                 }).setNegativeButton("NEJ", null);
 
+
         AlertDialog alert = builder.create();
+
         alert.show();
+        alert.getWindow().setBackgroundDrawable(getResources().getDrawable(R.drawable.button_background));
+        alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.background));
+        alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.background));
     }
 
     private void resetSelected() {

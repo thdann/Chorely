@@ -41,7 +41,7 @@
             android:clickable="true"
             android:focusable="true"
             android:src="@drawable/icon_delete_purple"
-            android:visibility="visible" />
+            android:visibility="invisible" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fragment_reward_editRewardButton"
@@ -53,7 +53,7 @@
             android:clickable="true"
             android:focusable="true"
             android:src="@drawable/action_chore_edit"
-            android:visibility="visible" />
+            android:visibility="invisible" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fragment_reward_claimRewardButton"
@@ -65,7 +65,8 @@
             android:clickable="true"
             android:focusable="true"
             android:src="@drawable/action_chore_done"
-            android:visibility="visible" />
+            android:visibility="invisible"
+            />
 
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
