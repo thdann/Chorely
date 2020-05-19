@@ -75,12 +75,14 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_rewards, container, false);
         recyclerView = view.findViewById(R.id.fragment_rewards_recyclerView);
-        FloatingActionButton createButton = (FloatingActionButton) view.findViewById(R.id.fragment_rewards_addNewRewardButton);
-        FloatingActionButton buyRewardButton = view.findViewById(R.id.fragment_reward_buyRewardButton);
-        FloatingActionButton editRewardButton = view.findViewById(R.id.fragment_reward_changeRewardButton);
+        FloatingActionButton createButton = (FloatingActionButton) view.findViewById(R.id.fragment_rewards_createNewRewardButton);
+        FloatingActionButton buyRewardButton = view.findViewById(R.id.fragment_reward_claimRewardButton);
+        FloatingActionButton editRewardButton = view.findViewById(R.id.fragment_reward_editRewardButton);
+        FloatingActionButton deleteRewardButton = view.findViewById(R.id.fragment_rewards_deleteRewardButton);
         createButton.setOnClickListener(this);
         buyRewardButton.setOnClickListener(this);
         editRewardButton.setOnClickListener(this);
+        deleteRewardButton.setOnClickListener(this);
         buildRecyclerView();
 
         return view;
@@ -141,19 +143,20 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
                 System.out.println(selectedView.toString());
                 System.out.println(selectedView.getRootView().toString());
 
-                getView().findViewById(R.id.fragment_reward_buyRewardButton).setVisibility(View.VISIBLE);
-                getView().findViewById(R.id.fragment_reward_changeRewardButton).setVisibility(View.VISIBLE);
+                getView().findViewById(R.id.fragment_reward_claimRewardButton).setVisibility(View.VISIBLE);
+                getView().findViewById(R.id.fragment_reward_editRewardButton).setVisibility(View.VISIBLE);
+                getView().findViewById(R.id.fragment_rewards_deleteRewardButton).setVisibility(View.VISIBLE);
             }
         });
     }
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.fragment_rewards_addNewRewardButton) {
+        if (v.getId() == R.id.fragment_rewards_createNewRewardButton) {
             Intent intent = new Intent(getContext(), CreateRewardActivity.class);
             startActivity(intent);
 
-        } else if (v.getId() == R.id.fragment_reward_buyRewardButton) {
+        } else if (v.getId() == R.id.fragment_reward_claimRewardButton) {
             Model model = Model.getInstance(getActivity().getFilesDir());
             User currentUser = model.getUser();
             int userPoints = model.getSelectedGroup().getUserPoints(currentUser);
@@ -161,15 +164,17 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
 
             if (enoughPoints(userPoints, costOfReward)) {
                 claimReward(costOfReward);
-            } else {
 
+            } else {
                 Presenter.getInstance().toastCurrent("Du har inte tillräckligt med poäng");
             }
 
-        } else if (v.getId() == R.id.fragment_reward_changeRewardButton) {
+        } else if (v.getId() == R.id.fragment_reward_editRewardButton) {
             Intent intent = new Intent(getContext(), CreateRewardActivity.class);
             intent.putExtra("reward", itemList.get(selectedItem).getReward());
             startActivity(intent);
+        } else if (v.getId() == R.id.fragment_rewards_deleteRewardButton) {
+            deleteReward();
         }
     }
 
@@ -198,6 +203,29 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
 
         AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    private void resetSelected() {
+        getView().findViewById(R.id.fragment_reward_claimRewardButton).setVisibility(View.INVISIBLE);
+        getView().findViewById(R.id.fragment_reward_editRewardButton).setVisibility(View.INVISIBLE);
+        getView().findViewById(R.id.fragment_rewards_deleteRewardButton).setVisibility(View.INVISIBLE);
+
+        for (int i = 0; i < recyclerView.getChildCount(); i++) {
+            View unselectedView = recyclerView.getChildAt(i);
+            unselectedView.findViewById(R.id.central_list_layout).setBackgroundColor(getResources().getColor(R.color.background));
+        }
+    }
+
+    private void deleteReward() {
+        Model model = Model.getInstance(getActivity().getFilesDir());
+        Group selectedGroup = model.getSelectedGroup();
+        Reward reward = selectedGroup.getSingleReward(selectedItem);
+        selectedGroup.deleteReward(reward);
+        ArrayList<Transferable> data = new ArrayList<>();
+        data.add(selectedGroup);
+        Message message = new Message(NetCommands.clientInternalGroupUpdate, model.getUser(), data);
+        model.handleTask(message);
+        resetSelected();
     }
 
 
