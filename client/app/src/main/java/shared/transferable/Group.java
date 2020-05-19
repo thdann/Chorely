@@ -38,7 +38,7 @@ public class Group implements Transferable {
 
     public Group(String groupName, User user) {
         this.name = groupName;
-        users.add(user);
+        addUser(user);
     }
 
     public Group(Group group) {
@@ -74,6 +74,7 @@ public class Group implements Transferable {
 
     public void addUser(User user) {
         users.add(user);
+        points.put(user, 0);
     }
 
     public void setName(String name) {

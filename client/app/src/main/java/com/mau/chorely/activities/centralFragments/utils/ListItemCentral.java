@@ -55,7 +55,9 @@ public class ListItemCentral {
     public String getPoints(){
         return String.format("%d", points);
     }
-
+    public int getPointsInt(){
+        return points;
+    }
     public String getDoneBy() {
         return doneBy;
     }
