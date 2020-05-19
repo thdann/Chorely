@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:gravity="center"
-        android:text="REPLACE ME WITH @strings noChores"
+        android:text="Du har inte lagt till några sysslor"
         android:textColor="@color/btnColor" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -21,7 +21,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:scrollbars="vertical"
-        android:layout_above="@+id/fragment_chores_buttonView"/>
+        android:layout_above="@+id/fragment_chores_buttonView"
+        android:layout_alignParentTop="true"/>
 
     <RelativeLayout
         android:id="@+id/fragment_chores_buttonView"
@@ -40,7 +41,7 @@
             android:clickable="true"
             android:focusable="true"
             android:src="@drawable/icon_delete_purple"
-            android:visibility="visible" />
+            android:visibility="invisible" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fragment_chores_editChoreButton"
@@ -52,7 +53,7 @@
             android:clickable="true"
             android:focusable="true"
             android:src="@drawable/action_chore_edit"
-            android:visibility="visible" />
+            android:visibility="invisible" />
 
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -65,7 +66,7 @@
             android:clickable="true"
             android:focusable="true"
             android:src="@drawable/action_chore_done"
-            android:visibility="visible" />
+            android:visibility="invisible" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fragment_chores_createNewChoreButton"

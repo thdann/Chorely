@@ -12,13 +12,15 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:gravity="center"
-        android:text="Du har inte lagt till några sysslor"
+        android:text="Du har inte lagt till några belöningar"
         android:textColor="@color/btnColor" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/fragment_rewards_recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/fragment_rewards_buttonView"
+        android:layout_alignParentTop="true"
         android:layout_marginTop="5dp"
         android:scrollbars="vertical" />
 
@@ -34,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:layout_toLeftOf="@+id/fragment_reward_changeRewardButton"
+            android:layout_toLeftOf="@+id/fragment_reward_editRewardButton"
             android:backgroundTint="@color/btnColor"
             android:clickable="true"
             android:focusable="true"
@@ -42,32 +44,32 @@
             android:visibility="visible" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fragment_reward_changeRewardButton"
+            android:id="@+id/fragment_reward_editRewardButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:layout_toLeftOf="@+id/fragment_reward_buyRewardButton"
+            android:layout_toStartOf="@+id/fragment_reward_claimRewardButton"
             android:backgroundTint="@color/btnColor"
             android:clickable="true"
             android:focusable="true"
             android:src="@drawable/action_chore_edit"
             android:visibility="visible" />
 
-
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fragment_reward_buyRewardButton"
+            android:id="@+id/fragment_reward_claimRewardButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:layout_toLeftOf="@+id/fragment_rewards_addNewRewardButton"
+            android:layout_toStartOf="@+id/fragment_rewards_createNewRewardButton"
             android:backgroundTint="@color/btnColor"
             android:clickable="true"
             android:focusable="true"
             android:src="@drawable/action_chore_done"
             android:visibility="visible" />
 
+
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fragment_rewards_addNewRewardButton"
+            android:id="@+id/fragment_rewards_createNewRewardButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
