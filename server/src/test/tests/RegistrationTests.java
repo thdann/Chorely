@@ -36,8 +36,7 @@ public class RegistrationTests {
             List<Message> expected = Collections.singletonList(new Message(NetCommands.registrationOk, user));
             assertEquals(receivedMessages, expected);
             TestUtils.deleteUser(user);
-        } catch (InterruptedException | ExecutionException e) {
-            // What do I do here?
+        } catch (InterruptedException | ExecutionException ignore) {
         }
     }
 
@@ -85,11 +84,8 @@ public class RegistrationTests {
             TestUtils.deleteUser(user3);
             TestUtils.deleteUser(user4);
 
-        } catch (InterruptedException | ExecutionException e) {
-
+        } catch (InterruptedException | ExecutionException ignore) {
         }
-
-
     }
 
     @Test
@@ -119,8 +115,7 @@ public class RegistrationTests {
 
             TestUtils.deleteUser(user);
 
-        } catch (InterruptedException | ExecutionException e) {
-            // What do I do here?
+        } catch (InterruptedException | ExecutionException ignore) {
         }
     }
 
