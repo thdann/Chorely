@@ -1,5 +1,7 @@
 package com.mau.chorely.model;
 
+import android.util.Log;
+
 import shared.transferable.Message;
 import shared.transferable.NetCommands;
 import shared.transferable.Transferable;
@@ -9,7 +11,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.concurrent.LinkedBlockingDeque;
 
 /**
@@ -20,6 +21,7 @@ import java.util.concurrent.LinkedBlockingDeque;
  * achieved by using three different threads: ClientNetworkManager, InputHandler, OutputHandler.
  */
 public class ClientNetworkManager {
+    private static final String TAG = "ClientNetworkManager";
     private static final int SERVER_PORT = 6583;
     private static final String SERVER_IP = "10.0.2.2";
     private volatile boolean connected = false;
@@ -67,7 +69,7 @@ public class ClientNetworkManager {
                 if (!connected) {
                     try {
                         Socket socket = new Socket(SERVER_IP, SERVER_PORT);
-                        System.out.println(new Date() + " Network: established socket...");
+                        Log.i(TAG, "Established socket.");
                         ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
                         ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
                         Thread outputThread = new Thread(new OutputHandler(socket, output));
@@ -77,7 +79,7 @@ public class ClientNetworkManager {
                         connected = true;
                         model.handleTask(new Message(NetCommands.connected, null, new ArrayList<Transferable>()));
                     } catch (IOException e1) {
-                        System.out.println(new Date() + " Network: failed to connect...");
+                        Log.i(TAG, "Failed to connect.");
                         try {
                             Thread.sleep(500);
                         } catch (InterruptedException e2) {
@@ -117,7 +119,7 @@ public class ClientNetworkManager {
                     model.handleTask((Message) input.readObject());
                 }
             } catch (IOException e) {
-                System.out.println(new Date() + "Network: closed input handler with IOException.");
+                Log.i(TAG, "Closed input handler with IOException.");
             } catch (ClassNotFoundException e) {
                 throw new RuntimeException(e);
             } finally {
@@ -160,10 +162,10 @@ public class ClientNetworkManager {
                     output.flush();
                 }
             } catch (IOException e) {
-                System.out.println(new Date() + " Network: closed output handler with IOException.");
+                Log.i(TAG, "Closed output handler with IOException.");
                 outBoundQueue.addFirst(msg);
             } catch (InterruptedException e) {
-                System.out.println(new Date() + " Network: closed output handler with InterruptedException.");
+                Log.i(TAG, "Closed output handler with InterruptedException.");
             } finally {
                 try {
                     socket.close();
