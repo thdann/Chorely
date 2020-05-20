@@ -15,6 +15,8 @@ public class StartProgram {
             System.err.println("Couldn't load logging properties file. Exiting.");
             System.exit(0);
         }
+        
+        // todo: create the files/groups and files/users directories if they don't exist.
 
         ServerController prog = new ServerController(6583);
     }

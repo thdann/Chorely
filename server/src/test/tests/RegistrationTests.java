@@ -103,7 +103,7 @@ public class RegistrationTests {
             Future<List<Message>> received = executorService.submit(testClient);
             List<Message> receivedMessages = received.get();
             List<Message> expected = Collections.singletonList(new Message(NetCommands.registrationOk, user));
-            assertEquals(receivedMessages, expected);
+            assertEquals(expected, receivedMessages);
 
             // Trying to register with the same username - should fail because it already exists.
             Callable<List<Message>> testClient2 = TestClient.newTestRun(outgoingMessages, port);
@@ -111,7 +111,7 @@ public class RegistrationTests {
             List<Message> receivedMessages2 = received2.get();
             List<Message> expected2 = Collections.singletonList(new Message(NetCommands.registrationDenied, user,
                     new ErrorMessage("Användarnamnet är upptaget, välj ett annat.")));
-            assertEquals(receivedMessages2, expected2);
+            assertEquals(expected2, receivedMessages2);
 
             TestUtils.deleteUser(user);
 
