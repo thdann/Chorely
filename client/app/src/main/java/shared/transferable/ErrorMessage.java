@@ -1,7 +1,9 @@
 package shared.transferable;
 
 
-
+/**
+ * ErrorMessage is used to communicate error message between server and client.
+ */
 public class ErrorMessage implements Transferable {
     private String message;
 

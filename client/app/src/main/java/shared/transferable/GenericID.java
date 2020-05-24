@@ -1,23 +1,24 @@
 package shared.transferable;
 
-
-
-
-
 import java.util.UUID;
 
+/**
+ * The UUID class creates IDs that are guaranteed to be unique.
+ * This makes it possible for a client to create a unique ID without having to
+ * communicate with the server to verify that another client hasn't already created
+ * the same ID.
+ *
+ * UUID is wrapped in the GenericID class to make it Transferable.
+ */
 public class GenericID implements Transferable, Comparable<GenericID> {
-    private UUID id;
-    public GenericID(){
+    private final UUID id;
+
+    public GenericID() {
         id = UUID.randomUUID();
     }
 
     public UUID getId() {
         return id;
-    }
-
-    public  String getIdString(){
-        return id.toString();
     }
 
     @Override
@@ -27,7 +28,11 @@ public class GenericID implements Transferable, Comparable<GenericID> {
 
     @Override
     public boolean equals(Object obj) {
-        return id.equals(((GenericID)obj).getId());
+        if (!(obj instanceof GenericID)) {
+            return false;
+        }
+
+        return id.equals(((GenericID) obj).getId());
     }
 
     @Override
