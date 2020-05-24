@@ -3,13 +3,8 @@ package shared.transferable;
 import java.io.Serializable;
 
 /**
- * Generic interface to enable transferring of arraylists.
- *
- * The protocol this far for said arraylist is:
- * Element 0 requestType @see NetCommand.
- * Element 1 requestId.
- *
+ * Messages sent between server and client have a list of optional data.
+ * Objects placed in this list must implement Transferable.
  */
-
 public interface Transferable extends Serializable {
 }

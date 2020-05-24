@@ -1,5 +1,8 @@
 package shared.transferable;
 
+/**
+ * This enum is used to differentiate between different types of Message.
+ */
 public enum NetCommands implements Transferable {
     registerUser,
     registrationOk,
@@ -8,25 +11,14 @@ public enum NetCommands implements Transferable {
     newGroupOk,
     newGroupDenied,
     deleteGroup,
-    groupDeleted,
-    addUserToGroup,
-    removeUserFromGroup,
     updateGroup,
     addNewChore,
-    newChoreOk,
     addNewReward,
-    newRewardOk,
-    claimReward,
-    connectionStatus,
-    notConnected,
     connected,
     searchForUser,
     userExists,
     userDoesNotExist,
     connectionFailed,
-    requestUserGroups,
-    userHasNoGroup,
-    userHasGroupUpdate,
     login,
     loginOk,
     loginDenied,

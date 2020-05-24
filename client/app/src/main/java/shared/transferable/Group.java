@@ -17,11 +17,7 @@ public class Group implements Transferable {
     private ArrayList<Chore> chores = new ArrayList<>();
     private ArrayList<Reward> rewards = new ArrayList<>();
     private HashMap<User, Integer> points = new HashMap<>();
-    private int incomingPoints;
 
-    /**
-     * CreateEditGroupActivity needs to be able to create a group before name is set.
-     */
     public Group() {
     }
 
@@ -68,7 +64,6 @@ public class Group implements Transferable {
     public ArrayList<User> getUsers() {
         return users;
     }
-
 
     public void addUser(User user) {
         users.add(user);

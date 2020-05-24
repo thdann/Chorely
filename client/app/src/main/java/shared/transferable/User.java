@@ -1,8 +1,10 @@
 package shared.transferable;
 
-
 import java.util.ArrayList;
 
+/**
+ * Objects of the User class correspond to a registered end-users of the system.
+ */
 public class User implements Transferable {
     private final String username;
     private final String password;
