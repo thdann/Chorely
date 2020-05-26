@@ -47,7 +47,6 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
         // Required empty public constructor
     }
 
-
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -62,6 +61,10 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
         return fragment;
     }
 
+    /**
+     * Fills the list with chores if there are any registered
+     * @param savedInstanceState TODO: hur beskriva detta?
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,7 +75,13 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
         }
     }
 
-
+    /**
+     * Adds components to activity, views, buttons and listeners to buttons
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return the view
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -92,6 +101,11 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
         return view;
     }
 
+    /**
+     * Checks for duplicates among registered chores and removes them if
+     * two chores are exactly the same.
+     * @param chores
+     */
     private static void validateAndUpdateListData(ArrayList<Chore> chores) {
         for (Chore chore : chores) {
             boolean foundItem = false;
@@ -119,14 +133,22 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
         }
     }
 
+    /**
+     * Updates the list of chores if something is changed in a chore
+     * @param chores list of chores
+     */
     public static void updateList(ArrayList<Chore> chores) {
         validateAndUpdateListData(chores);
         adapter.notifyDataSetChanged();
     }
 
+    /**
+     * Makes buttons visible when a chore is selected in the list, and adds listeners to the buttons.
+     * Sets backgroundcolor of the selected item in the list.
+     */
     private void buildRecyclerView() {
         recyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager = new LinearLayoutManager(getContext());
         adapter = new CentralActivityRecyclerViewAdapter(itemList);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
@@ -136,17 +158,14 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
                 selectedItem = position;
                 View selectedView = recyclerView.getChildAt(position);
 
-//                for (int i = 0; i < itemList.size(); i++) {
-//                    if (i == selectedItem) {
-//                        selectedView.findViewById(R.id.central_list_layout).setBackground(getResources().getDrawable(R.drawable.edit_text_background));
-//                    } else {
-//                        View unselectedView = recyclerView.getChildAt(i);
-//                        unselectedView.findViewById(R.id.central_list_layout).setBackgroundColor(getResources().getColor(R.color.background));
-//                    }
-//                }
-
-                System.out.println(selectedView.toString());
-                System.out.println(selectedView.getRootView().toString());
+                for (int i = 0; i < itemList.size(); i++) {
+                    if (i == selectedItem) {
+                        selectedView.findViewById(R.id.central_list_layout).setBackground(getResources().getDrawable(R.drawable.edit_text_background));
+                    } else {
+                        View unselectedView = recyclerView.getChildAt(i);
+                        unselectedView.findViewById(R.id.central_list_layout).setBackgroundColor(getResources().getColor(R.color.background));
+                    }
+                }
 
                 getView().findViewById(R.id.fragment_chores_claimChoreButton).setVisibility(View.VISIBLE);
                 getView().findViewById(R.id.fragment_chores_editChoreButton).setVisibility(View.VISIBLE);
@@ -156,6 +175,10 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
         });
     }
 
+    /**
+     * Actions for the different buttons - create, claim, edit and delete chore.
+     * @param v the view
+     */
     @Override
     public void onClick(View v) {
 
@@ -199,6 +222,9 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
         }
     }
 
+    /**
+     * Removes selection
+     */
     private void resetSelected(){
         getView().findViewById(R.id.fragment_chores_claimChoreButton).setVisibility(View.INVISIBLE);
         getView().findViewById(R.id.fragment_chores_editChoreButton).setVisibility(View.INVISIBLE);
@@ -208,9 +234,11 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
             View unselectedView = recyclerView.getChildAt(i);
             unselectedView.findViewById(R.id.central_list_layout).setBackgroundColor(getResources().getColor(R.color.background));
         }
-
     }
 
+    /**
+     * Deletes selected chore
+     */
     private void deleteChore() {
         Model model = Model.getInstance(getActivity().getFilesDir());
         Group selectedGroup = model.getSelectedGroup();
@@ -222,6 +250,5 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
         model.handleTask(message);
         resetSelected();
     }
-
 
 }

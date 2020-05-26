@@ -43,8 +43,9 @@ public class FragmentScore extends Fragment {
         itemList = new ArrayList<>();
         if (getArguments() != null) {
             scoreMap = (HashMap<User, Integer>) getArguments().getSerializable("SCORE");
-            initList();
+
         }
+        initList();
     }
 
     @Nullable
@@ -53,16 +54,13 @@ public class FragmentScore extends Fragment {
         View view = inflater.inflate(R.layout.fragment_score, container, false);
         recyclerView = view.findViewById(R.id.fragment_score_recyclerView);
         buildRecyclerView();
+
+        adapter.notifyDataSetChanged();
         return view;
 
 
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        updateList(Model.getInstance(getActivity().getFilesDir()).getSelectedGroup().getPoints());
-    }
 
     public void buildRecyclerView() {
         recyclerView.hasFixedSize();
@@ -73,12 +71,55 @@ public class FragmentScore extends Fragment {
     }
 
     public static void updateList(HashMap<User, Integer> newMap) {
+        System.out.println("UPDATING SCOREBOARD OUTSIDE IF");
+        scoreMap = newMap;
         if (adapter != null) {
-            scoreMap = newMap;
-            itemList = new ArrayList<>();
-            initList();
+
+            System.out.println("UPDATING SCOREBOARD INSIDE IF");
+            boolean updated = false;
+            boolean foundEntry = false;
+            int size = itemList.size();
+            for (Map.Entry<User, Integer> entry : scoreMap.entrySet()) {
+                for (int i = 0; i < size; i++) {
+                    System.out.println(itemList.get(i).getTitle() + " ?= " + entry.getKey().getUsername());
+                    if (itemList.get(i).getTitle().equals(entry.getKey().getUsername())) {
+                        System.out.println(itemList.get(i).getPointsInt() + " ?= " + entry.getValue());
+                        if (itemList.get(i).getPointsInt() != entry.getValue()) {
+                            System.out.println("UPDATING SCORE!!!!");
+                            itemList.remove(i);
+                            itemList.add(new ListItemCentral(entry.getKey().getUsername(), null, entry.getValue()));
+                            updated = true;
+                        }
+                        foundEntry = true;
+                        break;
+                    }
+                }
+                if (!foundEntry) {
+                    itemList.add(new ListItemCentral(entry.getKey().getUsername(), null, entry.getValue()));
+                    updated = true;
+                }
+            }
+
+            if(scoreMap.size() > itemList.size()){
+                for(int i = 0; i< itemList.size(); i++){
+                    foundEntry = false;
+                    for(Map.Entry<User, Integer> entry : scoreMap.entrySet()){
+                        if(entry.getKey().getUsername().equals(itemList.get(i).getTitle())){
+                            foundEntry = true;
+                        }
+                    }
+                    if(!foundEntry){
+                        itemList.remove(i);
+                    }
+                }
+            }
+
+            if (updated) {
+                adapter.notifyDataSetChanged();
+
+            }
+            System.out.println("UPDATED SCOREBOARD: Size: " + itemList.size());
             adapter.notifyDataSetChanged();
-            System.out.println("SCORELIST UPDATED");
         }
     }
 
@@ -88,6 +129,7 @@ public class FragmentScore extends Fragment {
 
             User user = entry.getKey();
             int points = entry.getValue();
+            System.out.println("ADDED VALUES TO SCOREBOARD: Name:" + user.getUsername() + " Points: " + points);
             ListItemCentral item = new ListItemCentral(user.getUsername(), "", points);
             itemList.add(item);
         }

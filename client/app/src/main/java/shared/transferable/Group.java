@@ -1,16 +1,14 @@
 package shared.transferable;
 
-/**
- * Group is a class that represent a group in the application.
- * version 2.0 2020-04-08
- *
- * @author Timothy Denison and Emma Svensson, Angelica Asplund, Fredrik Jeppsson
- */
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Group is a class that represent a group in the application.
+ *
+ * @author Timothy Denison and Emma Svensson, Angelica Asplund, Fredrik Jeppsson
+ */
 public class Group implements Transferable {
     private String name;
     private String description;
@@ -19,11 +17,7 @@ public class Group implements Transferable {
     private ArrayList<Chore> chores = new ArrayList<>();
     private ArrayList<Reward> rewards = new ArrayList<>();
     private HashMap<User, Integer> points = new HashMap<>();
-    private int incomingPoints;
 
-    /**
-     * CreateEditGroupActivity needs to be able to create a group before name is set.
-     */
     public Group() {
     }
 
@@ -38,7 +32,7 @@ public class Group implements Transferable {
 
     public Group(String groupName, User user) {
         this.name = groupName;
-        users.add(user);
+        addUser(user);
     }
 
     public Group(Group group) {
@@ -71,9 +65,9 @@ public class Group implements Transferable {
         return users;
     }
 
-
     public void addUser(User user) {
         users.add(user);
+        points.put(user, 0);
     }
 
     public void setName(String name) {

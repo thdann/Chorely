@@ -13,14 +13,11 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Logger;
 
 /**
- * ServerController handles the over all logic on the server side.
- * The class contains the main method that starts the program and makes it possible for a client
- * to obtain a connection by creating an instance of ServerNetwork.
- * version 3.0 2020-04-22
+ * ServerController handles the overall logic on the server side.
  *
- * @author Angelica Asplund, Emma Svensson and Theresa Dannberg
+ * @author Angelica Asplund, Emma Svensson, Theresa Dannberg, Fredrik Jeppsson
  */
-public class ServerController implements ClientListener {
+public class ServerController {
     private final static Logger messagesLogger = Logger.getLogger("messages");
     private final RegisteredUsers registeredUsers = RegisteredUsers.getInstance();
     private final RegisteredGroups registeredGroups = RegisteredGroups.getInstance();
@@ -35,12 +32,11 @@ public class ServerController implements ClientListener {
     }
 
     /**
-     * Adds an outgoing message to the buffer-queue.
+     * Adds an incoming message to the controller's queue of messages to handle.
      *
-     * @param msg the outgoing Message object.
+     * @param msg the incoming Message object.
      */
-    @Override
-    public void sendMessage(Message msg) {
+    public void handleMessage(Message msg) {
         clientTaskBuffer.add(msg);
     }
 
@@ -174,6 +170,12 @@ public class ServerController implements ClientListener {
         }
     }
 
+    /**
+     * Handles a logout message by getting the ClientHandler that belongs to the
+     * user in question, and then calling its logout method.
+     *
+     * @param msg the logout message from the client.
+     */
     public void logoutUser(Message msg) {
         User user = msg.getUser();
         ClientHandler clientHandler = onlineClients.get(user);
@@ -247,7 +249,7 @@ public class ServerController implements ClientListener {
      * Updates the group membership of the users removed from a group
      * and notifies the changes to the user.
      *
-     * @param newGroup
+     * @param newGroup the group that potentially has a change in group membership.
      */
     private void removeUsers(Group newGroup) {
         GenericID id = newGroup.getGroupID();

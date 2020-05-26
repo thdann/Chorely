@@ -1,23 +1,15 @@
 package shared.transferable;
 
-
-
 /**
  * Reward is a class that represents a reward in the application.
- * version 1.0 2020-04-08
  *
- * @autor Emma Svensson
+ * @author Emma Svensson
  */
 public class Reward implements Transferable {
     private String name;
     private int rewardPrice;
     private String description;
     private String lastDoneByUser = "";
-
-    public Reward(String name, int rewardPrice) {
-        this.name = name;
-        this.rewardPrice = rewardPrice;
-    }
 
     public Reward(String name, int rewardPrice, String description) {
         this.name = name;

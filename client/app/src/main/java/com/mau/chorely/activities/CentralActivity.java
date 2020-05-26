@@ -69,8 +69,9 @@ public class CentralActivity extends AppCompatActivity implements UpdatableActiv
     }
 
     public void logOut() {
-        Model model = Model.getInstance(getFilesDir());
+        Presenter.getInstance().deregisterForUpdates(this);
 
+        Model model = Model.getInstance(getFilesDir());
         Message logOutMsg = new Message(NetCommands.logout, model.getUser(), new ArrayList<Transferable>());
         model.handleTask(logOutMsg);
         Intent intent = new Intent(this, MainActivity.class);
@@ -123,7 +124,6 @@ public class CentralActivity extends AppCompatActivity implements UpdatableActiv
     @Override
     public void updateActivity() {
         final Group updatedGroup = Model.getInstance(getFilesDir()).getSelectedGroup();
-        System.out.println("UPDATING FRAGMENTS OUTSIDE IF");
         if (!selectedGroup.allIsEqual(updatedGroup)) {
             selectedGroup = updatedGroup;
             System.out.println("UPDATING FRAGMENT LISTS");

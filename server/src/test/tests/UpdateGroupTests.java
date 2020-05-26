@@ -17,7 +17,7 @@ public class UpdateGroupTests {
     private static final int basePort = 6900;
 
     /**
-     * When a user logs in they should receive groups they belong to.
+     * When a user logs in they should receive groups that they belong to.
      */
     @Test
     public void testLoginAndReceiveGroup() {
@@ -51,7 +51,6 @@ public class UpdateGroupTests {
             expected = List.of(new Message(loginOk, user), new Message(updateGroup, user, List.of(group)));
             assertEquals(expected, receivedMessages);
         } catch (InterruptedException | ExecutionException e) {
-            // What do I do here?
         } finally {
             TestUtils.deleteUser(user);
             TestUtils.deleteGroup(group);
