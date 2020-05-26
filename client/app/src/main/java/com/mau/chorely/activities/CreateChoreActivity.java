@@ -36,6 +36,10 @@ public class CreateChoreActivity extends AppCompatActivity implements UpdatableA
         setContentView(R.layout.activity_create_chore);
     }
 
+    /**
+     * The method fills the textfields with info of a selected Chore if the user is
+     * navigated to the activity from the selection of "Edit Chore" in the Chores fragment- activity
+     */
     @Override
     protected void onStart() {
         super.onStart();
@@ -54,12 +58,22 @@ public class CreateChoreActivity extends AppCompatActivity implements UpdatableA
         }
     }
 
+    /**
+     * Sets the menu to the activity
+     * @param menu the menu
+     * @return the activity with the menu
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_create_chore, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * Checks which menu item is clicked, in this case only saveChanges
+     * @param item the menu item for save changes
+     * @return the selection
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -79,6 +93,11 @@ public class CreateChoreActivity extends AppCompatActivity implements UpdatableA
         return chore;
     }
 
+    /**
+     * Creates a message containing the new Chore and sends it
+     * @param newChore the new chore
+     * @return true if executed correctly.
+     */
     public boolean createMessageNewChore(Chore newChore) {
         Model model = Model.getInstance(getFilesDir());
         ArrayList<Transferable> data = new ArrayList<>();
@@ -88,6 +107,12 @@ public class CreateChoreActivity extends AppCompatActivity implements UpdatableA
         return true;
     }
 
+    /**
+     * The method checks that no textfields are empty and that the points-filed contains
+     * integers.
+     *
+     * @return true if everything is correct, otherwiser false.
+     */
     public boolean controlTextFields() {
         String nameField = ((EditText) findViewById(R.id.activity_register_editText_nameChore)).getText().toString();
         String descriptionField = ((EditText) findViewById(R.id.activity_register_editText_descriptionChore)).getText().toString();
@@ -118,6 +143,10 @@ public class CreateChoreActivity extends AppCompatActivity implements UpdatableA
 
     }
 
+    /**
+     * Shows a toast
+     * @param message the text with information to the user
+     */
     @Override
     public void doToast(final String message) {
 
