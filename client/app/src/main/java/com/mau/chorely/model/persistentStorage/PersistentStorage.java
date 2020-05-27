@@ -110,9 +110,6 @@ public class PersistentStorage {
         return user;
     }
 
-
-    // TODO: 2020-04-13 Ska returnera sant om ändringar gjorts. falskt om identisk grupp finns sparad
-    // TODO: 2020-04-15 om ändring görs ska även det sparade user objektet ändras för att inehålla den nya gruppen
     public synchronized boolean saveOrUpdateGroup(Group newGroup) {
         boolean groupUpdated = false;
         if (!groupDir.exists()) {

@@ -147,6 +147,7 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
        return super.onContextItemSelected(item);
 
     }
+
     public void logOut() {
         Model model = Model.getInstance(getFilesDir());
 
