@@ -15,7 +15,6 @@ import com.mau.chorely.model.Model;
 
 import java.util.ArrayList;
 
-import shared.transferable.Group;
 import shared.transferable.Message;
 import shared.transferable.NetCommands;
 import shared.transferable.Reward;
@@ -36,7 +35,10 @@ public class CreateRewardActivity extends AppCompatActivity implements Updatable
         setContentView(R.layout.activity_create_reward);
 
     }
-
+    /**
+     * The method fills the textfields with info of a selected Reward if the user is
+     * navigated to the activity from the selection of "Edit Reward" in the Reward fragment- activity
+     */
     @Override
     protected void onStart() {
         super.onStart();
@@ -51,12 +53,22 @@ public class CreateRewardActivity extends AppCompatActivity implements Updatable
         }
     }
 
+    /**
+     * Sets the menu to the activity
+     * @param menu the menu
+     * @return the activity with the menu
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_create_reward, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * Checks which menu item is clicked, in this case only saveChanges
+     * @param item the menu item for save changes
+     * @return the selection
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -70,20 +82,19 @@ public class CreateRewardActivity extends AppCompatActivity implements Updatable
         return super.onOptionsItemSelected(item);
     }
 
-
-  /*  public Reward createNewReward() {
-        String name = ((EditText) findViewById(R.id.activity_register_editText_nameReward)).getText().toString();
-        String description = ((EditText) findViewById(R.id.activity_register_editText_descriptionReward)).getText().toString();
-        int points = Integer.parseInt(((EditText) findViewById(R.id.activity_register_editText_pointsReward)).getText().toString());
-        Reward reward = new Reward(name, points, description);
-        return reward;
-    } */
-
+    /**
+     * Creates a new Reward-object from the user-input
+     */
     public Reward createNewReward(String name, String desc, int points) {
         Reward reward = new Reward(name, points, desc);
         return reward;
     }
 
+    /**
+     * Creates a message containing the new Reward and sends it
+     * @param newReward the new reward
+     * @return true if executed correctly.
+     */
     public boolean createMessageNewReward(Reward newReward) {
         Model model = Model.getInstance(getFilesDir());
         ArrayList<Transferable> data = new ArrayList<>();
@@ -93,6 +104,12 @@ public class CreateRewardActivity extends AppCompatActivity implements Updatable
         return true;
     }
 
+    /**
+     * The method checks that no textfields are empty and that the points-filed contains
+     * integers.
+     *
+     * @return true if everything is correct, otherwiser false.
+     */
     public boolean controlTextFields() {
         String nameField = ((EditText) findViewById(R.id.activity_register_editText_nameReward)).getText().toString();
         String descriptionField = ((EditText) findViewById(R.id.activity_register_editText_descriptionReward)).getText().toString();
@@ -124,6 +141,10 @@ public class CreateRewardActivity extends AppCompatActivity implements Updatable
 
     }
 
+    /**
+     * Shows a toast
+     * @param message the text with information to the user
+     */
     @Override
     public void doToast(final String message) {
 
