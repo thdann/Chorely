@@ -7,6 +7,7 @@ import shared.transferable.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -164,8 +165,11 @@ public class ServerController {
         registeredGroups.deleteGroup(group);
 
         group.deleteAllUsers();
+        List<Transferable> list = new ArrayList<>();
+        list.add(group);
+
         for (User user : users) {
-            Message message = new Message(NetCommands.updateGroup, user, List.of(group));
+            Message message = new Message(NetCommands.updateGroup, user, list);
             sendReply(message);
         }
     }
