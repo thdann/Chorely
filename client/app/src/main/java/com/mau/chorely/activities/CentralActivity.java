@@ -53,6 +53,11 @@ public class CentralActivity extends AppCompatActivity implements UpdatableActiv
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * Listener method of the optionsmenu.
+     * @param item Item clicked.
+     * @return unknown android stuff.
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.menu_central_edit) {
@@ -61,13 +66,16 @@ public class CentralActivity extends AppCompatActivity implements UpdatableActiv
             startActivity(intent);
         } else if (item.getItemId() == R.id.logOut) {
             logOut();
-        } else if(item.getItemId() == R.id.menu_central_deleteGroup) {
+        } else if (item.getItemId() == R.id.menu_central_deleteGroup) {
             deleteGroup();
         } else
             System.out.println("ITEM: " + item);
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Method to handle clicks on the logout button.
+     */
     public void logOut() {
         Presenter.getInstance().deregisterForUpdates(this);
 
@@ -80,7 +88,9 @@ public class CentralActivity extends AppCompatActivity implements UpdatableActiv
 
     }
 
-
+    /**
+     * Method to handle clicks on the delete button.
+     */
     private void deleteGroup() {
         Presenter.getInstance().deregisterForUpdates(this);
         Model model = Model.getInstance(getFilesDir());
@@ -121,6 +131,9 @@ public class CentralActivity extends AppCompatActivity implements UpdatableActiv
         Presenter.getInstance().deregisterForUpdates(this);
     }
 
+    /**
+     * Interface method to handle updates to the activity.
+     */
     @Override
     public void updateActivity() {
         final Group updatedGroup = Model.getInstance(getFilesDir()).getSelectedGroup();
@@ -156,26 +169,33 @@ public class CentralActivity extends AppCompatActivity implements UpdatableActiv
 
     }
 
+    /**
+     * Method to setup the viewpager. (Container for the tabs of the activiy.)
+     *
+     * @param viewPager a reference to the viewpager.
+     */
     private void setupViewPager(ViewPager viewPager) {
         Group selectedGroup = null;
         ArrayList<Chore> chores = null;
         ArrayList<Reward> rewards = null;
         HashMap<User, Integer> points = null;
 
-        if(Model.getInstance(getFilesDir()).getSelectedGroup() != null){
+        if (Model.getInstance(getFilesDir()).getSelectedGroup() != null) {
             selectedGroup = Model.getInstance(getFilesDir()).getSelectedGroup();
             chores = selectedGroup.getChores();
             rewards = selectedGroup.getRewards();
             points = selectedGroup.getPoints();
         }
-            adapter.addFragment(FragmentChores.newInstance(chores), "Sysslor");
-            adapter.addFragment(FragmentRewards.newInstance(rewards), "Belöningar");
-            adapter.addFragment(FragmentScore.newInstance(points), "Poängtavla");
-            viewPager.setAdapter(adapter);
+        adapter.addFragment(FragmentChores.newInstance(chores), "Sysslor");
+        adapter.addFragment(FragmentRewards.newInstance(rewards), "Belöningar");
+        adapter.addFragment(FragmentScore.newInstance(points), "Poängtavla");
+        viewPager.setAdapter(adapter);
 
-        }
+    }
 
-
+    /**
+     * Method to update the user points.
+     */
     private void updateUserPoints() {
         User user = Model.getInstance(getFilesDir()).getUser();
         int points = selectedGroup.getUserPoints(user);

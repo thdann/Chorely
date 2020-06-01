@@ -16,6 +16,10 @@ import java.util.ArrayList;
 
 import shared.transferable.User;
 
+/**
+ * The class is an adapter for the listview of users in the createGroup activity.
+ * @author Timothy Denison, Theresa Dannberg.
+ */
 public class ListViewAdapter extends ArrayAdapter<User> {
 
     public ListViewAdapter(Context context, ArrayList<User> memberList) {

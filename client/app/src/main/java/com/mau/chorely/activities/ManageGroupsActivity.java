@@ -94,25 +94,6 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
         mAdapter.setOnItemClickListener(new RecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                /*
-                selectedItem = position;
-                View selectedView = mRecyclerView.getChildAt(position);
-
-                for (int i = 0; i < groupList.size(); i++) {
-                    if (i == selectedItem) {
-                        selectedView.findViewById(R.id.group_list_relativeLayout).setBackground(getResources().getDrawable(R.drawable.edit_text_background));
-                    } else {
-                        View unselectedView = mRecyclerView.getChildAt(i);
-                        unselectedView.findViewById(R.id.group_list_relativeLayout).setBackgroundColor(getResources().getColor(R.color.background));
-                    }
-                }
-
-                findViewById(R.id.manage_groups_enterButton).setVisibility(View.VISIBLE);
-                findViewById(R.id.manage_groups_editButton).setVisibility(View.VISIBLE);
-
-
-                 */
-
                 Model.getInstance(getFilesDir()).setSelectedGroup(groupList.get(position));
                 Intent intent = new Intent(ManageGroupsActivity.this, CentralActivity.class);
                 startActivity(intent);
@@ -120,13 +101,6 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
         });
     }
 
-    public void enterGroupClick(View v) {
-
-    }
-
-    public void editGroupClick(View v) {
-
-    }
 
     public void newGroupClick(View v) {
         startActivity(new Intent(this, CreateEditGroupActivity.class));
@@ -238,5 +212,4 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
             }
         }
     }
-
 }

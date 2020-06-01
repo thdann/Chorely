@@ -299,30 +299,9 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
      */
     public void addMember(View view) {
         selectedGroup.addUser(lastSearchedUser);
-//        spinnerAdapter.notifyDataSetChanged();
         adapter.notifyDataSetChanged();
         cancelFoundMember(null);
     }
 
-//    /**
-//     * Method to handle click on edit name button.
-//     * @param view Button klicked.
-//     */
-//    public void editGroupName(View view) {
-//        EditText groupName = findViewById(R.id.edit_group_current_name);
-//        groupName.setFocusableInTouchMode(true);
-//        groupName.setFocusable(true);
-//        groupName.requestFocus();
-//    }
 
-//    /**
-//     * Method to handle clicks on edit button for group description.
-//     * @param view view clicked.
-//     */
-//    public void editGroupDescription(View view) {
-//        EditText groupDescription = findViewById(R.id.edit_group_edit_description_text);
-//        groupDescription.setFocusableInTouchMode(true);
-//        groupDescription.setFocusable(true);
-//        groupDescription.requestFocus();
-//    }
 }
