@@ -48,18 +48,28 @@ public class PersistentStorage {
         deleteAllGroups();
 
     }
+
+    /**
+     * Method to delete selected group.
+     */
     public void deleteSelectedGroup() {
      if(selectedGroup.exists()) {
          selectedGroup.delete();
      }
     }
 
+    /**
+     * Method to delete current user.
+     */
     public void deleteUser() {
         if(userFile.exists()) {
             userFile.delete();
         }
     }
 
+    /**
+     * Method to delete all groups.
+     */
     public void deleteAllGroups(){
         if(groupDir.exists()) {
             File[] groupFiles = groupDir.listFiles();
@@ -110,6 +120,12 @@ public class PersistentStorage {
         return user;
     }
 
+    /**
+     * Method to save or overwrite group. If the group doesent already exist it is simply stored,
+     * otherwise overwritten.
+     * @param newGroup Group to save.
+     * @return returns true if there was an update to existing group.
+     */
     public synchronized boolean saveOrUpdateGroup(Group newGroup) {
         boolean groupUpdated = false;
         if (!groupDir.exists()) {
@@ -161,6 +177,10 @@ public class PersistentStorage {
     }
 
 
+    /**
+     * getter for all saved groups
+     * @return all saved groups.
+     */
     public synchronized ArrayList<Group> getGroups() {
         ArrayList<Group> ret = new ArrayList<>();
         File[] groupFiles = groupDir.listFiles();
@@ -178,6 +198,10 @@ public class PersistentStorage {
         return ret;
     }
 
+    /**
+     * Method to delete a selected group.
+     * @param group group to delete.
+     */
     public void deleteGroup(Group group) {
         //remove group from user file
         User user = getUser();
@@ -207,6 +231,10 @@ public class PersistentStorage {
         }
     }
 
+    /**
+     * Method to get the current selected group.
+     * @return
+     */
     public synchronized Group getSelectedGroup() {
         Group group = null;
         if (selectedGroup.exists()) {

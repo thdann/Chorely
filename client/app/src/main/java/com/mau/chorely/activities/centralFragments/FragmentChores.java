@@ -35,6 +35,7 @@ import shared.transferable.User;
  * A simple {@link Fragment} subclass.
  * Use the {@link FragmentChores#newInstance} factory method to
  * create an instance of this fragment.
+ * @author Timothy Denison
  */
 public class FragmentChores extends Fragment implements View.OnClickListener {
     private static ArrayList<ListItemCentral> itemList = new ArrayList<>();

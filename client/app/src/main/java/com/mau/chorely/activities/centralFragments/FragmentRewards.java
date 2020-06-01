@@ -87,6 +87,10 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
         return view;
     }
 
+    /**
+     * Method to validate and update the local list of rewards.
+     * @param rewards incoming updated list.
+     */
     private static void validateAndUpdateListData(ArrayList<Reward> rewards) {
         for (Reward reward : rewards) {
             boolean foundItem = false;
@@ -118,6 +122,9 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
         adapter.notifyDataSetChanged();
     }
 
+    /**
+     * Method to build the recyclerView.
+     */
     private void buildRecyclerView() {
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getContext());
@@ -149,6 +156,10 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
         });
     }
 
+    /**
+     * Listener for the buttons.
+     * @param v View clicked.
+     */
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.fragment_rewards_createNewRewardButton) {
@@ -177,6 +188,9 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
         }
     }
 
+    /**
+     * Method to delete a reward.
+     */
     private void deleteReward() {
         Model model = Model.getInstance(getActivity().getFilesDir());
         Group selectedGroup = model.getSelectedGroup();
@@ -193,6 +207,10 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
         return (userPoints + costOfReward) >= 0;
     }
 
+    /**
+     * Method to claim a reward.
+     * @param costOfReward the cost of the specified reward.
+     */
     public void claimReward(final int costOfReward) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage("Vill du lösa ut denna belöning?")
@@ -221,6 +239,9 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
         alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.background));
     }
 
+    /**
+     * Method to reset the selected reward.
+     */
     private void resetSelected() {
         getView().findViewById(R.id.fragment_reward_claimRewardButton).setVisibility(View.INVISIBLE);
         getView().findViewById(R.id.fragment_reward_editRewardButton).setVisibility(View.INVISIBLE);

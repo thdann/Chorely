@@ -22,6 +22,10 @@ import java.util.Map;
 
 import shared.transferable.User;
 
+/**
+ * Fragment containing the scoreboard.
+ * @author Timothy Denison, Angelica Asplund.
+ */
 public class FragmentScore extends Fragment {
     private static HashMap<User, Integer> scoreMap;
     private RecyclerView recyclerView;
@@ -70,6 +74,11 @@ public class FragmentScore extends Fragment {
         recyclerView.setAdapter(adapter);
     }
 
+    /**
+     * Method to validate and update the list of scores in the group.
+     *
+     * @param newMap new hashmap of scores and users.
+     */
     public static void updateList(HashMap<User, Integer> newMap) {
         System.out.println("UPDATING SCOREBOARD OUTSIDE IF");
         scoreMap = newMap;
@@ -100,15 +109,15 @@ public class FragmentScore extends Fragment {
                 }
             }
 
-            if(scoreMap.size() > itemList.size()){
-                for(int i = 0; i< itemList.size(); i++){
+            if (scoreMap.size() > itemList.size()) {
+                for (int i = 0; i < itemList.size(); i++) {
                     foundEntry = false;
-                    for(Map.Entry<User, Integer> entry : scoreMap.entrySet()){
-                        if(entry.getKey().getUsername().equals(itemList.get(i).getTitle())){
+                    for (Map.Entry<User, Integer> entry : scoreMap.entrySet()) {
+                        if (entry.getKey().getUsername().equals(itemList.get(i).getTitle())) {
                             foundEntry = true;
                         }
                     }
-                    if(!foundEntry){
+                    if (!foundEntry) {
                         itemList.remove(i);
                     }
                 }
@@ -123,6 +132,9 @@ public class FragmentScore extends Fragment {
         }
     }
 
+    /**
+     * Method to initiate the list.
+     */
     private static void initList() {
 
         for (Map.Entry<User, Integer> entry : scoreMap.entrySet()) {

@@ -65,10 +65,19 @@ public class Model {
         return storage.getUser();
     }
 
+    /**
+     * Getter fpr te stored selected group.
+     * @return selected group.
+     */
+
     public Group getSelectedGroup() {
         return storage.getSelectedGroup();
     }
 
+    /**
+     * Setter for the selected group.
+     * @param group group to set as selected.
+     */
     public void setSelectedGroup(Group group) {
         storage.setSelectedGroup(group);
     }
@@ -144,6 +153,10 @@ public class Model {
         }
     }
 
+    /**
+     * Handles updates to groups coming from the server,
+     * @param message
+     */
     private void updateGroupExternal(Message message) {
         Group currentGroup = (Group) message.getData().get(0);
         if (currentGroup.getUsers().contains(storage.getUser())) {
@@ -158,17 +171,28 @@ public class Model {
         }
     }
 
+    /**
+     * Method to log the user in if there is a saved user from a previous session.
+     */
     private void automaticLogIn() {
         if (hasStoredUser()) {
             network.sendMessage(new Message(NetCommands.login, getUser()));
         }
     }
 
+    /**
+     * Manual login method.
+     * @param msg Message containing user object to login to.
+     */
     private void manualLogIn(Message msg) {
         network.sendMessage(msg);
 
     }
 
+    /**
+     * Method to log out the user.
+     * @param msg message containing the user to log out.
+     */
     private void logOut(Message msg) {
         network.sendMessage(msg);
         isLoggedIn = false;
