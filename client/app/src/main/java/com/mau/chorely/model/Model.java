@@ -126,6 +126,7 @@ public class Model {
      */
     public void handleTask(Message msg) {
         try {
+            System.out.println(msg);
             taskToHandle.put(msg);
         } catch (InterruptedException e) {
             System.out.println("Error in model callback" + e.getMessage());
@@ -375,8 +376,9 @@ public class Model {
                             logOut(currentTask);
                             break;
 
-
-
+                        case notificationSent:
+                            network.sendMessage(currentTask);
+                            break;
                         default:
                             System.out.println("Unrecognized command: " + command);
                             Presenter.getInstance().toastCurrent("Unknown command: " + command);

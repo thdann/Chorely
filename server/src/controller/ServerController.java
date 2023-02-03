@@ -136,6 +136,8 @@ public class ServerController {
             case deleteGroup:
                 deleteGroup(msg);
                 break;
+            case notificationSent:
+                System.out.println("fuuuck");
             default:
                 break;
         }
@@ -300,6 +302,7 @@ public class ServerController {
             while (true) {
                 try {
                     Message message = clientTaskBuffer.take();
+                    System.out.println(message);
                     handleClientTask(message);
                 } catch (InterruptedException e) {
                     e.printStackTrace();

@@ -2,8 +2,13 @@ package com.mau.chorely.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -300,7 +305,30 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
     public void addMember(View view) {
         selectedGroup.addUser(lastSearchedUser);
         adapter.notifyDataSetChanged();
+        memberAddedNotification();
         cancelFoundMember(null);
+    }
+
+    public void memberAddedNotification() {
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "MemberAdded")
+                .setSmallIcon(R.drawable.logo)
+                .setContentTitle("Member Added")
+                .setContentText(lastSearchedUser.getUsername() + " was added to " + selectedGroup.getName())
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        NetCommands netCommands = NetCommands.notificationSent;
+        Model model = Model.getInstance(getFilesDir());
+
+        ArrayList<Transferable> data = new ArrayList<>();
+        data.addAll(selectedGroup.getUsers());
+
+        Message message = new Message(netCommands, model.getUser(), data);
+
+        model.handleTask(message);
+
+        notificationManager.notify(1, builder.build());
     }
 
 

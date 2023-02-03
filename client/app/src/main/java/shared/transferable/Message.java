@@ -42,6 +42,14 @@ public class Message implements Transferable {
         this.errorMessage = errorMessage;
     }
 
+    public Message(NetCommands netCommands, User user, ArrayList<Transferable> data) {
+        this.command = netCommands;
+        this.data = data;
+        this.user = user;
+        this.errorMessage = new ErrorMessage("");
+
+    }
+
     public void setCommand(NetCommands command){
         this.command = command;
     }
