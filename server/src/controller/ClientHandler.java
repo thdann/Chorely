@@ -180,6 +180,9 @@ public class ClientHandler {
                 ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
                 while (!Thread.currentThread().isInterrupted()) {
                     Message reply = outgoingMessages.take();
+
+                    System.out.println("outgoing: " + reply);
+
                     oos.writeObject(reply);
                     oos.flush();
                     messagesLogger.info("outgoing message: " + reply + " sent to user " + reply.getUser());

@@ -137,10 +137,41 @@ public class ServerController {
                 deleteGroup(msg);
                 break;
             case notificationSent:
-                System.out.println("fuuuck");
+                sendNotifications(msg);
             default:
                 break;
         }
+    }
+
+    private void sendNotifications(Message msg) {
+        Message reply;
+
+        if (msg.getData() != null) {
+            ArrayList<Transferable> data = new ArrayList<>();
+            data.addAll(msg.getData());
+            reply = new Message(NetCommands.notificationReceived, msg.getUser() ,data);
+            sendReply(reply);
+        }
+    }
+
+    /**
+     * Looks for a requested user among registered users.
+     *
+     * @param request is the message object that contains the user searched for
+     */
+    public void searchForUser(Message request) {
+        Message reply;
+        User dummyUser = (User) request.getData().get(0);
+
+        if (registeredUsers.findUser(dummyUser) != null) {
+            User foundUser = registeredUsers.findUser(dummyUser);
+            List<Transferable> data = Arrays.asList(new Transferable[]{foundUser});
+            reply = new Message(NetCommands.userExists, request.getUser(), data);
+        } else {
+            ErrorMessage errorMessage = new ErrorMessage("Användaren finns inte");
+            reply = new Message(NetCommands.userDoesNotExist, request.getUser(), errorMessage);
+        }
+        sendReply(reply);
     }
 
     /**
@@ -270,26 +301,6 @@ public class ServerController {
                 sendReply(message);
             }
         }
-    }
-
-    /**
-     * Looks for a requested user among registered users.
-     *
-     * @param request is the message object that contains the user searched for
-     */
-    public void searchForUser(Message request) {
-        Message reply;
-        User dummyUser = (User) request.getData().get(0);
-
-        if (registeredUsers.findUser(dummyUser) != null) {
-            User foundUser = registeredUsers.findUser(dummyUser);
-            List<Transferable> data = Arrays.asList(new Transferable[]{foundUser});
-            reply = new Message(NetCommands.userExists, request.getUser(), data);
-        } else {
-            ErrorMessage errorMessage = new ErrorMessage("Användaren finns inte");
-            reply = new Message(NetCommands.userDoesNotExist, request.getUser(), errorMessage);
-        }
-        sendReply(reply);
     }
 
     /**

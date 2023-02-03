@@ -24,6 +24,7 @@ public enum NetCommands implements Transferable {
     loginDenied,
     logout,
     clientInternalGroupUpdate,
-    notificationSent
+    notificationSent,
+    notificationReceived
     ;
 }

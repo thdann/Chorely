@@ -1,6 +1,8 @@
 
 package com.mau.chorely.model;
 
+import android.os.Looper;
+
 import shared.transferable.Chore;
 import shared.transferable.Group;
 import shared.transferable.Message;
@@ -9,6 +11,7 @@ import shared.transferable.Reward;
 import shared.transferable.Transferable;
 import shared.transferable.User;
 
+import com.mau.chorely.activities.ReceiveNotifications;
 import com.mau.chorely.activities.utils.Presenter;
 import com.mau.chorely.model.persistentStorage.PersistentStorage;
 
@@ -271,6 +274,17 @@ public class Model {
 
     }
 
+    public void receiveNotification(Message currentTask) {
+        System.out.println("start1");
+        Looper.prepare();
+        System.out.println("start2");
+        //Looper.loop();
+        System.out.println("start3");
+        ReceiveNotifications receive = new ReceiveNotifications();
+        System.out.println("start4");
+        receive.receiveNotification();
+        System.out.println("start5");
+    }
 
 
     /**
@@ -378,6 +392,9 @@ public class Model {
 
                         case notificationSent:
                             network.sendMessage(currentTask);
+                            break;
+                        case notificationReceived:
+                            receiveNotification(currentTask);
                             break;
                         default:
                             System.out.println("Unrecognized command: " + command);
