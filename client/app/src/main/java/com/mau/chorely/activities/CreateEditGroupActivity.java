@@ -310,35 +310,19 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
     }
 
     public void memberAddedNotification() {
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "MemberAdded")
-                .setSmallIcon(R.drawable.logo)
-                .setContentTitle("Member Added")
-                .setContentText(lastSearchedUser.getUsername() + " was added to " + selectedGroup.getName())
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
         NetCommands netCommands = NetCommands.notificationSent;
         Model model = Model.getInstance(getFilesDir(),this);
 
         ArrayList<Transferable> data = new ArrayList<>();
-        data.addAll(selectedGroup.getUsers());
+        for (int i = 0; i < selectedGroup.size(); i++) {
+            if (selectedGroup.getUsers().get(i) != lastSearchedUser) {
+                data.add(selectedGroup.getUsers().get(i));
+            }
+        }
+        data.add(selectedGroup.getGroupID());
 
         Message message = new Message(netCommands, model.getUser(), data);
 
         model.handleTask(message);
-
-        //notificationManager.notify(1, builder.build());
-    }
-
-
-    public void notifyGroup() {
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "MemberAdded")
-                .setSmallIcon(R.drawable.logo)
-                .setContentTitle("Member Added")
-                .setContentText("lastSearchedUser.getUsername()" + " was added to " + "selectedGroup.getName()")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-        notificationManager.notify(2, builder.build());
     }
 }

@@ -149,8 +149,12 @@ public class ServerController {
         if (msg.getData() != null) {
             ArrayList<Transferable> data = new ArrayList<>();
             data.addAll(msg.getData());
-            reply = new Message(NetCommands.notificationReceived, msg.getUser() ,data);
-            sendReply(reply);
+            for (int i = 0; i < data.size(); i++) {
+                if (data.get(i) instanceof User) {
+                    reply = new Message(NetCommands.notificationReceived, (User) data.get(i), data);
+                    sendReply(reply);
+                }
+            }
         }
     }
 
