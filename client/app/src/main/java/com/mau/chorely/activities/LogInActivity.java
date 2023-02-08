@@ -69,7 +69,7 @@ public class LogInActivity extends AppCompatActivity implements UpdatableActivit
             User userToLogIn = new User(username, password);
 
             Message logInMsg = new Message(NetCommands.login, userToLogIn, new ArrayList<Transferable>());
-            Model.getInstance(getFilesDir()).handleTask(logInMsg);
+            Model.getInstance(getFilesDir(),this).handleTask(logInMsg);
             user.setVisibility(View.INVISIBLE);
             pass.setVisibility(View.INVISIBLE);
             Button buttonRegister = findViewById(R.id.logIn);
@@ -88,8 +88,8 @@ public class LogInActivity extends AppCompatActivity implements UpdatableActivit
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (Model.getInstance(getFilesDir()).isConnected()) {
-                    if (Model.getInstance(getFilesDir()).isLoggedIn()) {
+                if (Model.getInstance(getFilesDir(),getApplicationContext()).isConnected()) {
+                    if (Model.getInstance(getFilesDir(),getApplicationContext()).isLoggedIn()) {
                         Intent intent = new Intent(LogInActivity.this, ManageGroupsActivity.class);
                         startActivity(intent);
                         finish();

@@ -46,7 +46,7 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_groups);
         buildRecyclerView();
-        updatedGroups = Model.getInstance(getFilesDir()).getGroups();
+        updatedGroups = Model.getInstance(getFilesDir(),this).getGroups();
         updateGroupsList();
     }
 
@@ -94,7 +94,7 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
         mAdapter.setOnItemClickListener(new RecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                Model.getInstance(getFilesDir()).setSelectedGroup(groupList.get(position));
+                Model.getInstance(getFilesDir(),getApplicationContext()).setSelectedGroup(groupList.get(position));
                 Intent intent = new Intent(ManageGroupsActivity.this, CentralActivity.class);
                 startActivity(intent);
             }
@@ -123,7 +123,7 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
     }
 
     public void logOut() {
-        Model model = Model.getInstance(getFilesDir());
+        Model model = Model.getInstance(getFilesDir(),this);
 
         Message logOutMsg = new Message(NetCommands.logout, model.getUser(), new ArrayList<Transferable>());
         model.handleTask(logOutMsg);
@@ -156,9 +156,9 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (Model.getInstance(getFilesDir()).isConnected()) {
+                if (Model.getInstance(getFilesDir(), getApplicationContext()).isConnected()) {
                     synchronized (lockObjectGroupList) {
-                        updatedGroups = Model.getInstance(getFilesDir()).getGroups();
+                        updatedGroups = Model.getInstance(getFilesDir(),getApplicationContext()).getGroups();
                         updateGroupsList();
                         updateGroupText();
                     }

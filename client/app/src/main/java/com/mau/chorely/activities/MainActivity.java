@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements UpdatableActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Presenter.getInstance().register(this);
-        Model.getInstance(getFilesDir()); // startar modellen.
+        Model.getInstance(getFilesDir(),this); // startar modellen.
         createNotificationChannel();
     }
 
@@ -49,13 +49,13 @@ public class MainActivity extends AppCompatActivity implements UpdatableActivity
      */
     @Override
     public  void updateActivity() {
-        if (Model.getInstance(getFilesDir()).isConnected() ) {
-            if (Model.getInstance(getFilesDir()).hasStoredUser()) {
-                if(Model.getInstance(getFilesDir()).getSelectedGroup() != null ){
+        if (Model.getInstance(getFilesDir(),this).isConnected() ) {
+            if (Model.getInstance(getFilesDir(),this).hasStoredUser()) {
+                if(Model.getInstance(getFilesDir(),this).getSelectedGroup() != null ){
                     Intent intent = new Intent(this, CentralActivity.class);
                     startActivity(intent);
                     finish();
-                } else if(Model.getInstance(getFilesDir()).isLoggedIn()){
+                } else if(Model.getInstance(getFilesDir(),this).isLoggedIn()){
                     Intent intent = new Intent(this, ManageGroupsActivity.class);
                     startActivity(intent);
                     finish();

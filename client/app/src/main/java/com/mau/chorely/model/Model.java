@@ -1,7 +1,10 @@
 
 package com.mau.chorely.model;
 
-import android.os.Looper;
+import android.app.NotificationManager;
+import android.content.Context;
+
+import androidx.core.app.NotificationCompat;
 
 import shared.transferable.Chore;
 import shared.transferable.Group;
@@ -11,7 +14,7 @@ import shared.transferable.Reward;
 import shared.transferable.Transferable;
 import shared.transferable.User;
 
-import com.mau.chorely.activities.ReceiveNotifications;
+import com.mau.chorely.R;
 import com.mau.chorely.activities.utils.Presenter;
 import com.mau.chorely.model.persistentStorage.PersistentStorage;
 
@@ -36,6 +39,7 @@ public class Model {
     private ClientNetworkManager network;
     private User lastSearchedUser;
     private static Model model;
+    private Context context;
 
     private Model() {
     }
@@ -43,16 +47,17 @@ public class Model {
     ;
 
 
-    public static Model getInstance(File appFilesDir) {
+    public static Model getInstance(File appFilesDir, Context context) {
         if (model == null) {
-            model = new Model(appFilesDir);
+            model = new Model(appFilesDir, context);
             Exception e = new Exception("MODEL UNREFERENCED");
             e.printStackTrace();
         }
         return model;
     }
 
-    public Model(File filesDir) {
+    public Model(File filesDir, Context context) {
+        this.context = context;
         network = new ClientNetworkManager(this);
         Thread modelThread = new Thread(new ModelThread());
         modelThread.start();
@@ -275,7 +280,7 @@ public class Model {
     }
 
     public void receiveNotification(Message currentTask) {
-        System.out.println("start1");
+       /* System.out.println("start1");
         Looper.prepare();
         System.out.println("start2");
         //Looper.loop();
@@ -283,7 +288,18 @@ public class Model {
         ReceiveNotifications receive = new ReceiveNotifications();
         System.out.println("start4");
         receive.receiveNotification();
-        System.out.println("start5");
+        System.out.println("start5"); */
+        System.out.println("test1");
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        System.out.println("test2");
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "MemberAdded")
+                .setSmallIcon(R.drawable.logo)
+                .setContentTitle("Member Added")
+                .setContentText("lastSearchedUser.getUsername()" + " was added to " + "selectedGroup.getName()")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        System.out.println("test3");
+        notificationManager.notify(2, builder.build());
+        System.out.println("test4");
     }
 
 

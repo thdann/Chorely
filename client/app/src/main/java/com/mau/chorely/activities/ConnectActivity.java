@@ -43,7 +43,7 @@ public class ConnectActivity extends AppCompatActivity implements UpdatableActiv
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (Model.getInstance(getFilesDir()).isConnected()) {
+                if (Model.getInstance(getFilesDir(), getApplicationContext()).isConnected()) {
                     finish();
                 }
             }

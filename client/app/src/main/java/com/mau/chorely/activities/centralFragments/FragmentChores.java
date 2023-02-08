@@ -195,7 +195,7 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
                         public void onClick(DialogInterface dialog, int which) {
                             int points = Integer.parseInt(itemList.get(selectedItem).getPoints());
                             // Uppdatera poängen för användaren i selected group:
-                            Model model = Model.getInstance(getActivity().getFilesDir());
+                            Model model = Model.getInstance(getActivity().getFilesDir(),getContext());
                             Group group = model.getSelectedGroup();
                             User currentUser = model.getUser();
                             group.getChores().get(selectedItem).setLastDoneByUser(currentUser.getUsername());
@@ -241,7 +241,7 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
      * Deletes selected chore
      */
     private void deleteChore() {
-        Model model = Model.getInstance(getActivity().getFilesDir());
+        Model model = Model.getInstance(getActivity().getFilesDir(),getContext());
         Group selectedGroup = model.getSelectedGroup();
         Chore chore = selectedGroup.getSingleChore(selectedItem);
         selectedGroup.deleteChore(chore);

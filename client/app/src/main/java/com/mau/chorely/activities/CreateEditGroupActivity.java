@@ -4,12 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 
-import android.app.Notification;
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
+import android.os.Looper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -48,6 +47,7 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
     private ListView lv;
     private ArrayAdapter adapter;
     int selectedMemberIndex;
+
 
 
     @Override
@@ -93,7 +93,7 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Model model = Model.getInstance(getFilesDir());
+                Model model = Model.getInstance(getFilesDir(),getApplicationContext());
                 if (model.isConnected()) {
                     if (lastSearchedUser == null) {
                         lastSearchedUser = model.removeLastSearchedUser();
@@ -195,7 +195,7 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
         } else {
             selectedGroup = new Group();
             newGroup = true;
-            selectedGroup.addUser(Model.getInstance(getFilesDir()).getUser());
+            selectedGroup.addUser(Model.getInstance(getFilesDir(),this).getUser());
 //            initSpinner();
             initListView();
         }
@@ -216,7 +216,7 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
                 } else {
                     command = NetCommands.clientInternalGroupUpdate;
                 }
-                Model model = Model.getInstance(getFilesDir());
+                Model model = Model.getInstance(getFilesDir(),this);
                 ArrayList<Transferable> data = new ArrayList<>();
                 selectedGroup.setName(groupName);
                 selectedGroup.setDescription(groupDescription);
@@ -268,7 +268,7 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
         if (!searchString.equals("")) {
             if (!selectedGroup.getUsers().contains(new User(searchString, ""))) {
                 findViewById(R.id.edit_group_searchMemberButton).setVisibility(View.INVISIBLE);
-                Model model = Model.getInstance(getFilesDir());
+                Model model = Model.getInstance(getFilesDir(),this);
                 User user = new User(searchString, "");
                 ArrayList<Transferable> data = new ArrayList<>();
                 data.add(user);
@@ -319,7 +319,7 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
         NetCommands netCommands = NetCommands.notificationSent;
-        Model model = Model.getInstance(getFilesDir());
+        Model model = Model.getInstance(getFilesDir(),this);
 
         ArrayList<Transferable> data = new ArrayList<>();
         data.addAll(selectedGroup.getUsers());
@@ -328,8 +328,17 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
 
         model.handleTask(message);
 
-        notificationManager.notify(1, builder.build());
+        //notificationManager.notify(1, builder.build());
     }
 
 
+    public void notifyGroup() {
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "MemberAdded")
+                .setSmallIcon(R.drawable.logo)
+                .setContentTitle("Member Added")
+                .setContentText("lastSearchedUser.getUsername()" + " was added to " + "selectedGroup.getName()")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        notificationManager.notify(2, builder.build());
+    }
 }

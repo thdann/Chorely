@@ -96,7 +96,7 @@ public class CreateRewardActivity extends AppCompatActivity implements Updatable
      * @return true if executed correctly.
      */
     public boolean createMessageNewReward(Reward newReward) {
-        Model model = Model.getInstance(getFilesDir());
+        Model model = Model.getInstance(getFilesDir(),this);
         ArrayList<Transferable> data = new ArrayList<>();
         data.add(newReward);
         Message message = new Message(NetCommands.addNewReward, model.getUser(), data);
