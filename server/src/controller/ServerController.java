@@ -144,14 +144,15 @@ public class ServerController {
     }
 
     /**
+     * @param msg The message containing the data of the users to receive notifications.
+     * @return
      * @Author Johan, Måns
      * Sends notifications to all users in the specified message's data.
      * The method loops through the data of the msg parameter and sends a notification to each user.
      * The NetCommands value of each notification is set to NetCommands.notificationReceived
      * and the data is set to the original data from msg.
-     * @param msg The message containing the data of the users to receive notifications.
      */
-    private void sendNotifications(Message msg) {
+    private Message sendNotifications(Message msg) {
         Message reply;
 
         if (msg.getData() != null) {
@@ -162,9 +163,12 @@ public class ServerController {
                     System.out.println(data.get(i));
                     reply = new Message(NetCommands.notificationReceived, (User) data.get(i), data);
                     sendReply(reply);
+                    return reply;
                 }
             }
         }
+
+        return null;
     }
 
     /**
