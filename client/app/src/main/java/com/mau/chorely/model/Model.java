@@ -28,7 +28,7 @@ import java.util.concurrent.LinkedBlockingDeque;
  * The focus of the class is to recieve requests from both the activities, and the network, in the
  * form of messages.
  *
- * @author Timothy Denison, Emma Svensson, Theresa Dannberg
+ * @author Timothy Denison, Emma Svensson, Theresa Dannberg, Johan Salomonsson, Måns Harnesk
  * @version 2.0
  */
 public class Model {
@@ -279,27 +279,45 @@ public class Model {
 
     }
 
-    public void receiveNotification(Message currentTask) {
-       /* System.out.println("start1");
-        Looper.prepare();
-        System.out.println("start2");
-        //Looper.loop();
-        System.out.println("start3");
-        ReceiveNotifications receive = new ReceiveNotifications();
-        System.out.println("start4");
-        receive.receiveNotification();
-        System.out.println("start5"); */
-        System.out.println("test1");
+    /**
+     * @Author Johan, Måns
+     * Sends a notification to the Android Notification Manager and displays a notification to the user.
+     *  @param currentTask The current task that triggers the notification.
+     *  @return A boolean indicating whether the notification was successfully sent.
+     *  @throws Exception If there was an error sending the notification.
+     */
+    public boolean receiveNotification(Message currentTask) {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        System.out.println("test2");
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "MemberAdded")
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "Notifications")
                 .setSmallIcon(R.drawable.logo)
                 .setContentTitle("Member Added")
-                .setContentText("lastSearchedUser.getUsername()" + " was added to " + "selectedGroup.getName()")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-        System.out.println("test3");
-        notificationManager.notify(2, builder.build());
-        System.out.println("test4");
+                .setContentText("A new member was added to " + getGroupNameForNotification(currentTask))
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setChannelId("Notifications");
+        int notificationId = 2;
+        try {
+            notificationManager.notify(notificationId, builder.build());
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * @Author Johan
+     * Returns the name of the group in the given message.
+     *
+     * @param data The message that contains the data.
+     * @return The name of the group, or `null` if no group was found in the data.
+     */
+    public String getGroupNameForNotification(Message data){
+        for (int i  = 0; i < data.getData().size(); i++){
+            if (data.getData().get(i) instanceof Group) {
+                return ((Group) data.getData().get(i)).getName();
+            }
+        }
+
+        return null;
     }
 
 
@@ -409,7 +427,7 @@ public class Model {
                         case notificationSent:
                             network.sendMessage(currentTask);
                             break;
-                        case notificationReceived:
+                        case notificationReceived:          //@author Johan, Måns
                             receiveNotification(currentTask);
                             break;
                         default:

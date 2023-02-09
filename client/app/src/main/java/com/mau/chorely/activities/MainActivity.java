@@ -96,17 +96,26 @@ public class MainActivity extends AppCompatActivity implements UpdatableActivity
         startActivity(intent);
     }
 
-    public void createNotificationChannel() {
+    /**
+     * Author: Johan och Måns
+     * Creates a notification channel for the application.
+     * This method creates a notification channel with the ID "Notifications",
+     * a name taken from the string resources, and a default importance.
+     * @return The description of the notification channel or null.
+     */
+    public String createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = getString(R.string.textAddMembers);
-            String description = "Notification";
+            String description = "Notification Channel";
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
             NotificationChannel channel = new NotificationChannel("Notifications", name, importance);
             channel.setDescription(description);
 
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
+            return description;
         }
+        return null;
     }
 
 

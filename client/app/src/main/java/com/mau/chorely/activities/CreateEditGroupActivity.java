@@ -2,13 +2,9 @@ package com.mau.chorely.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
 
-import android.app.NotificationManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Looper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -305,11 +301,21 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
     public void addMember(View view) {
         selectedGroup.addUser(lastSearchedUser);
         adapter.notifyDataSetChanged();
-        memberAddedNotification();
+        memberAddedNotification();     //@Author Johan, Måns
         cancelFoundMember(null);
     }
 
-    public void memberAddedNotification() {
+    /**
+     * @Author Johan, Måns
+     * Sends a notification to the server indicating that a new member has been added to a group.
+     *
+     * This method creates a `NetCommands.notificationSent` message and
+     * populates it with the current user and the selected group along with its updated members.
+     * The message is then sent to the server via the handleTask method.
+     *
+     * @return The message containing the notification information, including the updated group and its members.
+     */
+    public Message memberAddedNotification() {
         NetCommands netCommands = NetCommands.notificationSent;
         Model model = Model.getInstance(getFilesDir(),this);
 
@@ -319,10 +325,9 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
                 data.add(selectedGroup.getUsers().get(i));
             }
         }
-        data.add(selectedGroup.getGroupID());
-
+        data.add(selectedGroup);
         Message message = new Message(netCommands, model.getUser(), data);
-
         model.handleTask(message);
+        return message;
     }
 }
