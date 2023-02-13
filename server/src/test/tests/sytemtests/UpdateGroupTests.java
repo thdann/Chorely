@@ -1,3 +1,5 @@
+package sytemtests;
+
 import controller.ServerController;
 import org.junit.jupiter.api.Test;
 import shared.transferable.Group;

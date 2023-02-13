@@ -1,3 +1,5 @@
+package sytemtests;
+
 import controller.ServerController;
 import model.RegisteredUsers;
 import org.junit.jupiter.api.Test;
