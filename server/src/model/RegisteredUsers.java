@@ -30,15 +30,18 @@ public class RegisteredUsers {
      * Saves a User object to its own file on the server.
      *
      * @param user the User object to be saved to file
+     * @return
      */
-    public synchronized void writeUserToFile(User user) {
+    public synchronized int writeUserToFile(User user) {
         String filename = String.format("%s%s.dat", filePath, user.getUsername());
         try (ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filename)))) {
             oos.writeObject(user);
             oos.flush();
             messagesLogger.info("wrote user to file " + filename);
+            return 1;
         } catch (IOException e) {
             messagesLogger.info("writeUserToFile(user): " + e.getMessage());
+            return 0;
         }
     }
 

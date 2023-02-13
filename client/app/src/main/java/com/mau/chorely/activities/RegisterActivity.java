@@ -69,7 +69,7 @@ public class RegisterActivity extends AppCompatActivity implements UpdatableActi
 
         if (!username.equals("") && !password.equals("")) {
             Message registerMsg = new Message(NetCommands.registerUser, userToRegister, new ArrayList<Transferable>());
-            Model.getInstance(getFilesDir()).handleTask(registerMsg);
+            Model.getInstance(getFilesDir(),this).handleTask(registerMsg);
             user.setVisibility(View.INVISIBLE);
             pass.setVisibility(View.INVISIBLE);
             Button buttonRegister = findViewById(R.id.register);
@@ -88,8 +88,8 @@ public class RegisterActivity extends AppCompatActivity implements UpdatableActi
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (Model.getInstance(getFilesDir()).isConnected()) {
-                    if (Model.getInstance(getFilesDir()).isLoggedIn()) {
+                if (Model.getInstance(getFilesDir(),getApplicationContext()).isConnected()) {
+                    if (Model.getInstance(getFilesDir(),getApplicationContext()).isLoggedIn()) {
                         Intent intent = new Intent(RegisterActivity.this, ManageGroupsActivity.class);
                         startActivity(intent);
                         finish();

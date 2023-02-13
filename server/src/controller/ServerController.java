@@ -88,12 +88,15 @@ public class ServerController {
      * to a queue that sends the message when the user is online again.
      *
      * @param reply the message object containing the reply
+     * @return
      */
-    public void sendReply(Message reply) {
+    public int sendReply(Message reply) {
         ClientHandler client = onlineClients.get(reply.getUser());
         if (client != null) {
             client.addToOutgoingMessages(reply);
+            return 1;
         }
+        return 0;
     }
 
     /**
@@ -116,8 +119,9 @@ public class ServerController {
      * Handles the incoming messages from the client
      *
      * @param msg is the incoming message object
+     * @return
      */
-    public void handleClientTask(Message msg) {
+    public NetCommands handleClientTask(Message msg) {
         NetCommands command = msg.getCommand();
 
         switch (command) {
@@ -136,9 +140,86 @@ public class ServerController {
             case deleteGroup:
                 deleteGroup(msg);
                 break;
+            case notificationSent:         // @Author Johan, Måns
+                sendNotifications(msg);
+                break;
+            case choreNotificationSent:     // @Author Johan
+                sendChoreNotification(msg);
             default:
                 break;
         }
+        return command;
+    }
+
+    /**
+     * @return
+     * @Author Johan
+     * Used to send notifications to all users in the specified message's data when a chore is completed.
+     * The method loops through the data of the msg parameter and sends a notification to each user.
+     */
+    public int sendChoreNotification(Message msg) {
+        Message reply;
+        if (msg.getData() != null) {
+            ArrayList<Transferable> data = new ArrayList<>();
+            data.addAll(msg.getData());
+            System.out.println(data.size());
+            System.out.println(data);
+            for (int i = 0; i < data.size(); i++) {
+                System.out.println(data.get(i) instanceof User);
+                if (data.get(i) instanceof User) {
+                    reply = new Message(NetCommands.choreNotificationReceived, (User) data.get(i), data);
+                    sendReply(reply);
+                }
+            }
+            return 0;
+        }
+        return 1;
+    }
+
+    /**
+     * @param msg The message containing the data of the users to receive notifications.
+     * @return
+     * @Author Johan, Måns
+     * Sends notifications to all users in the specified message's data.
+     * The method loops through the data of the msg parameter and sends a notification to each user.
+     * The NetCommands value of each notification is set to NetCommands.notificationReceived
+     * and the data is set to the original data from msg.
+     */
+    private int sendNotifications(Message msg) {
+        Message reply;
+        if (msg.getData() != null) {
+            ArrayList<Transferable> data = new ArrayList<>();
+            data.addAll(msg.getData());
+            for (int i = 0; i < data.size(); i++) {
+                if (data.get(i) instanceof User) {
+                    System.out.println(data.get(i));
+                    reply = new Message(NetCommands.notificationReceived, (User) data.get(i), data);
+                    sendReply(reply);
+                }
+            }
+            return 0;
+        }
+        return 1;
+    }
+
+    /**
+     * Looks for a requested user among registered users.
+     *
+     * @param request is the message object that contains the user searched for
+     */
+    public void searchForUser(Message request) {
+        Message reply;
+        User dummyUser = (User) request.getData().get(0);
+
+        if (registeredUsers.findUser(dummyUser) != null) {
+            User foundUser = registeredUsers.findUser(dummyUser);
+            List<Transferable> data = Arrays.asList(new Transferable[]{foundUser});
+            reply = new Message(NetCommands.userExists, request.getUser(), data);
+        } else {
+            ErrorMessage errorMessage = new ErrorMessage("Användaren finns inte");
+            reply = new Message(NetCommands.userDoesNotExist, request.getUser(), errorMessage);
+        }
+        sendReply(reply);
     }
 
     /**
@@ -271,26 +352,6 @@ public class ServerController {
     }
 
     /**
-     * Looks for a requested user among registered users.
-     *
-     * @param request is the message object that contains the user searched for
-     */
-    public void searchForUser(Message request) {
-        Message reply;
-        User dummyUser = (User) request.getData().get(0);
-
-        if (registeredUsers.findUser(dummyUser) != null) {
-            User foundUser = registeredUsers.findUser(dummyUser);
-            List<Transferable> data = Arrays.asList(new Transferable[]{foundUser});
-            reply = new Message(NetCommands.userExists, request.getUser(), data);
-        } else {
-            ErrorMessage errorMessage = new ErrorMessage("Användaren finns inte");
-            reply = new Message(NetCommands.userDoesNotExist, request.getUser(), errorMessage);
-        }
-        sendReply(reply);
-    }
-
-    /**
      * Inner class MessageHandler handles the incoming messages from the client one at a time.
      */
     private class MessageHandler implements Runnable {
@@ -300,6 +361,7 @@ public class ServerController {
             while (true) {
                 try {
                     Message message = clientTaskBuffer.take();
+                    System.out.println(message);
                     handleClientTask(message);
                 } catch (InterruptedException e) {
                     e.printStackTrace();

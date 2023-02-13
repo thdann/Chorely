@@ -25,7 +25,6 @@ import shared.transferable.Group;
 import shared.transferable.Message;
 import shared.transferable.NetCommands;
 import shared.transferable.Transferable;
-import shared.transferable.User;
 
 /**
  * This is the activity to overview current groups and initiate creation of new ones.
@@ -39,14 +38,13 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
     private static final Object lockObjectGroupList = new Object();
     ArrayList<Group> groupList = new ArrayList<>();
     ArrayList<Group> updatedGroups = new ArrayList<>();
-    private int selectedItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_groups);
         buildRecyclerView();
-        updatedGroups = Model.getInstance(getFilesDir()).getGroups();
+        updatedGroups = Model.getInstance(getFilesDir(),this).getGroups();
         updateGroupsList();
     }
 
@@ -94,7 +92,7 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
         mAdapter.setOnItemClickListener(new RecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                Model.getInstance(getFilesDir()).setSelectedGroup(groupList.get(position));
+                Model.getInstance(getFilesDir(),getApplicationContext()).setSelectedGroup(groupList.get(position));
                 Intent intent = new Intent(ManageGroupsActivity.this, CentralActivity.class);
                 startActivity(intent);
             }
@@ -122,15 +120,14 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
 
     }
 
-    public void logOut() {
-        Model model = Model.getInstance(getFilesDir());
-
+    public String logOut() {
+        Model model = Model.getInstance(getFilesDir(),this);
         Message logOutMsg = new Message(NetCommands.logout, model.getUser(), new ArrayList<Transferable>());
         model.handleTask(logOutMsg);
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
-
+        return "logged out";
     }
     /**
      * Interface method to toast activity.
@@ -156,9 +153,9 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (Model.getInstance(getFilesDir()).isConnected()) {
+                if (Model.getInstance(getFilesDir(), getApplicationContext()).isConnected()) {
                     synchronized (lockObjectGroupList) {
-                        updatedGroups = Model.getInstance(getFilesDir()).getGroups();
+                        updatedGroups = Model.getInstance(getFilesDir(),getApplicationContext()).getGroups();
                         updateGroupsList();
                         updateGroupText();
                     }
@@ -170,11 +167,13 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
         });
     }
 
-    private void updateGroupText() {
+    private String updateGroupText() {
         if (groupList.size() > 0) {
             ((TextView) findViewById(R.id.manage_groups_textViewYourGroups)).setText(R.string.groups);
+            return "";
         } else {
             ((TextView) findViewById(R.id.manage_groups_textViewYourGroups)).setText(R.string.noGroup);
+            return "You are not a member of any group";
         }
     }
 

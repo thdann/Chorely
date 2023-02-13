@@ -167,7 +167,7 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
             startActivity(intent);
 
         } else if (v.getId() == R.id.fragment_reward_claimRewardButton) {
-            Model model = Model.getInstance(getActivity().getFilesDir());
+            Model model = Model.getInstance(getActivity().getFilesDir(),getContext());
             User currentUser = model.getUser();
             int userPoints = model.getSelectedGroup().getUserPoints(currentUser);
             int costOfReward = (Integer.parseInt(itemList.get(selectedItem).getPoints())) * -1;
@@ -192,7 +192,7 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
      * Method to delete a reward.
      */
     private void deleteReward() {
-        Model model = Model.getInstance(getActivity().getFilesDir());
+        Model model = Model.getInstance(getActivity().getFilesDir(),getContext());
         Group selectedGroup = model.getSelectedGroup();
         Reward reward = selectedGroup.getSingleReward(selectedItem);
         selectedGroup.deleteReward(reward);
@@ -218,7 +218,7 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // Uppdatera poängen för användaren i selected group:
-                        Model model = Model.getInstance(getActivity().getFilesDir());
+                        Model model = Model.getInstance(getActivity().getFilesDir(),getContext());
                         Group group = model.getSelectedGroup();
                         User currentUser = model.getUser();
                         group.getRewards().get(selectedItem).setLastDoneByUser(currentUser.getUsername());

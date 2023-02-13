@@ -99,7 +99,7 @@ public class CreateChoreActivity extends AppCompatActivity implements UpdatableA
      * @return true if executed correctly.
      */
     public boolean createMessageNewChore(Chore newChore) {
-        Model model = Model.getInstance(getFilesDir());
+        Model model = Model.getInstance(getFilesDir(),this);
         ArrayList<Transferable> data = new ArrayList<>();
         data.add(newChore);
         Message message = new Message(NetCommands.addNewChore, model.getUser(), data);
@@ -140,7 +140,6 @@ public class CreateChoreActivity extends AppCompatActivity implements UpdatableA
 
     @Override
     public void updateActivity() {
-
     }
 
     /**

@@ -79,7 +79,7 @@ public class CentralActivity extends AppCompatActivity implements UpdatableActiv
     public void logOut() {
         Presenter.getInstance().deregisterForUpdates(this);
 
-        Model model = Model.getInstance(getFilesDir());
+        Model model = Model.getInstance(getFilesDir(),this);
         Message logOutMsg = new Message(NetCommands.logout, model.getUser(), new ArrayList<Transferable>());
         model.handleTask(logOutMsg);
         Intent intent = new Intent(this, MainActivity.class);
@@ -93,7 +93,7 @@ public class CentralActivity extends AppCompatActivity implements UpdatableActiv
      */
     private void deleteGroup() {
         Presenter.getInstance().deregisterForUpdates(this);
-        Model model = Model.getInstance(getFilesDir());
+        Model model = Model.getInstance(getFilesDir(),this);
         ArrayList<Transferable> data = new ArrayList<>();
         data.add(model.getSelectedGroup());
         Message deleteGroupMsg = new Message(NetCommands.deleteGroup, model.getUser(), data);
@@ -113,7 +113,7 @@ public class CentralActivity extends AppCompatActivity implements UpdatableActiv
         setupViewPager(viewPager);
         TabLayout tabLayout = findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
-        selectedGroup = Model.getInstance(getFilesDir()).getSelectedGroup();
+        selectedGroup = Model.getInstance(getFilesDir(),this).getSelectedGroup();
         setTitle(selectedGroup.getName());
     }
 
@@ -136,7 +136,7 @@ public class CentralActivity extends AppCompatActivity implements UpdatableActiv
      */
     @Override
     public void updateActivity() {
-        final Group updatedGroup = Model.getInstance(getFilesDir()).getSelectedGroup();
+        final Group updatedGroup = Model.getInstance(getFilesDir(),this).getSelectedGroup();
         if (!selectedGroup.allIsEqual(updatedGroup)) {
             selectedGroup = updatedGroup;
             System.out.println("UPDATING FRAGMENT LISTS");
@@ -180,8 +180,8 @@ public class CentralActivity extends AppCompatActivity implements UpdatableActiv
         ArrayList<Reward> rewards = null;
         HashMap<User, Integer> points = null;
 
-        if (Model.getInstance(getFilesDir()).getSelectedGroup() != null) {
-            selectedGroup = Model.getInstance(getFilesDir()).getSelectedGroup();
+        if (Model.getInstance(getFilesDir(),this).getSelectedGroup() != null) {
+            selectedGroup = Model.getInstance(getFilesDir(),this).getSelectedGroup();
             chores = selectedGroup.getChores();
             rewards = selectedGroup.getRewards();
             points = selectedGroup.getPoints();
@@ -197,7 +197,7 @@ public class CentralActivity extends AppCompatActivity implements UpdatableActiv
      * Method to update the user points.
      */
     private void updateUserPoints() {
-        User user = Model.getInstance(getFilesDir()).getUser();
+        User user = Model.getInstance(getFilesDir(),this).getUser();
         int points = selectedGroup.getUserPoints(user);
 
         ((TextView) findViewById(R.id.nameAndPointsLayout_userName)).setText(user.getUsername());
