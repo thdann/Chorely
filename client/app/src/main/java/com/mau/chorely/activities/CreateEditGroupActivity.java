@@ -36,10 +36,8 @@ import shared.transferable.User;
  */
 public class CreateEditGroupActivity extends AppCompatActivity implements UpdatableActivity {
     private Group selectedGroup;
-    //private SpinnerAdapterMembers spinnerAdapter;
     private User lastSearchedUser;
     private boolean newGroup = false;
-
     private ListView lv;
     private ArrayAdapter adapter;
     int selectedMemberIndex;
@@ -158,15 +156,6 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
         lv.setAdapter(adapter);
     }
 
-//    /**
-//     * Method to initiate spinner of group members.
-//     */
-//    private void initSpinner() {
-//        Spinner memberSpinner = findViewById(R.id.spinnerMembers);
-//        spinnerAdapter = new SpinnerAdapterMembers(this, selectedGroup.getUsers());
-//        memberSpinner.setAdapter(spinnerAdapter);
-//    }
-
     /**
      * Method to put the activity in different initial states depending on if the user was sent here
      * by selecting a group to edit, or by creating a new group.
@@ -181,10 +170,6 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
             groupName.setFocusableInTouchMode(false);
             EditText groupDescription = (EditText) findViewById(R.id.edit_group_edit_description_text);
             groupDescription.setText(selectedGroup.getDescription());
-//            groupDescription.setFocusable(false);
-//            if (spinnerAdapter == null) {
-//                initSpinner();
-//            }
             if (adapter == null) {
                 initListView();
             }
@@ -192,7 +177,6 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
             selectedGroup = new Group();
             newGroup = true;
             selectedGroup.addUser(Model.getInstance(getFilesDir(),this).getUser());
-//            initSpinner();
             initListView();
         }
     }
@@ -234,22 +218,19 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
      * Method to remove a user from a group.
      *
      * @param view button pressed.
+     * @return
      */
-    public void removeMemberFromGroup(View view) {
-        // TODO: 2020-04-12 POPUP DIALOG ask for confirmation?
+    public boolean removeMemberFromGroup(View view) {
         if (adapter.getCount() > 1) {
-            //int selectedUserIndex = ((Spinner) findViewById(R.id.spinnerMembers)).getSelectedItemPosition();
-            //selectedGroup.getUsers().remove(selectedUserIndex);
-
             System.out.println(selectedMemberIndex);
             selectedGroup.getUsers().remove(selectedMemberIndex);
-
-
             adapter.notifyDataSetChanged();
+            return true;
         } else {
             Toast.makeText(this, "Varje grupp måste ha minst en användare. Om du vill " +
                             "radera gruppen kan du göra det i menyn.",
                     Toast.LENGTH_SHORT).show();
+            return false;
         }
     }
 
@@ -258,8 +239,9 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
      * puts activity in a searching state in wait for reply.
      *
      * @param view Button clicked.
+     * @return
      */
-    public void searchForMember(View view) {
+    public String searchForMember(View view) {
         String searchString = ((EditText) findViewById(R.id.edit_group_memberSearchText)).getText().toString();
         if (!searchString.equals("")) {
             if (!selectedGroup.getUsers().contains(new User(searchString, ""))) {
@@ -270,20 +252,25 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
                 data.add(user);
                 Message message = new Message(NetCommands.searchForUser, model.getUser(), data);
                 model.handleTask(message);
+                return "Found user searched for";
             } else {
                 doToast("Den här användaren finns redan i gruppen");
+                return "User found but already in the group";
             }
         } else {
             Toast.makeText(this, "Du har inte fyllt i något användarnamn", Toast.LENGTH_SHORT).show();
+            return "Username not entered";
         }
+
     }
 
     /**
      * Method to return activity to searchable state. Invoked by a clock on the cancel button.
      *
      * @param view button clicked.
+     * @return
      */
-    public void cancelFoundMember(View view) {
+    public String cancelFoundMember(View view) {
         lastSearchedUser = null;
         findViewById(R.id.edit_group_memberSearchCancelButton).setVisibility(View.INVISIBLE);
         findViewById(R.id.edit_group_addMemberButton).setVisibility(View.INVISIBLE);
@@ -291,6 +278,7 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
         findViewById(R.id.edit_group_memberSearchText).setFocusable(true);
         findViewById(R.id.edit_group_memberSearchText).setFocusableInTouchMode(true);
         ((EditText) findViewById(R.id.edit_group_memberSearchText)).setText("");
+        return "Reset complete";
     }
 
     /**

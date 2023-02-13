@@ -31,6 +31,7 @@ import java.util.concurrent.LinkedBlockingDeque;
  * @author Timothy Denison, Emma Svensson, Theresa Dannberg, Johan Salomonsson, Måns Harnesk
  * @version 2.0
  */
+
 public class Model {
     private LinkedBlockingDeque<Message> taskToHandle = new LinkedBlockingDeque<>();
     private volatile boolean isLoggedIn = false;
@@ -40,12 +41,6 @@ public class Model {
     private User lastSearchedUser;
     private static Model model;
     private Context context;
-
-    private Model() {
-    }
-
-    ;
-
 
     public static Model getInstance(File appFilesDir, Context context) {
         if (model == null) {
@@ -131,22 +126,26 @@ public class Model {
      * Callback method. Puts the message in a queue to be handled by the model thread.
      *
      * @param msg this is the task to handle, complete with a command, and data.
+     * @return True if successful and false otherwise
      */
-    public void handleTask(Message msg) {
+    public boolean handleTask(Message msg) {
         try {
             System.out.println(msg);
             taskToHandle.put(msg);
+            return true;
         } catch (InterruptedException e) {
             System.out.println("Error in model callback" + e.getMessage());
         }
+        return false;
     }
 
     /**
      * This method handles updates to existing groups on the client side.
      *
      * @param message message containing the group to update.
+     * @return
      */
-    private void updateGroup(Message message) {
+    private String updateGroup(Message message) {
         Group currentGroup = (Group) message.getData().get(0);
         if (currentGroup.getUsers().contains(storage.getUser())) {
 
@@ -154,82 +153,104 @@ public class Model {
                 message.setCommand(NetCommands.updateGroup);
                 network.sendMessage(message);
                 Presenter.getInstance().updateCurrent();
+                return "Group successfully updated";
+            } else {
+                return "Failed to update group.";
             }
             //If not, group is already up to date.
         } else {
             storage.deleteGroup(currentGroup);
             Presenter.getInstance().updateCurrent();
+            return "Deleted group.";
         }
     }
 
     /**
      * Handles updates to groups coming from the server,
+     *
      * @param message
+     * @return
      */
-    private void updateGroupExternal(Message message) {
+    private String updateGroupExternal(Message message) {
         Group currentGroup = (Group) message.getData().get(0);
         if (currentGroup.getUsers().contains(storage.getUser())) {
 
             if (storage.saveOrUpdateGroup(currentGroup)) {
                 Presenter.getInstance().updateCurrent();
+                return "Group successfully updated";
+            } else {
+                return "Failed to update group.";
             }
             //If not, group is already up to date.
         } else {
             storage.deleteGroup(currentGroup);
             Presenter.getInstance().updateCurrent();
+            return "Deleted group.";
         }
     }
 
     /**
      * Method to log the user in if there is a saved user from a previous session.
+     *
+     * @return
      */
-    private void automaticLogIn() {
+    private String automaticLogIn() {
         if (hasStoredUser()) {
             network.sendMessage(new Message(NetCommands.login, getUser()));
+            return "Automatic Login";
         }
+        return null;
     }
 
     /**
      * Manual login method.
+     *
      * @param msg Message containing user object to login to.
+     * @return
      */
-    private void manualLogIn(Message msg) {
+    private String manualLogIn(Message msg) {
         network.sendMessage(msg);
-
+        return "Manual login";
     }
 
     /**
      * Method to log out the user.
+     *
      * @param msg message containing the user to log out.
+     * @return
      */
-    private void logOut(Message msg) {
+    private String logOut(Message msg) {
         network.sendMessage(msg);
         isLoggedIn = false;
         storage.deleteAllGroups();
         storage.deleteSelectedGroup();
         storage.deleteUser();
-
+        return "User logged out";
     }
 
     /**
      * This method handles creation of new groups on the client side.
      *
      * @param message message containing the new group.
+     * @return
      */
-    private void createGroup(Message message) {
+    private String createGroup(Message message) {
         if (storage.saveOrUpdateGroup((Group) message.getData().get(0))) {
             System.out.println("SENDING NEW GROUP TO SERVER");
             network.sendMessage(message);
             Presenter.getInstance().updateCurrent();
+            return "Group created";
         }
+        return null;
     }
 
     /**
      * This method updates current group with new chores.
      *
      * @param message message containing the new chore.
+     * @return
      */
-    public void addNewChore(Message message) {
+    public String addNewChore(Message message) {
         Group group = storage.getSelectedGroup();
         Chore chore = (Chore) message.getData().get(0);
         boolean foundSame = false;
@@ -248,16 +269,16 @@ public class Model {
         ArrayList<Transferable> data = new ArrayList<>();
         data.add(group);
         Message newMessage = new Message(NetCommands.updateGroup, message.getUser(), data);
-        updateGroup(newMessage);
-
+        return updateGroup(newMessage);
     }
 
     /**
      * This method updates current group with new reward.
      *
      * @param message message containing the new reward.
+     * @return
      */
-    public void addNewReward(Message message) {
+    public String addNewReward(Message message) {
         Group group = storage.getSelectedGroup();
         Reward reward = (Reward) message.getData().get(0);
         boolean foundSame = false;
@@ -275,7 +296,7 @@ public class Model {
         ArrayList<Transferable> data = new ArrayList<>();
         data.add(group);
         Message newMessage = new Message(NetCommands.updateGroup, message.getUser(), data);
-        updateGroup(newMessage);
+        return updateGroup(newMessage);
 
     }
 
@@ -318,6 +339,28 @@ public class Model {
         }
 
         return null;
+    }
+
+    /**
+     * @author Johan
+     * Sends a notification to the Android Notification Manager and displays a notification
+     * to the user when a chore is completed.
+     */
+    public boolean receiveChoreNotification(Message data){
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "Notifications")
+                .setSmallIcon(R.drawable.logo)
+                .setContentTitle("Chore completed")
+                .setContentText("A member in group " + getGroupNameForNotification(data) + " has completed a chore")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setChannelId("Notifications");
+        int notificationId = 3;
+        try {
+            notificationManager.notify(notificationId, builder.build());
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
 
@@ -429,6 +472,12 @@ public class Model {
                             break;
                         case notificationReceived:          //@author Johan, Måns
                             receiveNotification(currentTask);
+                            break;
+                        case choreNotificationSent:          //@author Johan
+                            network.sendMessage(currentTask);
+                            break;
+                        case choreNotificationReceived:         //@author Johan
+                            receiveChoreNotification(currentTask);
                             break;
                         default:
                             System.out.println("Unrecognized command: " + command);

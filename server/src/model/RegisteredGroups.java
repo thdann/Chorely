@@ -2,11 +2,8 @@ package model;
 
 import shared.transferable.GenericID;
 import shared.transferable.Group;
-import shared.transferable.User;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.logging.Logger;
 
 /**
@@ -34,15 +31,18 @@ public class RegisteredGroups {
      * Saves a Group object to its own file on the server
      *
      * @param group the Group object to be saved to file
+     * @return
      */
-    public synchronized void writeGroupToFile(Group group) {
+    public synchronized int writeGroupToFile(Group group) {
         String filename = String.format("%s%s.dat", filePath, group.getGroupID());
         try (ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(filename)))) {
             oos.writeObject(group);
             oos.flush();
             messagesLogger.info("wrote group to file: " + filename);
+            return 1;
         } catch (IOException e) {
             messagesLogger.info("writeGroupToFile(group): " + e.getMessage());
+            return 0;
         }
     }
 
@@ -93,6 +93,7 @@ public class RegisteredGroups {
             file.delete();
         }
         writeGroupToFile(group);
+
     }
 
     /**

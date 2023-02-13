@@ -41,9 +41,11 @@ public class ClientHandler {
      * Adds an Message object to the queue of outgoing messages for this client.
      *
      * @param reply the Message object to be placed in queue.
+     * @return
      */
-    public void addToOutgoingMessages(Message reply) {
+    public Message addToOutgoingMessages(Message reply) {
         outgoingMessages.add(reply);
+        return reply;
     }
 
     /**
@@ -51,12 +53,14 @@ public class ClientHandler {
      *
      * @param user the user that is logged out.
      */
-    public void logout(User user) {
+    public boolean logout(User user) {
         try {
             socket.close();
         } catch (IOException ignore) {
+            return false;
         }
         messagesLogger.info(user + " logged out.");
+        return true;
     }
 
     /**

@@ -88,12 +88,15 @@ public class ServerController {
      * to a queue that sends the message when the user is online again.
      *
      * @param reply the message object containing the reply
+     * @return
      */
-    public void sendReply(Message reply) {
+    public int sendReply(Message reply) {
         ClientHandler client = onlineClients.get(reply.getUser());
         if (client != null) {
             client.addToOutgoingMessages(reply);
+            return 1;
         }
+        return 0;
     }
 
     /**
@@ -116,8 +119,9 @@ public class ServerController {
      * Handles the incoming messages from the client
      *
      * @param msg is the incoming message object
+     * @return
      */
-    public void handleClientTask(Message msg) {
+    public NetCommands handleClientTask(Message msg) {
         NetCommands command = msg.getCommand();
 
         switch (command) {
@@ -138,22 +142,51 @@ public class ServerController {
                 break;
             case notificationSent:         // @Author Johan, Måns
                 sendNotifications(msg);
+                break;
+            case choreNotificationSent:     // @Author Johan
+                sendChoreNotification(msg);
             default:
                 break;
         }
+        return command;
     }
 
     /**
+     * @return
+     * @Author Johan
+     * Used to send notifications to all users in the specified message's data when a chore is completed.
+     * The method loops through the data of the msg parameter and sends a notification to each user.
+     */
+    public int sendChoreNotification(Message msg) {
+        Message reply;
+        if (msg.getData() != null) {
+            ArrayList<Transferable> data = new ArrayList<>();
+            data.addAll(msg.getData());
+            System.out.println(data.size());
+            System.out.println(data);
+            for (int i = 0; i < data.size(); i++) {
+                System.out.println(data.get(i) instanceof User);
+                if (data.get(i) instanceof User) {
+                    reply = new Message(NetCommands.choreNotificationReceived, (User) data.get(i), data);
+                    sendReply(reply);
+                }
+            }
+            return 0;
+        }
+        return 1;
+    }
+
+    /**
+     * @param msg The message containing the data of the users to receive notifications.
+     * @return
      * @Author Johan, Måns
      * Sends notifications to all users in the specified message's data.
      * The method loops through the data of the msg parameter and sends a notification to each user.
      * The NetCommands value of each notification is set to NetCommands.notificationReceived
      * and the data is set to the original data from msg.
-     * @param msg The message containing the data of the users to receive notifications.
      */
-    private void sendNotifications(Message msg) {
+    private int sendNotifications(Message msg) {
         Message reply;
-
         if (msg.getData() != null) {
             ArrayList<Transferable> data = new ArrayList<>();
             data.addAll(msg.getData());
@@ -164,8 +197,9 @@ public class ServerController {
                     sendReply(reply);
                 }
             }
+            return 0;
         }
-
+        return 1;
     }
 
     /**

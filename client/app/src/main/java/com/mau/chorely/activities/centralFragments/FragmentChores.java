@@ -23,6 +23,7 @@ import com.mau.chorely.model.Model;
 
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import shared.transferable.Chore;
 import shared.transferable.Group;
@@ -205,6 +206,7 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
                             group.modifyUserPoints(model.getUser(), points);
                             Message message = new Message(NetCommands.clientInternalGroupUpdate, currentUser, data);
                             model.handleTask(message);
+                            choreDoneNotification();
                         }
                     }).setNegativeButton("NEJ", null);
 
@@ -221,6 +223,25 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
         } else if (v.getId() == R.id.fragment_chores_deleteChoreButton) {
             deleteChore();
         }
+    }
+
+    /**
+     * @author Johan Salomonsson
+     * Sends a notification when a chore is completed
+     * @return
+     */
+    public Message choreDoneNotification() {
+        NetCommands netCommands = NetCommands.choreNotificationSent;
+        Model model = Model.getInstance(getActivity().getFilesDir(),getContext());
+        Group group = model.getSelectedGroup();
+        ArrayList<Transferable> data = new ArrayList<>();
+        for (int i = 0; i < group.size(); i++) {
+                data.add(group.getUsers().get(i));
+        }
+        data.add(group);
+        Message message = new Message(netCommands, model.getUser(), data);
+        model.handleTask(message);
+        return message;
     }
 
     /**

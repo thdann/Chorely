@@ -24,15 +24,19 @@ public class ServerNetwork implements Runnable {
 
     /**
      * Starts a thread that accepts incoming sockets using a ServerSocket object.
+     *
+     * @return
      */
-    private void startServer() {
+    private int startServer() {
         try {
             serverSocket = new ServerSocket(port);
             Thread serverThread = new Thread(this);
             serverThread.start();
+            return 1;
         } catch (IOException e1) {
             messagesLogger.severe("ServerNetwork could not be started.");
             System.exit(0);
+            return 0;
         }
     }
 

@@ -140,7 +140,6 @@ public class CreateChoreActivity extends AppCompatActivity implements UpdatableA
 
     @Override
     public void updateActivity() {
-
     }
 
     /**
