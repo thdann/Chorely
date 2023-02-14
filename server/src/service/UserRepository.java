@@ -35,9 +35,9 @@ public class UserRepository {
         String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
         //simple (but not secure) method to clean sql input
         String sqlSafeUsername = user.getUsername().replace("'", "''");
-        String query = "INSERT INTO [User] VALUES ('" + sqlSafeUsername + "', '" + hashedPassword + "',)";
+        String query = "INSERT INTO [User] VALUES ('" + sqlSafeUsername + "', '" + hashedPassword + "')";
         try {
-            database.executeUpdate(query);
+            database.executeUpdateQuery(query);
             success = true;
         }
         catch (SQLException sqlException) {
@@ -58,7 +58,7 @@ public class UserRepository {
         String sqlSafeUsername = username.replace("'", "''");
         String query = "SELECT password FROM [User] WHERE user_name = '" + sqlSafeUsername + "';";
         try {
-            ResultSet resultSet = database.executeQuery(query);
+            ResultSet resultSet = database.executeReadQuery(query);
             if (resultSet.next()) {
                 String hashedPassword = resultSet.getString(1);
                 isVerified = BCrypt.checkpw(password, hashedPassword);
@@ -67,6 +67,7 @@ public class UserRepository {
         catch (SQLException sqlException) {
             sqlException.printStackTrace();
         }
+        System.out.println(isVerified);
         return isVerified;
     }
 
@@ -81,13 +82,14 @@ public class UserRepository {
         if (checkLogin(username, password)) {
             try {
                 Statement statement = database.beginTransaction();
-                String queryDeleteUser = "DELETE FROM [User] WHERE user_name = " + username + ";";
+                String queryDeleteUser = "DELETE FROM [User] WHERE user_name = '" + username + "';";
                 statement.executeUpdate(queryDeleteUser);
                 database.endTransaction();
                 accountDeleted = true;
             }
             catch (SQLException sqlException) {
                 try {
+                    System.out.println(sqlException);
                    database.rollbackTransaction();
                 }
                 catch (SQLException throwables) {

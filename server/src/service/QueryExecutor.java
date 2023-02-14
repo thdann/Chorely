@@ -15,8 +15,9 @@ public class QueryExecutor {
         this.connection = connection;
     }
 
-
-    public void executeUpdate(String query) throws SQLException {
+    //execute queries that modify the database
+    public void executeUpdateQuery(String query) throws SQLException {
+        SQLException exception;
         boolean isSuccess = false;
         int retries = 0;
         do {
@@ -26,14 +27,17 @@ public class QueryExecutor {
                 return;
             }
             catch (SQLException sqlException) {
+                exception = sqlException;
                 connection.closeConnection();
                 retries++;
             }
         } while (!isSuccess && retries < 3);
-        throw new SQLException("No connection to database");
+        //retry connection 3 times, if no success, throw the last exception
+        throw exception;
     }
-
-    public ResultSet executeQuery(String query) throws SQLException {
+    //execute queries that read from the database
+    public ResultSet executeReadQuery(String query) throws SQLException {
+        SQLException exception;
         int retries = 0;
         do {
             try {
@@ -41,14 +45,17 @@ public class QueryExecutor {
                 return resultSet;
             }
             catch (SQLException sqlException) {
+                exception = sqlException;
                 connection.closeConnection();
                 retries++;
             }
         } while (retries < 3);
-        throw new SQLException("No connection to database");
+        //retry connection 3 times, if no success, throw the last exception
+        throw exception;
     }
-
+    //can be used when issuing updates that must succeed/fail
     public Statement beginTransaction() throws SQLException {
+        SQLException exception;
         int retries = 0;
         do {
             try {
@@ -56,20 +63,23 @@ public class QueryExecutor {
                 return connection.getConnection().createStatement();
             }
             catch (SQLException sqlException) {
+                exception = sqlException;
+                System.out.println(sqlException);
                 connection.closeConnection();
                 retries++;
             }
         }
         while (retries < 3);
-        throw new SQLException("No connection to database");
+        //retry connection 3 times, if no success, throw the last exception
+        throw exception;
     }
 
-
+    //commit tx once connection established
     public void endTransaction() throws SQLException {
         connection.getConnection().commit();
         connection.getConnection().setAutoCommit(true);
     }
-
+    //any problems and the tx gets rolled back
     public void rollbackTransaction() throws SQLException {
         connection.getConnection().rollback();
     }

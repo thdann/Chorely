@@ -1,5 +1,7 @@
 package service;
 
+import shared.transferable.User;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.DriverManager;
@@ -16,12 +18,12 @@ public class DatabaseConnection {
 
     private java.sql.Connection createConnection() throws SQLException, UnknownHostException {
         String dbServerIp = "127.0.0.1";
-        String dbServerPort = "1433";
+        String dbServerPort = "1433"; //default port for mssql
         String dbUser = "chorely-admin";
         String dbPassword = "Welovesven";
         //can be different sql driver
         DriverManager.registerDriver(new com.microsoft.sqlserver.jdbc.SQLServerDriver());
-
+//        //if logging into database both in local network and remotely, specify localhost when at home
 //        if (InetAddress.getLocalHost().getHostName().equals(PasswordsAndKeys.dbHostName)) {
 //            dbServerIp = "localhost";
 //        }
@@ -59,7 +61,13 @@ public class DatabaseConnection {
 
     public static void main(String[] args) {
         DatabaseConnection databaseConnection = new DatabaseConnection("Chorely");
-        databaseConnection.getConnection();
-        databaseConnection.closeConnection();
+        QueryExecutor queryExecutor = new QueryExecutor(databaseConnection);
+        UserRepository userRepository = new UserRepository(queryExecutor);
+//        userRepository.registerUser(new User("Chris", "bajskorv"));
+        boolean loginSuccess = userRepository.checkLogin("Chris", "bajskorv");
+        if (loginSuccess) System.out.println("Login success");
+        boolean deleteSuccess = userRepository.deleteAccount("Chris", "bajskorv");
+        if (deleteSuccess) System.out.println("Successfully deleted");
+
     }
 }
