@@ -15,9 +15,9 @@ public class DatabaseConnection {
     }
 
     private java.sql.Connection createConnection() throws SQLException, UnknownHostException {
-        String dbServerIp = "localhost";
+        String dbServerIp = "127.0.0.1";
         String dbServerPort = "1433";
-        String dbUser = "sven";
+        String dbUser = "chorely-admin";
         String dbPassword = "Welovesven";
         //can be different sql driver
         DriverManager.registerDriver(new com.microsoft.sqlserver.jdbc.SQLServerDriver());
@@ -25,8 +25,7 @@ public class DatabaseConnection {
 //        if (InetAddress.getLocalHost().getHostName().equals(PasswordsAndKeys.dbHostName)) {
 //            dbServerIp = "localhost";
 //        }
-        String dbURL = String.format("jdbc:sqlserver://%s:%s;databaseName=" + databaseName + ";integratedSecurity=true", dbServerIp, dbServerPort);
-        //String dbURL = String.format("jdbc:sqlserver://%s:%s;databaseName=" + databaseName + ";user=%s;password=%s", dbServerIp, dbServerPort, dbUser, dbPassword);
+        String dbURL = String.format("jdbc:sqlserver://%s:%s;databaseName=" + databaseName + ";TrustServerCertificate=True;user=%s;password=%s", dbServerIp, dbServerPort, dbUser, dbPassword);
         this.conn = DriverManager.getConnection(dbURL);
         return conn;
     }
