@@ -7,7 +7,6 @@ import shared.transferable.*;
 import test.util.TestClient;
 import test.util.TestUtils;
 
-import javax.swing.*;
 import java.util.List;
 import java.util.concurrent.*;
 

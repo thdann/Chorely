@@ -195,7 +195,9 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             int points = Integer.parseInt(itemList.get(selectedItem).getPoints());
-                            // Uppdatera poängen för användaren i selected group:
+                            // updates on client side, THEN sends message to server -> suggest
+                            // we just send a message and update values with response from server = cut
+                            // need for local storage.
                             Model model = Model.getInstance(getActivity().getFilesDir(),getContext());
                             Group group = model.getSelectedGroup();
                             User currentUser = model.getUser();

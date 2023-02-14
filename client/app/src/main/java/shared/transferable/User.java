@@ -8,11 +8,13 @@ import java.util.ArrayList;
 public class User implements Transferable {
     private final String username;
     private final String password;
+    private final boolean adult;
     private final ArrayList<GenericID> groups = new ArrayList<>();
 
     public User(String username, String password) {
         this.username = username;
         this.password = password;
+        this.adult = true;
     }
 
     public ArrayList<GenericID> getGroups() {
@@ -68,4 +70,7 @@ public class User implements Transferable {
         return isEqual;
     }
 
+    public boolean isAdult() {
+        return adult;
+    }
 }
