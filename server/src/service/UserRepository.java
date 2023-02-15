@@ -27,15 +27,15 @@ public class UserRepository {
      */
     public boolean registerUser(User user) {
         boolean success = false;
-        int isAdult = 0;
-        if (user.isAdult()) {
-            isAdult = 1;
+        int isAdult = 1;
+        if (!user.isAdult()) {
+            isAdult = 0;
         }
         //Hash password
         String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
         //simple (but not secure) method to clean sql input
         String sqlSafeUsername = user.getUsername().replace("'", "''");
-        String query = "INSERT INTO [User] VALUES ('" + sqlSafeUsername + "', '" + hashedPassword + "')";
+        String query = "INSERT INTO [User] VALUES ('" + sqlSafeUsername + "', '" + hashedPassword + "', " + isAdult + ")";
         try {
             database.executeUpdateQuery(query);
             success = true;

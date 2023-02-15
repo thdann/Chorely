@@ -63,10 +63,10 @@ public class DatabaseConnection {
         DatabaseConnection databaseConnection = new DatabaseConnection("Chorely");
         QueryExecutor queryExecutor = new QueryExecutor(databaseConnection);
         UserRepository userRepository = new UserRepository(queryExecutor);
-//        userRepository.registerUser(new User("Chris", "bajskorv"));
-        boolean loginSuccess = userRepository.checkLogin("Chris", "bajskorv");
+        userRepository.registerUser(new User("Chris", "mypassword"));
+        boolean loginSuccess = userRepository.checkLogin("Chris", "mypassword");
         if (loginSuccess) System.out.println("Login success");
-        boolean deleteSuccess = userRepository.deleteAccount("Chris", "bajskorv");
+        boolean deleteSuccess = userRepository.deleteAccount("Chris", "mypassword");
         if (deleteSuccess) System.out.println("Successfully deleted");
 
     }
