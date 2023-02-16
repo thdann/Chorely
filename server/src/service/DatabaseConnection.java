@@ -16,10 +16,10 @@ public class DatabaseConnection {
     }
 
     private java.sql.Connection createConnection() throws SQLException, UnknownHostException {
-        String dbServerIp = "127.0.0.1";
-        String dbServerPort = "1433"; //default port for mssql
-        String dbUser = "chorely-admin";
-        String dbPassword = "Welovesven";
+        String dbServerIp = ServerAccess.dbServerIp;
+        String dbServerPort = ServerAccess.dbServerPort; //default port for mssql
+        String dbUser = ServerAccess.dbUser;
+        String dbPassword =ServerAccess.dbPassword;
         //can be different sql driver
         DriverManager.registerDriver(new com.microsoft.sqlserver.jdbc.SQLServerDriver());
 //        //if logging into database both in local network and remotely, specify localhost when at home

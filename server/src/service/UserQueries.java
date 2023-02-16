@@ -53,7 +53,7 @@ public class UserQueries {
         if (checkPassword(userName, password)) {
             String sqlSafeUsername = userName.replace("'", "''");
             loggedInUser = getUser(sqlSafeUsername);
-            //todo once groups changed to accept int as ID implement following call
+            //todo once groups changed to accept int as ID implement following call -> group statements to ONE query call
 //            String query = "SELECT * FROM [Member] WHERE name = '" + sqlSafeUsername + "';";
 //            try {
 //                ResultSet resultSet = database.executeReadQuery(query);
@@ -86,15 +86,14 @@ public class UserQueries {
     /**
      * Method to delete a user
      *
-     * @return boolean value, false if transaction is rolled back
-     * @throws SQLException
      */
     public boolean deleteAccount(User userToDelete, String password) {
         boolean accountDeleted = false;
+        String sqlSafeUsername = userToDelete.getUsername().replace("'", "''");
         if (checkPassword(userToDelete.getUsername(), password)) {
             try {
                 Statement statement = database.beginTransaction();
-                String queryDeleteUser = "DELETE FROM [User] WHERE name = '" + userToDelete.getUsername() + "';";
+                String queryDeleteUser = "DELETE FROM [User] WHERE name = '" + sqlSafeUsername + "';";
                 statement.executeUpdate(queryDeleteUser);
                 database.endTransaction();
                 accountDeleted = true;
