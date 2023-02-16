@@ -2,7 +2,6 @@ package service;
 
 import shared.transferable.User;
 
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -62,12 +61,14 @@ public class DatabaseConnection {
     public static void main(String[] args) {
         DatabaseConnection databaseConnection = new DatabaseConnection("Chorely");
         QueryExecutor queryExecutor = new QueryExecutor(databaseConnection);
-        UserRepository userRepository = new UserRepository(queryExecutor);
-        userRepository.registerUser(new User("Chris", "mypassword"));
-        boolean loginSuccess = userRepository.checkLogin("Chris", "mypassword");
-        if (loginSuccess) System.out.println("Login success");
-        boolean deleteSuccess = userRepository.deleteAccount("Chris", "mypassword");
+        UserQueries userQueries = new UserQueries(queryExecutor);
+        boolean registerSuccess = userQueries.registerUser("Chris", "mypassword", true);
+        if (registerSuccess) System.out.println("Registration success");
+        User loggedInUser = userQueries.loginUser("Chris", "mypassword");
+        if (loggedInUser!=null) System.out.println("Login success");
+        assert loggedInUser != null;
+        boolean deleteSuccess = userQueries.deleteAccount(loggedInUser, "mypassword");
         if (deleteSuccess) System.out.println("Successfully deleted");
-
+        databaseConnection.closeConnection();
     }
 }
