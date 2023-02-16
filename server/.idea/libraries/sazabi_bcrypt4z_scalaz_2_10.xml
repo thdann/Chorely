@@ -1,0 +1,17 @@
+<component name="libraryTable">
+  <library name="sazabi.bcrypt4z.scalaz_2.10" type="repository">
+    <properties maven-id="org.sazabi:bcrypt4z-scalaz_2.10:0.0.1" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/sazabi/bcrypt4z-scalaz_2.10/0.0.1/bcrypt4z-scalaz_2.10-0.0.1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/scala-lang/scala-library/2.10.5/scala-library-2.10.5.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/sazabi/bcrypt4z_2.10/0.0.1/bcrypt4z_2.10-0.0.1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/github/mpilquist/simulacrum_2.10/0.6.1/simulacrum_2.10-0.6.1.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/typelevel/macro-compat_2.10/1.1.0/macro-compat_2.10-1.1.0.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/scalamacros/quasiquotes_2.10/2.1.0-M5/quasiquotes_2.10-2.1.0-M5.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/scala-lang/scala-reflect/2.10.4/scala-reflect-2.10.4.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/scalaz/scalaz-core_2.10/7.1.6/scalaz-core_2.10-7.1.6.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
