@@ -18,6 +18,7 @@
 
 # Sensitive or high-churn files
 server/src/service/ServerAccess.java
+server/files
 .idea/**/dataSources/
 .idea/**/dataSources.ids
 .idea/**/dataSources.local.xml

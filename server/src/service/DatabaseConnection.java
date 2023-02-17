@@ -67,8 +67,8 @@ public class DatabaseConnection {
         User loggedInUser = userQueries.loginUser("Chris", "mypassword");
         if (loggedInUser!=null) System.out.println("Login success");
         assert loggedInUser != null;
-        boolean deleteSuccess = userQueries.deleteAccount(loggedInUser, "mypassword");
-        if (deleteSuccess) System.out.println("Successfully deleted");
+//        boolean deleteSuccess = userQueries.deleteAccount(loggedInUser, "mypassword");
+//        if (deleteSuccess) System.out.println("Successfully deleted");
         databaseConnection.closeConnection();
     }
 }
