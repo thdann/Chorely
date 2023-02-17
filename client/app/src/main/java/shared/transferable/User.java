@@ -1,6 +1,7 @@
 package shared.transferable;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * Objects of the User class correspond to a registered end-users of the system.
@@ -10,6 +11,7 @@ public class User implements Transferable {
     private final String password; //todo remove password storing in object, only in database
     private final boolean adult;
     private final ArrayList<GenericID> groups;
+    private final ArrayList<Integer> dbGroups = new ArrayList<>();
 
     public User(String username, String password) {
         this(username, password, true);
@@ -83,5 +85,9 @@ public class User implements Transferable {
 
     public boolean isAdult() {
         return adult;
+    }
+
+    public ArrayList<Integer> getDbGroups() {
+        return dbGroups;
     }
 }

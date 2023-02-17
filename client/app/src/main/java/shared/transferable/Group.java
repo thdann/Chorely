@@ -14,6 +14,7 @@ public class Group implements Transferable {
     private String description;
     private ArrayList<User> users = new ArrayList<>();
     private GenericID groupID = new GenericID();
+    private int intGroupID;
     private ArrayList<Chore> chores = new ArrayList<>();
     private ArrayList<Reward> rewards = new ArrayList<>();
     private HashMap<User, Integer> points = new HashMap<>();
@@ -47,6 +48,12 @@ public class Group implements Transferable {
         this.rewards.addAll(group.rewards);
         this.points = new HashMap<>();
         this.points.putAll(group.points);
+    }
+
+    public Group(int intGroupID, String name, String description) {
+        this.intGroupID = intGroupID;
+        this.name = name;
+        this.description = description;
     }
 
     public String getDescription() {
@@ -209,5 +216,9 @@ public class Group implements Transferable {
         ret += users;
 
         return ret;
+    }
+
+    public int getIntGroupID() {
+        return intGroupID;
     }
 }

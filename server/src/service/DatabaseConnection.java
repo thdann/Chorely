@@ -1,5 +1,6 @@
 package service;
 
+import shared.transferable.Group;
 import shared.transferable.User;
 
 import java.net.UnknownHostException;
@@ -61,14 +62,17 @@ public class DatabaseConnection {
     public static void main(String[] args) {
         DatabaseConnection databaseConnection = new DatabaseConnection("Chorely");
         QueryExecutor queryExecutor = new QueryExecutor(databaseConnection);
-        UserQueries userQueries = new UserQueries(queryExecutor);
-        boolean registerSuccess = userQueries.registerUser("Chris", "mypassword", true);
-        if (registerSuccess) System.out.println("Registration success");
-        User loggedInUser = userQueries.loginUser("Chris", "mypassword");
-        if (loggedInUser!=null) System.out.println("Login success");
-        assert loggedInUser != null;
+//        UserQueries userQueries = new UserQueries(queryExecutor);
+//        boolean registerSuccess = userQueries.registerUser("Kinda", "mypassword", true);
+//        if (registerSuccess) System.out.println("Registration success");
+//        User loggedInUser = userQueries.loginUser("Chris", "mypassword");
+//        if (loggedInUser!=null) System.out.println("Login success");
+//        assert loggedInUser != null;
 //        boolean deleteSuccess = userQueries.deleteAccount(loggedInUser, "mypassword");
 //        if (deleteSuccess) System.out.println("Successfully deleted");
+        GroupQueries groupQueries = new GroupQueries(queryExecutor);
+        Group newGroup = groupQueries.createGroup("Johan","Johans group","Welcome to group Johan");
+        System.out.println(newGroup.getIntGroupID() +", "+ newGroup.getName() +", "+ newGroup.getDescription());
         databaseConnection.closeConnection();
     }
 }
