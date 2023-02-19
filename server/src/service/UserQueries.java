@@ -153,7 +153,7 @@ public class UserQueries {
      * @param password typed password from client and the application
      * @return A boolean value, true if the user exist in database and the password is correct
      */
-    private boolean checkPassword(String username, String password) {
+    public boolean checkPassword(String username, String password) {
         boolean isVerified = false;
         //simple (but not secure) method to clean sql input
         String sqlSafeUsername = makeSqlSafe(username);
