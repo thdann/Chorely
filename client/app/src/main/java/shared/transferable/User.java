@@ -17,7 +17,7 @@ public class User implements Transferable {
         this(username, password, true);
     }
     public User(String username, String password, boolean adult) {
-        this(username, password, adult, new ArrayList<GenericID>());
+        this(username, password, adult, new ArrayList<>());
     }
     public User(String username, String password, boolean adult, ArrayList<GenericID> groups) {
         this.username = username;
