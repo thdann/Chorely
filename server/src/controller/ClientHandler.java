@@ -100,7 +100,9 @@ public class ClientHandler {
 
         if (userFromFile == null) {  // userFromFile == null when the username isn't found as a registered user.
             reply = new Message(NetCommands.loginDenied, user, new ErrorMessage("Fel användarnamn eller lösenord, försök igen!"));
-        } else if (user.compareUsernamePassword(userFromFile)) {
+        }
+//        else if (user.compareUsernamePassword(userFromFile)) {
+          else if (registeredUsers.checkPassword(user.getUsername(), user.getPassword())) {
             reply = new Message(NetCommands.loginOk, user);
             controller.addOnlineClient(user, ClientHandler.this);
             success = true;
