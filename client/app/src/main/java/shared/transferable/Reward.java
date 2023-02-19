@@ -10,11 +10,18 @@ public class Reward implements Transferable {
     private int rewardPrice;
     private String description;
     private String lastDoneByUser = "";
+    private int groupID;
+
 
     public Reward(String name, int rewardPrice, String description) {
         this.name = name;
         this.rewardPrice = rewardPrice;
         this.description = description;
+    }
+
+    public Reward(String name, int rewardPrice, String description, int groupID) {
+        this(name, rewardPrice, description);
+        this.groupID = groupID;
     }
 
     public String getLastDoneByUser() {
@@ -57,5 +64,9 @@ public class Reward implements Transferable {
         }
         else
             return false;
+    }
+
+    public int getGroupID() {
+        return groupID;
     }
 }

@@ -10,9 +10,11 @@ import java.util.Map;
  * @author Timothy Denison and Emma Svensson, Angelica Asplund, Fredrik Jeppsson
  */
 public class Group implements Transferable {
+    private String owner;
     private String name;
     private String description;
     private ArrayList<User> users = new ArrayList<>();
+    private ArrayList<String> members = new ArrayList<>(); //change to usernames to prevent looping
     private GenericID groupID = new GenericID();
     private int intGroupID;
     private ArrayList<Chore> chores = new ArrayList<>();
@@ -54,6 +56,13 @@ public class Group implements Transferable {
         this.intGroupID = intGroupID;
         this.name = name;
         this.description = description;
+    }
+
+    public Group(int intGroupID, String groupOwner, String groupName, String groupDesc) {
+        this.intGroupID = intGroupID;
+        this.owner = groupOwner;
+        this.name = groupName;
+        this.description = groupDesc;
     }
 
     public String getDescription() {
@@ -211,14 +220,19 @@ public class Group implements Transferable {
 
     @Override
     public String toString() {
-        String ret = name;
-        ret += "Members: \n";
-        ret += users;
-
+        String ret = intGroupID + ", " + name;
         return ret;
     }
 
     public int getIntGroupID() {
         return intGroupID;
+    }
+
+    public ArrayList<String> getMembers() {
+        return members;
+    }
+
+    public void setMembers(ArrayList<String> members) {
+        this.members = members;
     }
 }

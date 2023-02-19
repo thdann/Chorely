@@ -1,5 +1,7 @@
 package model;
 
+import service.*;
+import shared.transferable.Group;
 import shared.transferable.User;
 
 import java.io.*;
@@ -15,6 +17,9 @@ public class RegisteredUsers {
     private final static Logger messagesLogger = Logger.getLogger("messages");
     private final static String filePath = "files/users/";
     private final static RegisteredUsers instance = new RegisteredUsers();
+    UserQueries userQueries;
+    GroupQueries groupQueries;
+    ChoreRewardQueries choreRewardQueries;
 
     private RegisteredUsers() {
     }
@@ -82,7 +87,7 @@ public class RegisteredUsers {
      * Compares the username of a new user to already registered users.
      *
      * @param newUsername the requested username of a new user.
-     * @return true if username is available and false if it already taken.
+     * @return true if username is available and false if it is already taken.
      */
     public synchronized boolean userNameAvailable(String newUsername) {
         File file = new File(filePath + newUsername + ".dat");
@@ -91,6 +96,20 @@ public class RegisteredUsers {
         }
         return true;
     }
+    /**
+     * Compares the username of a new user to already registered users.
+     * todo method unnecessary, just here as a placeholder for now
+     * @param newUsername the requested username of a new user.
+     * @return true if username is available and false if it is already taken.
+     */
+    public boolean nameAvailable(String newUsername) {
+        boolean nameAvailable = false;
+        if (userQueries.getUserInfo(newUsername) == null) {
+            nameAvailable = true;
+        }
+        return nameAvailable;
+    }
+
 
     /**
      * Looks for a requested user among the registered users.
@@ -106,5 +125,11 @@ public class RegisteredUsers {
             foundUser = getUserFromFile(dummyUser);
         }
         return foundUser;
+    }
+
+    public void setQueryPerformers(UserQueries userQueries, GroupQueries groupQueries, ChoreRewardQueries choreRewardQueries) {
+        this.userQueries = userQueries;
+        this.groupQueries = groupQueries;
+        this.choreRewardQueries = choreRewardQueries;
     }
 }

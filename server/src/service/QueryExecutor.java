@@ -10,9 +10,15 @@ import java.sql.Statement;
 public class QueryExecutor {
 
     private DatabaseConnection connection;
+    UserQueries userQueries;
+    GroupQueries groupQueries;
+    ChoreRewardQueries choreRewardQueries;
 
     public QueryExecutor(DatabaseConnection connection) {
         this.connection = connection;
+        userQueries = new UserQueries(this);
+        groupQueries = new GroupQueries(this);
+        choreRewardQueries = new ChoreRewardQueries(this);
     }
 
     //execute queries that modify the database

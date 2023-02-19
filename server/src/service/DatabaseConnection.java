@@ -1,5 +1,6 @@
 package service;
 
+import shared.transferable.Chore;
 import shared.transferable.Group;
 import shared.transferable.User;
 
@@ -11,9 +12,11 @@ public class DatabaseConnection {
 
     private java.sql.Connection conn;
     private String databaseName;
+    QueryExecutor queryExecutor;
 
     public DatabaseConnection(String databaseName) {
         this.databaseName = databaseName;
+        queryExecutor = new QueryExecutor(this);
     }
 
     private java.sql.Connection createConnection() throws SQLException, UnknownHostException {
@@ -62,17 +65,27 @@ public class DatabaseConnection {
     public static void main(String[] args) {
         DatabaseConnection databaseConnection = new DatabaseConnection("Chorely");
         QueryExecutor queryExecutor = new QueryExecutor(databaseConnection);
-//        UserQueries userQueries = new UserQueries(queryExecutor);
-//        boolean registerSuccess = userQueries.registerUser("Kinda", "mypassword", true);
+        UserQueries userQueries = new UserQueries(queryExecutor);
+        ChoreRewardQueries choreRewardQueries = new ChoreRewardQueries(queryExecutor);
+//        boolean registerSuccess = userQueries.registerUser("Bilbo", "mypassword", true);
 //        if (registerSuccess) System.out.println("Registration success");
-//        User loggedInUser = userQueries.loginUser("Chris", "mypassword");
-//        if (loggedInUser!=null) System.out.println("Login success");
+//        User loggedInUser = userQueries.loginUser("Bilbo", "mypassword");
 //        assert loggedInUser != null;
 //        boolean deleteSuccess = userQueries.deleteAccount(loggedInUser, "mypassword");
 //        if (deleteSuccess) System.out.println("Successfully deleted");
-        GroupQueries groupQueries = new GroupQueries(queryExecutor);
-        Group newGroup = groupQueries.createGroup("Johan","Johans group","Welcome to group Johan");
-        System.out.println(newGroup.getIntGroupID() +", "+ newGroup.getName() +", "+ newGroup.getDescription());
+//        GroupQueries groupQueries = new GroupQueries(queryExecutor);
+//        Group newGroup = groupQueries.createGroup("Bilbo","Bilbos group","Welcome to Bilbo");
+//        System.out.println(newGroup.getIntGroupID() +", "+ newGroup.getName() +", "+ newGroup.getDescription());
+
+//        if (loggedInUser!=null) {
+//            System.out.println("Login success");
+//            System.out.println("member of group: " + loggedInUser.getDbGroups());
+//        }
+        Chore testChore = new Chore("Chore1", 200, "This is a CHORE", 3);
+//        choreRewardQueries.createChore(testChore);
+//        testChore.setLastDoneByUser("Bilbo");
+//        choreRewardQueries.updateChore(testChore);
+        choreRewardQueries.deleteChore(testChore);
         databaseConnection.closeConnection();
     }
 }
