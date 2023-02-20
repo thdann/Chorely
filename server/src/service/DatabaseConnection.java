@@ -92,7 +92,6 @@ public class DatabaseConnection {
         Group bigGroup = groupQueries.addMember("Bilbo", new Group(4));
         System.out.println(bigGroup.getMembers());
 
-        groupQueries.removeMember("Bilbo", new Group(4))
 
         databaseConnection.closeConnection();
     }
