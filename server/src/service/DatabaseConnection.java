@@ -67,25 +67,33 @@ public class DatabaseConnection {
         QueryExecutor queryExecutor = new QueryExecutor(databaseConnection);
         UserQueries userQueries = new UserQueries(queryExecutor);
         ChoreRewardQueries choreRewardQueries = new ChoreRewardQueries(queryExecutor);
+        GroupQueries groupQueries = new GroupQueries(queryExecutor);
 //        boolean registerSuccess = userQueries.registerUser("Bilbo", "mypassword", true);
 //        if (registerSuccess) System.out.println("Registration success");
 //        User loggedInUser = userQueries.loginUser("Bilbo", "mypassword");
 //        assert loggedInUser != null;
 //        boolean deleteSuccess = userQueries.deleteAccount(loggedInUser, "mypassword");
 //        if (deleteSuccess) System.out.println("Successfully deleted");
-//        GroupQueries groupQueries = new GroupQueries(queryExecutor);
-//        Group newGroup = groupQueries.createGroup("Bilbo","Bilbos group","Welcome to Bilbo");
 //        System.out.println(newGroup.getIntGroupID() +", "+ newGroup.getName() +", "+ newGroup.getDescription());
 
 //        if (loggedInUser!=null) {
 //            System.out.println("Login success");
 //            System.out.println("member of group: " + loggedInUser.getDbGroups());
 //        }
-        Chore testChore = new Chore("Chore1", 200, "This is a CHORE", 3);
+//        Chore testChore = new Chore("Chore1", 200, "This is a CHORE", 3);
 //        choreRewardQueries.createChore(testChore);
 //        testChore.setLastDoneByUser("Bilbo");
 //        choreRewardQueries.updateChore(testChore);
-        choreRewardQueries.deleteChore(testChore);
+//        choreRewardQueries.deleteChore(testChore);
+
+//        Group newGroup = groupQueries.createGroup("Bilbo","Bilbos group","Welcome to Bilbo");
+        Group group = new Group(4);
+        group.setOwner("Kinda");
+        Group bigGroup = groupQueries.addMember("Bilbo", new Group(4));
+        System.out.println(bigGroup.getMembers());
+
+        groupQueries.removeMember("Bilbo", new Group(4))
+
         databaseConnection.closeConnection();
     }
 }

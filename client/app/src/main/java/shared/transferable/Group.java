@@ -65,6 +65,10 @@ public class Group implements Transferable {
         this.description = groupDesc;
     }
 
+    public Group(int intGroupID) {
+        this.intGroupID = intGroupID;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -82,8 +86,7 @@ public class Group implements Transferable {
     }
 
     public void addUser(User user) {
-        users.add(user);
-        points.put(user, 0);
+        members.add(user.getUsername());
     }
 
     public void setName(String name) {
@@ -234,5 +237,17 @@ public class Group implements Transferable {
 
     public void setMembers(ArrayList<String> members) {
         this.members = members;
+    }
+
+    public void addUser(String userName) {
+        members.add(userName);
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 }

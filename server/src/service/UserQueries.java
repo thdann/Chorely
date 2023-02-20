@@ -117,14 +117,14 @@ public class UserQueries {
             try {
                 Statement statement = queryExecutor.beginTransaction();
                 String queryDeleteUser =
-                        //remove members from owned groups
-                        "DELETE FROM [Member] WHERE group_id = (SELECT group_id FROM [Group] WHERE group_owner = '" + sqlSafeUsername + "');" +
                         //remove chores from owned groups
                         "DELETE FROM [Chore] WHERE group_id = (SELECT group_id FROM [Group] WHERE group_owner = '" + sqlSafeUsername + "');" +
                         //remove rewards from owned groups
                         "DELETE FROM [Reward] WHERE group_id = (SELECT group_id FROM [Group] WHERE group_owner = '" + sqlSafeUsername + "');" +
+                        //remove members from owned groups
+                       "DELETE FROM [Member] WHERE group_id = (SELECT group_id FROM [Group] WHERE group_owner = '" + sqlSafeUsername + "');" +
                         //remove memberships
-                        "DELETE FROM [Member] WHERE user_name = '" + sqlSafeUsername + "';" +
+                       "DELETE FROM [Member] WHERE user_name = '" + sqlSafeUsername + "';" +
                         //remove owned groups
                         "DELETE FROM [Group] WHERE group_owner = '" + sqlSafeUsername + "';" +
                         //remove user
