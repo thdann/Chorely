@@ -10,5 +10,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="org.junit.jupiter:junit-jupiter:5.5.0" level="project" />
     <orderEntry type="module" module-name="shared" />
+    <orderEntry type="library" name="microsoft.sqlserver.mssql.jdbc" level="project" />
+    <orderEntry type="library" name="sazabi.bcrypt4z.scalaz_2.10" level="project" />
   </component>
 </module>

@@ -68,12 +68,11 @@ public class LogInActivity extends AppCompatActivity implements UpdatableActivit
         if(!username.equals("") && !password.equals("")) {
             User userToLogIn = new User(username, password);
 
-            Message logInMsg = new Message(NetCommands.login, userToLogIn, new ArrayList<Transferable>());
+            Message logInMsg = new Message(NetCommands.login, userToLogIn);
             Model.getInstance(getFilesDir(),this).handleTask(logInMsg);
             user.setVisibility(View.INVISIBLE);
             pass.setVisibility(View.INVISIBLE);
-            Button buttonRegister = findViewById(R.id.logIn);
-            buttonRegister.setVisibility(Button.INVISIBLE);
+            findViewById(R.id.logIn).setVisibility(View.INVISIBLE);
             gifImageViewWorking.setVisibility(View.VISIBLE);
         } else {
             doToast("Du måste fylla i användarnamn och lösenord");
@@ -119,7 +118,7 @@ public class LogInActivity extends AppCompatActivity implements UpdatableActivit
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
                 toast.show();
             }
         });

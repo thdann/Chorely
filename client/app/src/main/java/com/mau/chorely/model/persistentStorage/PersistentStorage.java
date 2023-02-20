@@ -35,7 +35,7 @@ public class PersistentStorage {
     private static final String SEL_GROUP_FILE_NAME = "/selGroup.cho";
     private static File userFile;
     private static File groupDir;
-    private static File selectedGroup;
+    private static Group selectedGroup;
 
     private PersistentStorage() {
     }
@@ -44,7 +44,7 @@ public class PersistentStorage {
         this.filesDir = filesDir;
         userFile = new File(filesDir.getAbsolutePath() + USER_FILE_NAME);
         groupDir = new File(filesDir.getAbsolutePath() + "/groups");
-        selectedGroup = new File(filesDir.getAbsolutePath() + SEL_GROUP_FILE_NAME);
+        //selectedGroup = new File(filesDir.getAbsolutePath() + SEL_GROUP_FILE_NAME);
         deleteAllGroups();
 
     }
@@ -53,9 +53,9 @@ public class PersistentStorage {
      * Method to delete selected group.
      */
     public void deleteSelectedGroup() {
-     if(selectedGroup.exists()) {
-         selectedGroup.delete();
-     }
+//     if(selectedGroup.exists()) {
+//         selectedGroup.delete();
+//     }
     }
 
     /**
@@ -218,17 +218,18 @@ public class PersistentStorage {
     }
 
     public synchronized void setSelectedGroup(Group inGroup) {
-        Group group = inGroup;
-        if (selectedGroup.exists()) {
-            selectedGroup.delete();
-        }
-        try (ObjectOutputStream ois = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(selectedGroup)))) {
-            ois.writeObject(group.getGroupID());
-            ois.flush();
-        } catch (IOException e) {
-            System.out.println(new Date() + "File output stream: thrown exception " +
-                    "trying to write group." + e.getMessage());
-        }
+        selectedGroup = inGroup;
+//        Group group = inGroup;
+//        if (selectedGroup.exists()) {
+//            selectedGroup.delete();
+//        }
+//        try (ObjectOutputStream ois = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(selectedGroup)))) {
+//            ois.writeObject(group.getGroupID());
+//            ois.flush();
+//        } catch (IOException e) {
+//            System.out.println(new Date() + "File output stream: thrown exception " +
+//                    "trying to write group." + e.getMessage());
+//        }
     }
 
     /**
@@ -236,20 +237,21 @@ public class PersistentStorage {
      * @return
      */
     public synchronized Group getSelectedGroup() {
-        Group group = null;
-        if (selectedGroup.exists()) {
-            try (ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(selectedGroup)))) {
-                GenericID id = (GenericID) ois.readObject();
-                try(ObjectInputStream groupInput = new ObjectInputStream(new BufferedInputStream(new FileInputStream(groupDir +"/" + id +".cho")))){
-                    group = (Group) groupInput.readObject();
-                } catch (IOException f){
-                    System.out.println("ERROR READING SELECTED GROUP: " + f.getMessage());
-                }
-            } catch (IOException | ClassNotFoundException e) {
-                System.out.println(new Date() + "File input stream: thrown exception " +
-                        "trying to read group." + e.getMessage());
-            }
-        }
-        return group;
+        return  selectedGroup;
+//        Group group = null;
+//        if (selectedGroup.exists()) {
+//            try (ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(selectedGroup)))) {
+//                GenericID id = (GenericID) ois.readObject();
+//                try(ObjectInputStream groupInput = new ObjectInputStream(new BufferedInputStream(new FileInputStream(groupDir +"/" + id +".cho")))){
+//                    group = (Group) groupInput.readObject();
+//                } catch (IOException f){
+//                    System.out.println("ERROR READING SELECTED GROUP: " + f.getMessage());
+//                }
+//            } catch (IOException | ClassNotFoundException e) {
+//                System.out.println(new Date() + "File input stream: thrown exception " +
+//                        "trying to read group." + e.getMessage());
+//            }
+//        }
+//        return group;
     }
 }

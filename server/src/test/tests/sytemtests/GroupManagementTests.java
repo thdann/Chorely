@@ -7,7 +7,7 @@ import shared.transferable.*;
 import test.util.TestClient;
 import test.util.TestUtils;
 
-import javax.swing.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 
@@ -177,7 +177,7 @@ public class GroupManagementTests {
             assertEquals(0, users.size());
             RegisteredUsers registeredUsers = RegisteredUsers.getInstance();
             User userFromFile = registeredUsers.getUserFromFile(user);
-            List<GenericID> groups = userFromFile.getGroups();
+            ArrayList<GenericID> groups = userFromFile.getGroups();
             assertFalse(groups.contains(group.getGroupID()));
         } catch (InterruptedException | ExecutionException e) {
             // What do I do here?

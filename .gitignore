@@ -17,6 +17,8 @@
 .idea/**/contentModel.xml
 
 # Sensitive or high-churn files
+server/src/service/ServerAccess.java
+server/files
 .idea/**/dataSources/
 .idea/**/dataSources.ids
 .idea/**/dataSources.local.xml
@@ -50,6 +52,7 @@ cmake-build-*/
 
 # IntelliJ
 out/
+server/files/
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/

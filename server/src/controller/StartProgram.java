@@ -1,5 +1,8 @@
 package controller;
 
+import model.RegisteredUsers;
+import service.*;
+
 import java.io.File;
 
 /**
@@ -36,5 +39,14 @@ public class StartProgram {
         }
 
         ServerController prog = new ServerController(6583);
+        //setup database connection
+        DatabaseConnection databaseConnection = new DatabaseConnection("Chorely");
+        //link to query executer
+        QueryExecutor queryExecutor = new QueryExecutor(databaseConnection);
+        //link to model classes
+        UserQueries userQueries = new UserQueries(queryExecutor);
+        GroupQueries groupQueries = new GroupQueries(queryExecutor);
+        ChoreRewardQueries choreRewardQueries = new ChoreRewardQueries(queryExecutor);
+        RegisteredUsers.getInstance().setQueryPerformers(userQueries, groupQueries, choreRewardQueries);
     }
 }
