@@ -1,9 +1,10 @@
 package service;
 
 import org.mindrot.jbcrypt.BCrypt;
+import shared.transferable.Group;
 import shared.transferable.User;
 
-import java.sql.Array;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -15,10 +16,10 @@ import java.util.ArrayList;
  */
 public class UserQueries {
 
-    private QueryExecutor database;
+    private QueryExecutor queryExecutor;
 
-    public UserQueries(QueryExecutor database){
-       this.database = database;
+    public UserQueries(QueryExecutor queryExecutor){
+       this.queryExecutor = queryExecutor;
     }
 
     /**
@@ -37,7 +38,7 @@ public class UserQueries {
         }
         String query = "INSERT INTO [User] VALUES ('" + sqlSafeUsername + "', '" + hashedPassword + "', " + isAdult + ")";
         try {
-            database.executeUpdateQuery(query);
+            queryExecutor.executeUpdateQuery(query);
             success = true;
         }
         catch (SQLException sqlException) {
@@ -46,72 +47,97 @@ public class UserQueries {
         }
         return success;
     }
-    private static String makeSqlSafe(String string) {
-        //simple (but not secure) method to clean sql input
-        return string.replace("'", "''");
-    }
-
     /**
-     * Method to check a user's credentials and log them in
+     * Method to retrieve a users info
+     *
      * @param userName and password from login message received from client
-     * @return A user containing their username, whether they are an adult, and a list of the groups they are a member of
+     * @return A user object containing their username, whether they are an adult, and a list of the groups they are a member of
      */
     public User loginUser(String userName, String password) {
         User loggedInUser = null;
-        ArrayList<Integer> groups = new ArrayList<>();
         if (checkPassword(userName, password)) {
             String sqlSafeUsername = makeSqlSafe(userName);
-            loggedInUser = getUser(sqlSafeUsername);
-            //todo once groups changed to accept int as ID implement following call -> group statements to ONE query call
-            //join with group table to get group names, points etc
-            String query = "SELECT * FROM [Member] WHERE user_name = '" + sqlSafeUsername + "';";
+            //get users basic info
+            loggedInUser = getUserInfo(sqlSafeUsername);
+            //get groups user is member of
+            //todo replace with call to GroupQueries once method is written
+            ArrayList<Group> groups = new ArrayList<>();
+            String query = "SELECT * FROM [Group] where group_id = (SELECT group_id from [Member] WHERE user_name = '" + sqlSafeUsername + "');";
             try {
-                ResultSet resultSet = database.executeReadQuery(query);
+                ResultSet resultSet = queryExecutor.executeReadQuery(query);
                 while (resultSet.next()) {
                     int groupId = resultSet.getInt("group_id");
-                    loggedInUser.getDbGroups().add(groupId);
+                    String groupName = resultSet.getString("group_name");
+                    String groupOwner = resultSet.getString("group_owner");
+                    String groupDesc = resultSet.getString("group_description");
+                    groups.add(new Group(groupId, groupOwner, groupName, groupDesc));
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+            loggedInUser.setDBGroups(groups);
         }
         return loggedInUser;
     }
 
-    public User getUser(String sqlSafeUsername) {
+    /**
+     * Finds and retrieves a user's details from the database
+     *
+     * @param userName username to be found
+     * @return the found user
+     */
+    public User getUserInfo(String userName) {
+        String sqlSafeUsername = makeSqlSafe(userName);
         boolean adult = false;
         String query = "SELECT * FROM [User] WHERE user_name = '" + sqlSafeUsername + "';";
         try {
-            ResultSet resultSet = database.executeReadQuery(query);
-            while (resultSet.next()) {
+            ResultSet resultSet = queryExecutor.executeReadQuery(query);
+            if (resultSet.next()) {
                 int adultInt = resultSet.getInt("is_adult");
                     if(adultInt == 1) adult = true;
+            }
+            else {
+                return null;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return new User(sqlSafeUsername, adult);
     }
-
     /**
-     * Method to delete a user
+     * Method to delete a user --no requirement but useful for testing
      *
+     * @param userToDelete object to be deleted, password for authorisation
+     * @return boolean with success outcome
      */
     public boolean deleteAccount(User userToDelete, String password) {
         boolean accountDeleted = false;
         String sqlSafeUsername = makeSqlSafe(userToDelete.getUsername());
         if (checkPassword(userToDelete.getUsername(), password)) {
             try {
-                Statement statement = database.beginTransaction();
-                String queryDeleteUser = "DELETE FROM [User] WHERE user_name = '" + sqlSafeUsername + "';";
+                Statement statement = queryExecutor.beginTransaction();
+                String queryDeleteUser =
+                        //remove chores from owned groups
+                        "DELETE FROM [Chore] WHERE group_id = (SELECT group_id FROM [Group] WHERE group_owner = '" + sqlSafeUsername + "');" +
+                        //remove rewards from owned groups
+                        "DELETE FROM [Reward] WHERE group_id = (SELECT group_id FROM [Group] WHERE group_owner = '" + sqlSafeUsername + "');" +
+                        //remove members from owned groups
+                       "DELETE FROM [Member] WHERE group_id = (SELECT group_id FROM [Group] WHERE group_owner = '" + sqlSafeUsername + "');" +
+                        //remove memberships
+                       "DELETE FROM [Member] WHERE user_name = '" + sqlSafeUsername + "';" +
+                        //remove owned groups
+                        "DELETE FROM [Group] WHERE group_owner = '" + sqlSafeUsername + "';" +
+                        //remove user
+                        "DELETE FROM [User] WHERE user_name = '" + sqlSafeUsername + "';";
+                System.out.println(queryDeleteUser);
                 statement.executeUpdate(queryDeleteUser);
-                database.endTransaction();
+                queryExecutor.endTransaction();
                 accountDeleted = true;
             }
             catch (SQLException sqlException) {
                 try {
                     System.out.println(sqlException);
-                   database.rollbackTransaction();
+                   queryExecutor.rollbackTransaction();
                 }
                 catch (SQLException throwables) {
                     throwables.printStackTrace();
@@ -133,7 +159,7 @@ public class UserQueries {
         String sqlSafeUsername = makeSqlSafe(username);
         String query = "SELECT user_password FROM [User] WHERE user_name = '" + sqlSafeUsername + "';";
         try {
-            ResultSet resultSet = database.executeReadQuery(query);
+            ResultSet resultSet = queryExecutor.executeReadQuery(query);
             if (resultSet.next()) {
                 String hashedPassword = resultSet.getString(1);
                 isVerified = BCrypt.checkpw(password, hashedPassword);
@@ -148,5 +174,10 @@ public class UserQueries {
 
 
 
+
+    private static String makeSqlSafe(String string) {
+        //simple (but not secure) method to clean sql input
+        return string.replace("'", "''");
+    }
 }
 

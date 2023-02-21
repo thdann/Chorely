@@ -11,13 +11,17 @@ public class Chore implements Transferable {
     private int score;
     private String description;
     private String lastDoneByUser = " ";
+    private int groupID;
 
     public Chore(String name, int score, String description) {
         this.name = name;
         this.score = score;
         this.description = description;
     }
-
+    public Chore(String name, int score, String description, int groupID) {
+        this(name, score, description);
+        this.groupID = groupID;
+    }
     public String getLastDoneByUser() {
         return lastDoneByUser;
     }
@@ -56,5 +60,9 @@ public class Chore implements Transferable {
                     ((Chore) obj).getLastDoneByUser().equals(lastDoneByUser));
         } else
             return false;
+    }
+
+    public int getGroupID() {
+        return groupID;
     }
 }

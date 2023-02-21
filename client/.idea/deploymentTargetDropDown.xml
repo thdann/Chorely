@@ -1,34 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="deploymentTargetDropDown">
-    <targetSelectedWithDropDown>
-      <Target>
-        <type value="QUICK_BOOT_TARGET" />
-        <deviceKey>
-          <Key>
-            <type value="VIRTUAL_DEVICE_PATH" />
-            <value value="C:\Users\Johan\.android\avd\Pixel_6_API_30_4.avd" />
-          </Key>
-        </deviceKey>
-      </Target>
-    </targetSelectedWithDropDown>
-    <timeTargetWasSelectedWithDropDown value="2023-02-13T07:02:30.321963400Z" />
     <runningDeviceTargetsSelectedWithDialog>
       <Target>
         <type value="RUNNING_DEVICE_TARGET" />
         <deviceKey>
           <Key>
-            <type value="VIRTUAL_DEVICE_PATH" />
-            <value value="C:\Users\Johan\.android\avd\Pixel_6_API_30_4.avd" />
-          </Key>
-        </deviceKey>
-      </Target>
-      <Target>
-        <type value="RUNNING_DEVICE_TARGET" />
-        <deviceKey>
-          <Key>
-            <type value="VIRTUAL_DEVICE_PATH" />
-            <value value="C:\Users\Johan\.android\avd\Pixel_6_API_30_3.avd" />
+            <type value="SERIAL_NUMBER" />
+            <value value="adb-RF8M31KS8VE-ZtxTkv._adb-tls-connect._tcp" />
           </Key>
         </deviceKey>
       </Target>
@@ -39,7 +18,7 @@
         <deviceKey>
           <Key>
             <type value="VIRTUAL_DEVICE_PATH" />
-            <value value="C:\Users\Johan\.android\avd\Pixel_6_API_30_3.avd" />
+            <value value="C:\Users\chris\.android\avd\Pixel_6_API_30.avd" />
           </Key>
         </deviceKey>
       </Target>

@@ -11,13 +11,13 @@ public class User implements Transferable {
     private final String password; //todo remove password storing in object, only in database
     private final boolean adult;
     private final ArrayList<GenericID> groups;
-    private final ArrayList<Integer> dbGroups = new ArrayList<>();
+    private ArrayList<Group> dbGroups = new ArrayList<>();
 
     public User(String username, String password) {
         this(username, password, true);
     }
     public User(String username, String password, boolean adult) {
-        this(username, password, adult, new ArrayList<>());
+        this(username, password, adult, new ArrayList<GenericID>());
     }
     public User(String username, String password, boolean adult, ArrayList<GenericID> groups) {
         this.username = username;
@@ -87,7 +87,13 @@ public class User implements Transferable {
         return adult;
     }
 
-    public ArrayList<Integer> getDbGroups() {
+    public ArrayList<Group> getDbGroups() {
         return dbGroups;
+    }
+    public boolean setDBGroups (ArrayList<Group> groups) {
+        boolean success = false;
+        dbGroups = groups;
+        success = true;
+        return success;
     }
 }
