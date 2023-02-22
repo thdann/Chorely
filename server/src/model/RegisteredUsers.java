@@ -132,17 +132,17 @@ public class RegisteredUsers {
 //        }
 //        writeUserToFile(user);
 //    }
-    /**
-     * Copy of previous method, deletes and re/registers user
-     * todo bad method, remove and (if needed) replace with update method
-     *
-     * @param user is the new updated version of the User object to be saved to file.
-     */
-    public synchronized void updateUser(User user) {
-        userQueries.deleteAccount(user, user.getPassword());
-        userQueries.registerUser(user.getUsername(), user.getPassword(), true);
-
-    }
+//    /**
+//     * Copy of previous method, deletes and re/registers user
+//     * todo bad method, remove and (if needed) replace with update method
+//     *
+//     * @param user is the new updated version of the User object to be saved to file.
+//     */
+//    public synchronized void updateUser(User user) {
+//        userQueries.deleteAccount(user, user.getPassword());
+//        userQueries.registerUser(user.getUsername(), user.getPassword(), true);
+//
+//    }
 //    /**
 //     * Compares the username of a new user to already registered users.
 //     *

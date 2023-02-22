@@ -1,10 +1,11 @@
 package service;
 
-import shared.transferable.Group;
+import shared.transferable.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class GroupQueries {
@@ -29,7 +30,8 @@ public class GroupQueries {
                 int newGroupId = resultSet.getInt("group_id");
                 String newGroupName = resultSet.getString("group_name");
                 String newGroupDescription = resultSet.getString("group_description");
-                createdGroup = new Group(newGroupId, newGroupName, newGroupDescription);
+                createdGroup = new Group(newGroupId, newGroupName, owner, newGroupDescription);
+                createdGroup.addMember(new User(owner));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -45,12 +47,13 @@ public class GroupQueries {
 
         try {
             ResultSet resultSet = queryExecutor.executeReadQuery(query);
-            resultSet.next();
-            group = new Group(
-                    Integer.parseInt(resultSet.getString("group_id")),
-                    resultSet.getString("group_name"),
-                    resultSet.getString("group_owner"),
-                    resultSet.getString("group_description"));
+            while (resultSet.next()) {
+                group = new Group(
+                        resultSet.getInt("group_id"),
+                        resultSet.getString("group_name"),
+                        resultSet.getString("group_owner"),
+                        resultSet.getString("group_description"));
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -91,44 +94,104 @@ public class GroupQueries {
      * Method adds a member to a given group,
      * with, by default, 0 points and no admin rights
      *
-     * @param userName user to add to group
+     * @param user user to add to group
      * @param group group to be updated
      * @return the updated group if successful, null if not
      */
-    public Group addMember(String userName, Group group) {
+    public Group addMember(User user, Group group) {
         //todo return the group with updated attributes, chores, members and rewards
-        Group biggerGroup = null;
         int groupID = group.getIntGroupID();
-        boolean success = false;
-        userName = makeSqlSafe(userName);
-        String query = "INSERT INTO [Member] VALUES ("+ groupID + ", '" + userName + "', 0 , 0);";
-        try {
-            queryExecutor.executeUpdateQuery(query);
-            success = true;
+        Group dbGroup = getGroupMembers(groupID);
+        //only add member if not already a member
+        if (!dbGroup.getMembers().contains(user)) {
+            boolean success = false;
+            String userName = makeSqlSafe(user.getUsername());
+            String query = "INSERT INTO [Member] VALUES (" + groupID + ", '" + userName + "', 0 , 0);";
+            System.out.println(query);
+            try {
+                queryExecutor.executeUpdateQuery(query);
+                success = true;
+            } catch (SQLException sqlException) {
+                sqlException.printStackTrace();
+            }
+            if (success) {
+                dbGroup = group;
+                dbGroup.addMember(user);
+            }
         }
-        catch (SQLException sqlException) {
-            sqlException.printStackTrace();
-        }
-        if (success) {
-            biggerGroup = group;
-            biggerGroup.addUser(userName);
-        }
-        return biggerGroup;
+        return dbGroup;
     }
 
     /**
      * Remove a member from a group, if the member is the owner,
      * remove the group and all it's members/chores/rewards
-     * @param userName name of member to remove
+     * @param user name of member to remove
      * @param group group to be updated
      * @return true when success
      */
-    public boolean removeMember(String userName, Group group) {
+    public boolean removeMember(User user, Group group) {
         boolean memberRemoved = false;
         String owner = group.getOwner();
         String query;
-        if (owner.equals(userName)) {
-            query =          //remove chores
+        if (group.getMembers().contains(user)) {
+            if (owner.equals(user.getUsername())) {
+                query =          //remove chores
+                        "DELETE FROM [Chore] WHERE group_id = '" + group.getGroupID() + "');" +
+                                //remove rewards
+                                "DELETE FROM [Reward] WHERE group_id = '" + group.getGroupID() + "');" +
+                                //remove members
+                                "DELETE FROM [Member] WHERE group_id = '" + group.getGroupID() + "');" +
+                                //finally, remove group
+                                "DELETE FROM [Group] WHERE group_id = '" + group.getGroupID() + "';";
+
+            } else {
+                query = "DELETE FROM [Member] WHERE user_name = '" + user.getUsername() + "' AND group_id = '" + group.getGroupID() + "'";
+            }
+            try {
+                Statement statement = queryExecutor.beginTransaction();
+                statement.executeUpdate(query);
+                queryExecutor.endTransaction();
+                memberRemoved = true;
+            } catch (SQLException sqlException) {
+                try {
+                    System.out.println(sqlException);
+                    queryExecutor.rollbackTransaction();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+            }
+        }
+        return memberRemoved;
+    }
+
+    private static String makeSqlSafe(String string) {
+        return string.replace("'", "''");
+    }
+
+    public boolean isUserAdmin(User user, Group group) {
+        boolean isAdmin = false;
+        String query = "SELECT * FROM [Member] WHERE user_name= " + user.getUsername() + " AND group_id= " + group.getIntGroupID();
+        try {
+            ResultSet resultSet = queryExecutor.executeReadQuery(query);
+            if (resultSet.next()) {
+                int adminBit = resultSet.getInt("is_admin");
+                if (adminBit == 1) {
+                    isAdmin = true;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return isAdmin;
+    }
+
+    /**
+     *
+     * @param group
+     */
+    public boolean removeGroup(Group group) {
+        boolean groupRemoved = false;
+        String query =          //remove chores
                     "DELETE FROM [Chore] WHERE group_id = '" + group.getGroupID() + "');" +
                             //remove rewards
                             "DELETE FROM [Reward] WHERE group_id = '" + group.getGroupID() + "');" +
@@ -137,30 +200,53 @@ public class GroupQueries {
                             //finally, remove group
                             "DELETE FROM [Group] WHERE group_id = '" + group.getGroupID() + "';";
 
-        }
-        else {
-            query = "DELETE FROM [Member] WHERE user_name = '" + userName + "' AND group_id = '"+ group.getGroupID() + "'";
-        }
+
         try {
             Statement statement = queryExecutor.beginTransaction();
             statement.executeUpdate(query);
             queryExecutor.endTransaction();
-            memberRemoved = true;
+            groupRemoved = true;
         }
         catch (SQLException sqlException) {
             try {
                 System.out.println(sqlException);
                 queryExecutor.rollbackTransaction();
+                groupRemoved = false;
             }
             catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
         }
-        return memberRemoved;
-    }
-    private static String makeSqlSafe(String string) {
-        return string.replace("'", "''");
+        return groupRemoved;
     }
 
+    public void updateMembers(Group updatedGroup) {
+        int id = updatedGroup.getIntGroupID();
+        Group oldGroup = getGroupMembers(id);
+        ArrayList<Transferable> data = new ArrayList<>();
+        data.add(updatedGroup);
+        for (User u : updatedGroup.getUsers()) {
+            if (!oldGroup.getUsers().contains(u) && !Objects.equals(oldGroup.getOwner(), u.getUsername())) {
+                addMember(u, updatedGroup);
+            }
+        }
 
+    }
+
+    private Group getGroupMembers(int id) {
+        Group groupWithMembers = new Group();
+        String query = "SELECT * FROM [Member] WHERE group_id=" + id + ";";
+        System.out.println(query);
+        try {
+            ResultSet resultSet = queryExecutor.executeReadQuery(query);
+            while (resultSet.next()) {
+                String userName = resultSet.getString("user_name");
+                User member = new User(userName);
+                groupWithMembers.addMember(member);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return groupWithMembers;
+    }
 }

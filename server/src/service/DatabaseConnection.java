@@ -89,7 +89,7 @@ public class DatabaseConnection {
 //        Group newGroup = groupQueries.createGroup("Bilbo","Bilbos group","Welcome to Bilbo");
         Group group = new Group(4);
         group.setOwner("Kinda");
-        Group bigGroup = groupQueries.addMember("Bilbo", new Group(4));
+        Group bigGroup = groupQueries.addMember(new User ("Bob"), new Group(4));
         System.out.println(bigGroup.getMembers());
 
 

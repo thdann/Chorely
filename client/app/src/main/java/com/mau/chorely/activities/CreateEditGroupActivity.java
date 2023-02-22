@@ -56,6 +56,7 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
         Presenter.getInstance().register(this);
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
+            //returns an empty group object
             selectedGroup = (Group) bundle.get("SELECTED_GROUP");
         }
         initActivity();
@@ -162,6 +163,7 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
      */
     private void initActivity() {
         if (selectedGroup != null) {
+            //update an existing group
             setTitle("Redigera grupp");
             EditText groupName = (EditText) findViewById(R.id.edit_group_current_name);
             groupName.setText(selectedGroup.getName());
@@ -174,9 +176,11 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
                 initListView();
             }
         } else {
+            //register a new group
             selectedGroup = new Group();
             newGroup = true;
-            selectedGroup.addUser(Model.getInstance(getFilesDir(),this).getUser());
+            selectedGroup.setOwner(Model.getInstance(getFilesDir(),this).getUser().getUsername());
+            selectedGroup.addMember(Model.getInstance(getFilesDir(),this).getUser());
             initListView();
         }
     }
@@ -200,6 +204,14 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
                 ArrayList<Transferable> data = new ArrayList<>();
                 selectedGroup.setName(groupName);
                 selectedGroup.setDescription(groupDescription);
+                selectedGroup.setOwner(model.getUser().getUsername());
+                System.out.println(selectedGroup.getUsers());
+                if(newGroup) {
+                    System.out.println("New group");
+                } else {
+                    System.out.println("Users in updated group");
+                }
+
                 data.add(selectedGroup);
                 Message message = new Message(command, model.getUser(), data);
                 model.handleTask(message);
@@ -244,7 +256,7 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
     public String searchForMember(View view) {
         String searchString = ((EditText) findViewById(R.id.edit_group_memberSearchText)).getText().toString();
         if (!searchString.equals("")) {
-            if (!selectedGroup.getUsers().contains(new User(searchString, ""))) {
+            if (!selectedGroup.getUsers().contains(new User(searchString))) {
                 findViewById(R.id.edit_group_searchMemberButton).setVisibility(View.INVISIBLE);
                 Model model = Model.getInstance(getFilesDir(),this);
                 User user = new User(searchString, "");
@@ -287,7 +299,7 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
      * @param view
      */
     public void addMember(View view) {
-        selectedGroup.addUser(lastSearchedUser);
+        selectedGroup.addMember(lastSearchedUser);
         adapter.notifyDataSetChanged();
         memberAddedNotification();     //@Author Johan, Måns
         cancelFoundMember(null);

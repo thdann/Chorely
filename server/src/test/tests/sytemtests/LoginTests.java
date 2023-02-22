@@ -22,7 +22,7 @@ public class LoginTests {
     public void testSimpleLogin() {
         User user = new User("testLoginAndReceiveGroup", "secret");
         Group group = new Group("testLoginGroup");
-        group.addUser(user);
+        group.addMember(user);
         try {
             int port = basePort + 1;
             ExecutorService executorService = Executors.newCachedThreadPool();
@@ -64,7 +64,7 @@ public class LoginTests {
     public void testLoginDenied() {
         User user = new User("testLoginAndReceiveGroup", "secret");
         Group group = new Group("testLoginGroup");
-        group.addUser(user);
+        group.addMember(user);
         try {
             int port = basePort + 2;
             ExecutorService executorService = Executors.newCachedThreadPool();
