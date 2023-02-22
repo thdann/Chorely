@@ -25,7 +25,7 @@ public class UpdateGroupTests {
     public void testLoginAndReceiveGroup() {
         User user = new User("testLoginAndReceiveGroup", "secret");
         Group group = new Group("testLoginGroup");
-        group.addUser(user);
+        group.addMember(user);
 
         try {
             int port = basePort + 1;

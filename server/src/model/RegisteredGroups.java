@@ -3,8 +3,8 @@ package model;
 import service.ChoreRewardQueries;
 import service.GroupQueries;
 import service.UserQueries;
-import shared.transferable.GenericID;
 import shared.transferable.Group;
+import shared.transferable.User;
 
 import java.io.*;
 import java.util.logging.Logger;
@@ -137,34 +137,50 @@ public class RegisteredGroups {
     public synchronized void updateGroup(Group group) {
         groupQueries.updateGroupName(group.getIntGroupID(), group.getName());
         groupQueries.updateGroupDescription(group.getIntGroupID(), group.getDescription());
+        groupQueries.updateMembers(group);
     }
 
-    /**
-     * Compares the groupID of a new group to already registered groups.
-     *
-     * @param newGroupId the requested groupID of a new group.
-     * @return true if groupID is available and false if it already exists.
-     */
-    public synchronized boolean groupIdAvailable(GenericID newGroupId) {
-        File file = new File(filePath + newGroupId + ".dat");
-        if (file.exists()) {
-            return false;
-        }
-        return true;
-    }
+//    /**
+//     * Compares the groupID of a new group to already registered groups.
+//     *
+//     * @param newGroupId the requested groupID of a new group.
+//     * @return true if groupID is available and false if it already exists.
+//     */
+//    public synchronized boolean groupIdAvailable(int newGroupId) {
+//        File file = new File(filePath + newGroupId + ".dat");
+//        if (file.exists()) {
+//            return false;
+//        }
+//        return true;
+//    }
 
+//    /**
+//     * Removes a group from the saved groups.
+//     * @param group the group that is removed.
+//     */
+//    public synchronized void deleteGroup(Group group) {
+//        File file = new File(filePath + group.getGroupID() + ".dat");
+//        file.delete();
+//    }
     /**
      * Removes a group from the saved groups.
      * @param group the group that is removed.
      */
     public synchronized void deleteGroup(Group group) {
-        File file = new File(filePath + group.getGroupID() + ".dat");
-        file.delete();
+        groupQueries.removeGroup(group);
     }
 
     public void setQueryPerformers(UserQueries userQueries, GroupQueries groupQueries, ChoreRewardQueries choreRewardQueries) {
         this.userQueries = userQueries;
         this.groupQueries = groupQueries;
         this.choreRewardQueries = choreRewardQueries;
+    }
+
+    public boolean removeMember(User user, Group group) {
+        return groupQueries.removeMember(user, group);
+    }
+
+    public Group addMember(User userToAdd, Group groupToAlter) {
+        return groupQueries.addMember(userToAdd, groupToAlter);
     }
 }

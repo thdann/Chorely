@@ -35,7 +35,7 @@ public class PersistentStorage {
     private static final String SEL_GROUP_FILE_NAME = "/selGroup.cho";
     private static File userFile;
     private static File groupDir;
-    private static Group selectedGroup;
+    private static File selectedGroup;
 
     private PersistentStorage() {
     }
@@ -44,7 +44,7 @@ public class PersistentStorage {
         this.filesDir = filesDir;
         userFile = new File(filesDir.getAbsolutePath() + USER_FILE_NAME);
         groupDir = new File(filesDir.getAbsolutePath() + "/groups");
-        //selectedGroup = new File(filesDir.getAbsolutePath() + SEL_GROUP_FILE_NAME);
+        selectedGroup = new File(filesDir.getAbsolutePath() + SEL_GROUP_FILE_NAME);
         deleteAllGroups();
 
     }
@@ -88,11 +88,13 @@ public class PersistentStorage {
     public void updateUser(User user) {
         if (userFile.exists()) {
             userFile.delete();
+            System.out.println("User file deleted");
         }
         try (ObjectOutputStream outputStream = new ObjectOutputStream(
                 new BufferedOutputStream(new FileOutputStream(userFile)))) {
             outputStream.writeObject(user);
             outputStream.flush();
+            System.out.println("User file written");
         } catch (IOException e) {
             System.out.println(new Date() + "File output stream: thrown exception " +
                     "trying to write user." + e.getMessage());
@@ -131,8 +133,8 @@ public class PersistentStorage {
         if (!groupDir.exists()) {
             groupDir.mkdirs();
         }
-
-        File groupFile = new File(groupDir.getPath() + "/" + newGroup.getGroupID() + ".cho");
+        System.out.println("Group to save" + newGroup);
+        File groupFile = new File(groupDir.getPath() + "/" + newGroup.getIntGroupID() + ".cho");
         if (groupFile.exists()) {
             System.out.println("FILE EXISTS");
             try (ObjectInputStream inputStream = new ObjectInputStream(new BufferedInputStream(
@@ -170,7 +172,7 @@ public class PersistentStorage {
 
         if (groupUpdated) {
             User user = getUser();
-            user.addGroupMembership(newGroup.getGroupID());
+            user.addGroupMembership(newGroup);
         }
 
         return groupUpdated;
@@ -183,6 +185,7 @@ public class PersistentStorage {
      */
     public synchronized ArrayList<Group> getGroups() {
         ArrayList<Group> ret = new ArrayList<>();
+
         File[] groupFiles = groupDir.listFiles();
         if (groupFiles != null) {
             for (File groupFile : groupFiles) {
@@ -205,7 +208,7 @@ public class PersistentStorage {
     public void deleteGroup(Group group) {
         //remove group from user file
         User user = getUser();
-        user.removeGroupMembership(group.getGroupID());
+        user.removeGroupMembership(group);
         updateUser(user);
 
         //delete file
@@ -218,18 +221,17 @@ public class PersistentStorage {
     }
 
     public synchronized void setSelectedGroup(Group inGroup) {
-        selectedGroup = inGroup;
-//        Group group = inGroup;
-//        if (selectedGroup.exists()) {
-//            selectedGroup.delete();
-//        }
-//        try (ObjectOutputStream ois = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(selectedGroup)))) {
-//            ois.writeObject(group.getGroupID());
-//            ois.flush();
-//        } catch (IOException e) {
-//            System.out.println(new Date() + "File output stream: thrown exception " +
-//                    "trying to write group." + e.getMessage());
-//        }
+        Group group = inGroup;
+        if (selectedGroup.exists()) {
+            selectedGroup.delete();
+        }
+        try (ObjectOutputStream ois = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(selectedGroup)))) {
+            ois.writeObject(group.getIntGroupID());
+            ois.flush();
+        } catch (IOException e) {
+            System.out.println(new Date() + "File output stream: thrown exception " +
+                    "trying to write group." + e.getMessage());
+        }
     }
 
     /**
@@ -237,21 +239,20 @@ public class PersistentStorage {
      * @return
      */
     public synchronized Group getSelectedGroup() {
-        return  selectedGroup;
-//        Group group = null;
-//        if (selectedGroup.exists()) {
-//            try (ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(selectedGroup)))) {
-//                GenericID id = (GenericID) ois.readObject();
-//                try(ObjectInputStream groupInput = new ObjectInputStream(new BufferedInputStream(new FileInputStream(groupDir +"/" + id +".cho")))){
-//                    group = (Group) groupInput.readObject();
-//                } catch (IOException f){
-//                    System.out.println("ERROR READING SELECTED GROUP: " + f.getMessage());
-//                }
-//            } catch (IOException | ClassNotFoundException e) {
-//                System.out.println(new Date() + "File input stream: thrown exception " +
-//                        "trying to read group." + e.getMessage());
-//            }
-//        }
-//        return group;
+        Group group = null;
+        if (selectedGroup.exists()) {
+            try (ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(selectedGroup)))) {
+                int id = (int) ois.readObject();
+                try(ObjectInputStream groupInput = new ObjectInputStream(new BufferedInputStream(new FileInputStream(groupDir +"/" + id +".cho")))){
+                    group = (Group) groupInput.readObject();
+                } catch (IOException f){
+                    System.out.println("ERROR READING SELECTED GROUP: " + f.getMessage());
+                }
+            } catch (IOException | ClassNotFoundException e) {
+                System.out.println(new Date() + "File input stream: thrown exception " +
+                        "trying to read group." + e.getMessage());
+            }
+        }
+        return group;
     }
 }

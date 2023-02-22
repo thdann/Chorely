@@ -65,7 +65,9 @@ public class RegisterActivity extends AppCompatActivity implements UpdatableActi
         EditText pass = findViewById(R.id.password);
         String username = user.getText().toString();
         String password = pass.getText().toString();
-        User userToRegister = new User(username, password);
+        //todo link adult variable to input method
+        boolean adult = true;
+        User userToRegister = new User(username, password, adult);
 
         if (!username.equals("") && !password.equals("")) {
             Message registerMsg = new Message(NetCommands.registerUser, userToRegister, new ArrayList<Transferable>());

@@ -88,11 +88,12 @@ public class Model {
 
     /**
      * Getter to get all stored groups.
-     *
+     * todo make this a call to the server
      * @return arraylist of groups.
      */
     public ArrayList<Group> getGroups() {
         return storage.getGroups();
+//        network.sendMessage(NetCommands.getGroups, storage.getUser());
     }
 
     /**
@@ -147,9 +148,10 @@ public class Model {
      * @return
      */
     private String updateGroup(Message message) {
+        //todo make sure currentGroup contains users
         Group currentGroup = (Group) message.getData().get(0);
-        if (currentGroup.getUsers().contains(storage.getUser())) {
-
+        System.out.println("current group to update: " +currentGroup+  "with users: " + currentGroup.getMembers());
+//        if (currentGroup.getUsers().contains(storage.getUser())) {
             if (storage.saveOrUpdateGroup(currentGroup)) {
                 message.setCommand(NetCommands.updateGroup);
                 network.sendMessage(message);
@@ -159,11 +161,11 @@ public class Model {
                 return "Failed to update group.";
             }
             //If not, group is already up to date.
-        } else {
-            storage.deleteGroup(currentGroup);
-            Presenter.getInstance().updateCurrent();
-            return "Deleted group.";
-        }
+//        } else {
+//            storage.deleteGroup(currentGroup);
+//            Presenter.getInstance().updateCurrent();
+//            return "Deleted group.";
+//        }
     }
 
     /**
@@ -236,13 +238,14 @@ public class Model {
      * @return
      */
     private String createGroup(Message message) {
-        if (storage.saveOrUpdateGroup((Group) message.getData().get(0))) {
-            System.out.println("SENDING NEW GROUP TO SERVER");
+        System.out.println("SENDING NEW GROUP TO SERVER");
+        try {
             network.sendMessage(message);
             Presenter.getInstance().updateCurrent();
             return "Group created";
+        } catch (Exception e) {
+            return e.toString();
         }
-        return null;
     }
 
     /**
@@ -461,6 +464,7 @@ public class Model {
                             break;
 
                         case newGroupOk:
+                            updateGroup(currentTask);
                             Presenter.getInstance().updateCurrent();
                             break;
 
@@ -469,13 +473,11 @@ public class Model {
                             break;
 
                         case notificationSent:
+                        case choreNotificationSent:          //@author Johan
                             network.sendMessage(currentTask);
                             break;
                         case notificationReceived:          //@author Johan, Måns
                             receiveNotification(currentTask);
-                            break;
-                        case choreNotificationSent:          //@author Johan
-                            network.sendMessage(currentTask);
                             break;
                         case choreNotificationReceived:         //@author Johan
                             receiveChoreNotification(currentTask);

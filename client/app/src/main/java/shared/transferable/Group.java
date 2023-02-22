@@ -13,13 +13,12 @@ public class Group implements Transferable {
     private String owner;
     private String name;
     private String description;
-    private ArrayList<User> users = new ArrayList<>();
-    private ArrayList<String> members = new ArrayList<>(); //change to usernames to prevent looping
-    private GenericID groupID = new GenericID();
+    //private ArrayList<User> users = new ArrayList<>();
+    private ArrayList<User> members = new ArrayList<>(); //change to usernames to prevent looping
     private int intGroupID;
     private ArrayList<Chore> chores = new ArrayList<>();
     private ArrayList<Reward> rewards = new ArrayList<>();
-    private HashMap<User, Integer> points = new HashMap<>();
+    private HashMap<User, Integer> leaderBoard = new HashMap<>();
 
     public Group() {
     }
@@ -35,30 +34,33 @@ public class Group implements Transferable {
 
     public Group(String groupName, User user) {
         this.name = groupName;
-        addUser(user);
+        addMember(user);
     }
 
     public Group(Group group) {
         this.name = group.name;
         this.description = group.description;
-        this.users = new ArrayList<>();
-        this.users.addAll(group.users);
-        this.groupID = group.groupID;
+        this.members = new ArrayList<>();
+        this.members.addAll(group.members);
+        assert group.getIntGroupID() != 0;
+        this.intGroupID = group.intGroupID;
         this.chores = new ArrayList<>();
         this.chores.addAll(group.chores);
         this.rewards = new ArrayList<>();
         this.rewards.addAll(group.rewards);
-        this.points = new HashMap<>();
-        this.points.putAll(group.points);
+        this.leaderBoard = new HashMap<>();
+        this.leaderBoard.putAll(group.leaderBoard);
     }
 
     public Group(int intGroupID, String name, String description) {
+        assert intGroupID != 0;
         this.intGroupID = intGroupID;
         this.name = name;
         this.description = description;
     }
 
-    public Group(int intGroupID, String groupOwner, String groupName, String groupDesc) {
+    public Group(int intGroupID, String groupName, String groupOwner, String groupDesc) {
+        assert intGroupID != 0;
         this.intGroupID = intGroupID;
         this.owner = groupOwner;
         this.name = groupName;
@@ -66,6 +68,7 @@ public class Group implements Transferable {
     }
 
     public Group(int intGroupID) {
+        assert intGroupID != 0;
         this.intGroupID = intGroupID;
     }
 
@@ -73,8 +76,8 @@ public class Group implements Transferable {
         return description;
     }
 
-    public GenericID getGroupID() {
-        return groupID;
+    public int getGroupID() {
+        return intGroupID;
     }
 
     public String getName() {
@@ -82,11 +85,11 @@ public class Group implements Transferable {
     }
 
     public ArrayList<User> getUsers() {
-        return users;
+        return members;
     }
 
-    public void addUser(User user) {
-        members.add(user.getUsername());
+    public void addMember(User user) {
+        members.add(user);
     }
 
     public void setName(String name) {
@@ -98,11 +101,11 @@ public class Group implements Transferable {
     }
 
     public void deleteUser(User user) {
-        users.remove(user);
+        members.remove(user);
     }
 
     public void deleteAllUsers() {
-        users = new ArrayList<>();
+        members = new ArrayList<>();
     }
 
     public void addChore(Chore chore) {
@@ -138,24 +141,24 @@ public class Group implements Transferable {
     }
 
     public int size() {
-        return users.size();
+        return members.size();
     }
 
     public void modifyUserPoints(User user, int incomingPoints) {
 
-        if (points.get(user) != null) {
-            int tempPoints = points.get(user);
+        if (leaderBoard.get(user) != null) {
+            int tempPoints = leaderBoard.get(user);
             tempPoints += incomingPoints;
-            points.put(user, tempPoints);
+            leaderBoard.put(user, tempPoints);
         } else {
-            points.put(user, incomingPoints);
+            leaderBoard.put(user, incomingPoints);
         }
     }
 
     public int getUserPoints(User user) {
-        if (points.containsKey(user)) {
-            if (points.get(user) != null) {
-                return points.get(user);
+        if (leaderBoard.containsKey(user)) {
+            if (leaderBoard.get(user) != null) {
+                return leaderBoard.get(user);
             } else {
                 return 0;
             }
@@ -165,13 +168,13 @@ public class Group implements Transferable {
 
     }
 
-    public HashMap<User, Integer> getPoints() {
-        return points;
+    public HashMap<User, Integer> getLeaderBoard() {
+        return leaderBoard;
     }
 
     public boolean allIsEqual(Group group) {
         if (group.getRewards().size() == rewards.size() && group.getChores().size() == chores.size()
-                && group.getUsers().size() == users.size()) {
+                && group.getUsers().size() == members.size()) {
             for (int i = 0; i < chores.size(); i++) {
                 if (!group.getChores().get(i).equals(chores.get(i))) {
                     return false;
@@ -183,14 +186,14 @@ public class Group implements Transferable {
                     return false;
                 }
             }
-            for (int i = 0; i < users.size(); i++) {
-                if (!group.getUsers().get(i).equals(users.get(i))) {
+            for (int i = 0; i < members.size(); i++) {
+                if (!group.getUsers().get(i).equals(members.get(i))) {
                     return false;
                 }
             }
-            for (Map.Entry inputEntry : group.getPoints().entrySet()) {
+            for (Map.Entry inputEntry : group.getLeaderBoard().entrySet()) {
                 boolean foundEntry = false;
-                for (Map.Entry entry : points.entrySet()) {
+                for (Map.Entry entry : leaderBoard.entrySet()) {
                     if (entry.getKey().equals(inputEntry.getKey()) && entry.getValue().equals(inputEntry.getValue())) {
                         foundEntry = true;
                     }
@@ -201,7 +204,7 @@ public class Group implements Transferable {
             }
             //If all of the above are true, the rest of the data is checked to be equal, and the
             //result is returned.
-            return (group.getGroupID().equals(groupID) && group.getDescription().equals(description) &&
+            return (group.getIntGroupID() == intGroupID && group.getDescription().equals(description) &&
                     group.getName().equals(name));
         } else
             return false;
@@ -210,15 +213,10 @@ public class Group implements Transferable {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Group)
-            return groupID.equals(((Group) obj).getGroupID());
+            return intGroupID == getGroupID();
 
         else
             return false;
-    }
-
-    @Override
-    public int hashCode() {
-        return groupID.hashCode();
     }
 
     @Override
@@ -231,17 +229,14 @@ public class Group implements Transferable {
         return intGroupID;
     }
 
-    public ArrayList<String> getMembers() {
+    public ArrayList<User> getMembers() {
         return members;
     }
 
-    public void setMembers(ArrayList<String> members) {
+    public void setMembers(ArrayList<User> members) {
         this.members = members;
     }
 
-    public void addUser(String userName) {
-        members.add(userName);
-    }
 
     public String getOwner() {
         return owner;

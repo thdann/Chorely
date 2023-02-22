@@ -37,7 +37,7 @@ import shared.transferable.User;
 import static androidx.fragment.app.FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT;
 
 /**
- * This is the activity to...
+ * Information shown when a group is open
  *
  * @author Timothy Denison, Emma Svensson
  */

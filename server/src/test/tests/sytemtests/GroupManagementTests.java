@@ -32,8 +32,8 @@ public class GroupManagementTests {
         User userA = new User("testA", "secret");
         User userB = new User("testB", "secret");
         Group group = new Group("testAddingUserToGroup");
-        group.addUser(userA);
-        group.addUser(userB);
+        group.addMember(userA);
+        group.addMember(userB);
         try {
             int port = basePort + 1;
             ServerController serverController = new ServerController(port);
@@ -66,8 +66,8 @@ public class GroupManagementTests {
         User userA = new User("testA", "secret");
         User userB = new User("testB", "secret");
         Group group = new Group("testRemovingUserFromGroup");
-        group.addUser(userA);
-        group.addUser(userB);
+        group.addMember(userA);
+        group.addMember(userB);
 
         try {
             int port = basePort + 2;
@@ -110,8 +110,8 @@ public class GroupManagementTests {
         User userA = new User("testA", "secret");
         Group group1 = new Group("testRegisterTwoGroups1");
         Group group2 = new Group("testRegisterTwoGroups2");
-        group1.addUser(userA);
-        group2.addUser(userA);
+        group1.addMember(userA);
+        group2.addMember(userA);
 
         try {
             int port = basePort + 3;
@@ -156,7 +156,7 @@ public class GroupManagementTests {
     public void testDeleteGroup() {
         User user = new User("testDeleteGroup", "secret");
         Group group = new Group("testDeletionGroup");
-        group.addUser(user);
+        group.addMember(user);
         try {
             int port = basePort + 4;
             ServerController serverController = new ServerController(port);
@@ -177,8 +177,8 @@ public class GroupManagementTests {
             assertEquals(0, users.size());
             RegisteredUsers registeredUsers = RegisteredUsers.getInstance();
             User userFromFile = registeredUsers.getUserFromFile(user);
-            ArrayList<GenericID> groups = userFromFile.getGroups();
-            assertFalse(groups.contains(group.getGroupID()));
+            ArrayList<Group> groups = userFromFile.getGroups();
+            assertFalse(groups.contains(group));
         } catch (InterruptedException | ExecutionException e) {
             // What do I do here?
         } finally {
