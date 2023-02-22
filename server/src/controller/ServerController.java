@@ -69,11 +69,10 @@ public class ServerController {
         User userFromFile = registeredUsers.getUserFromFile(user);
         if (userFromFile != null) {
             if (userFromFile.getGroups() != null) {
-                List<GenericID> groupMemberships = userFromFile.getGroups();
-                for (GenericID id : groupMemberships) {
-                    Group group = registeredGroups.getGroupByID(id);
+                List<Group> groupMemberships = userFromFile.getDbGroups();
+                for (Group gr : groupMemberships) {
                     ArrayList<Transferable> data = new ArrayList<>();
-                    data.add(group);
+                    data.add(gr);
                     Message message = new Message(NetCommands.updateGroup, user, data);
                     sendReply(message);
                 }
@@ -234,7 +233,7 @@ public class ServerController {
         Group groupFromMessage = (Group) data.get(0);
         Group group = new Group(groupFromMessage);   // defensive copy.
         List<User> users = group.getUsers();
-        GenericID id = group.getGroupID();
+        int id = group.getIntGroupID();
 
         for (User user : users) {
             User userFromFile = registeredUsers.getUserFromFile(user);
@@ -268,24 +267,53 @@ public class ServerController {
         }
     }
 
+//    /**
+//     * Registers a new group to the server and updates all the members
+//     * of that group with the new group membership
+//     *
+//     * @param request the Message object containing the group with all
+//     *                the members to be added.
+//     */
+//    public void registerNewGroup(Message request) {
+//        Message reply = null;
+//        Group group = (Group) request.getData().get(0);
+//
+//        if (registeredGroups.groupIdAvailable(group.getGroupID())) {
+//            registeredGroups.updateGroup(group);
+//            ArrayList<User> members = group.getUsers();
+//            GenericID groupID = group.getGroupID();
+//            for (User u : members) {
+//                User userFromFile = registeredUsers.getUserFromFile(u);
+//                userFromFile.addGroupMembership(groupID);
+//                registeredUsers.updateUser(userFromFile);
+//            }
+//            reply = new Message(NetCommands.newGroupOk, request.getUser());
+//            sendReply(reply);
+//            notifyGroupChanges(group);
+//        } else {
+//            ErrorMessage errorMessage = new ErrorMessage("Registrering av grupp misslyckades.");
+//            reply = new Message(NetCommands.newGroupDenied, request.getUser(), errorMessage);
+//            sendReply(reply);
+//        }
+//    }
     /**
      * Registers a new group to the server and updates all the members
      * of that group with the new group membership
-     *
+     * todo would be easier to only allow addition of users AFTER group created
      * @param request the Message object containing the group with all
      *                the members to be added.
      */
     public void registerNewGroup(Message request) {
         Message reply = null;
         Group group = (Group) request.getData().get(0);
-
-        if (registeredGroups.groupIdAvailable(group.getGroupID())) {
-            registeredGroups.updateGroup(group);
+        Group registeredGroup = registeredGroups.writeGroupToFile(group);
+        if (registeredGroup!=null) {
             ArrayList<User> members = group.getUsers();
-            GenericID groupID = group.getGroupID();
+            int groupID = registeredGroup.getIntGroupID();
+
             for (User u : members) {
                 User userFromFile = registeredUsers.getUserFromFile(u);
-                userFromFile.addGroupMembership(groupID);
+                userFromFile.addGroupMembership(registeredGroup);
                 registeredUsers.updateUser(userFromFile);
             }
             reply = new Message(NetCommands.newGroupOk, request.getUser());
@@ -297,7 +325,6 @@ public class ServerController {
             sendReply(reply);
         }
     }
-
     /**
      * Updates a registered group with new change and notifies all the
      * members of that group.
@@ -312,6 +339,22 @@ public class ServerController {
     }
 
 
+//    /**
+//     * Updates the group membership of the removed and/or added users
+//     *
+//     * @param group is the group that contains changes in members
+//     */
+//    private void updateUsersInGroup(Group group) {
+//        removeUsers(group);
+//
+//        ArrayList<User> members = group.getUsers();
+//        GenericID id = group.getGroupID();
+//        for (User u : members) {
+//            User userFromFile = registeredUsers.getUserFromFile(u);
+//            userFromFile.addGroupMembership(id);
+//            registeredUsers.updateUser(userFromFile);
+//        }
+//    }
     /**
      * Updates the group membership of the removed and/or added users
      *
@@ -321,26 +364,46 @@ public class ServerController {
         removeUsers(group);
 
         ArrayList<User> members = group.getUsers();
-        GenericID id = group.getGroupID();
+        int id = group.getIntGroupID();
         for (User u : members) {
             User userFromFile = registeredUsers.getUserFromFile(u);
-            userFromFile.addGroupMembership(id);
+            userFromFile.addGroupMembership(group);
             registeredUsers.updateUser(userFromFile);
         }
     }
-
+//    /**
+//     * Updates the group membership of the users removed from a group
+//     * and notifies the changes to the user.
+//     *
+//     * @param newGroup the group that potentially has a change in group membership.
+//     */
+//    private void removeUsers(Group newGroup) {
+//        GenericID id = newGroup.getGroupID();
+//        Group oldGroup = registeredGroups.getGroupFromFile(id);
+//        ArrayList<Transferable> data = new ArrayList<>();
+//        data.add(newGroup);
+//
+//        for (User u : oldGroup.getUsers()) {
+//            if (!newGroup.getUsers().contains(u)) {
+//                u.removeGroupMembership(id);
+//                registeredUsers.updateUser(u);
+//                Message message = new Message(NetCommands.updateGroup, u, data);
+//                sendReply(message);
+//            }
+//        }
+//    }
     /**
      * Updates the group membership of the users removed from a group
      * and notifies the changes to the user.
-     *
+     * todo this method needs to be completely rewritten with support from client
      * @param newGroup the group that potentially has a change in group membership.
      */
     private void removeUsers(Group newGroup) {
-        GenericID id = newGroup.getGroupID();
+        int id = newGroup.getIntGroupID();
         Group oldGroup = registeredGroups.getGroupFromFile(id);
         ArrayList<Transferable> data = new ArrayList<>();
         data.add(newGroup);
-
+        RegisteredGroups.getInstance().updateGroup(newGroup);
         for (User u : oldGroup.getUsers()) {
             if (!newGroup.getUsers().contains(u)) {
                 u.removeGroupMembership(id);
@@ -349,8 +412,8 @@ public class ServerController {
                 sendReply(message);
             }
         }
-    }
 
+    }
     /**
      * Inner class MessageHandler handles the incoming messages from the client one at a time.
      */
