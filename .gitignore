@@ -302,3 +302,5 @@ obj/
 
 server/logs/*.log.*
 server/logs/*.log
+client/app/.idea/workspace.xml
+.idea/Chorely.iml
