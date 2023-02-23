@@ -21,7 +21,7 @@ public class RegisteredUsers {
     GroupQueries groupQueries;
     ChoreRewardQueries choreRewardQueries;
 
-    private RegisteredUsers() {
+    public RegisteredUsers() {
     }
 
     /**
