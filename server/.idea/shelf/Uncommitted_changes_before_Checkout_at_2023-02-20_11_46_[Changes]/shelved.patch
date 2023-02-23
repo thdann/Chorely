@@ -1,0 +1,127 @@
+Index: src/test/tests/unitTests/controller/ServerNetworkTests/ServerNetworkTest.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package unitTests.controller.ServerNetworkTests;\r\n\r\n\r\nimport org.junit.jupiter.api.AfterAll;\r\nimport org.junit.jupiter.api.BeforeAll;\r\nimport org.junit.jupiter.api.Test;\r\n\r\n/** \r\n* ServerNetwork Tester. \r\n* \r\n* @author <Authors name> \r\n* @since <pre>feb. 8, 2023</pre> \r\n* @version 1.0 \r\n*/ \r\npublic class ServerNetworkTest { \r\n\r\n/** \r\n* \r\n* Method: run() \r\n* \r\n*/ \r\n@Test\r\npublic void testRun() throws Exception { \r\n//TODO: Test goes here... \r\n} \r\n\r\n\r\n/** \r\n* \r\n* Method: startServer() \r\n* \r\n*/ \r\n@Test\r\npublic void testStartServer() throws Exception { \r\n//TODO: Test goes here... \r\n/* \r\ntry { \r\n   Method method = ServerNetwork.getClass().getMethod(\"startServer\"); \r\n   method.setAccessible(true); \r\n   method.invoke(<Object>, <Parameters>); \r\n} catch(NoSuchMethodException e) { \r\n} catch(IllegalAccessException e) { \r\n} catch(InvocationTargetException e) { \r\n} \r\n*/ \r\n} \r\n\r\n} \r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/test/tests/unitTests/controller/ServerNetworkTests/ServerNetworkTest.java b/src/test/tests/unitTests/controller/ServerNetworkTests/ServerNetworkTest.java
+--- a/src/test/tests/unitTests/controller/ServerNetworkTests/ServerNetworkTest.java	(revision 2aba644020b54155efdaffa0bacf4fc38aa843b9)
++++ b/src/test/tests/unitTests/controller/ServerNetworkTests/ServerNetworkTest.java	(date 1676889479448)
+@@ -5,6 +5,8 @@
+ import org.junit.jupiter.api.BeforeAll;
+ import org.junit.jupiter.api.Test;
+ 
++import controller.ServerController;
++
+ /** 
+ * ServerNetwork Tester. 
+ * 
+@@ -21,28 +23,39 @@
+ */ 
+ @Test
+ public void testRun() throws Exception { 
+-//TODO: Test goes here... 
++   var ServerNetwork = new ServerNetworkTest();
++   ServerNetwork.start();
+ } 
+ 
+ 
+ /** 
+ * 
+-* Method: startServer() 
++* Method: startServer() - successfully started the server
+ * 
+ */ 
+ @Test
+-public void testStartServer() throws Exception { 
+-//TODO: Test goes here... 
+-/* 
+-try { 
+-   Method method = ServerNetwork.getClass().getMethod("startServer"); 
+-   method.setAccessible(true); 
+-   method.invoke(<Object>, <Parameters>); 
+-} catch(NoSuchMethodException e) { 
+-} catch(IllegalAccessException e) { 
+-} catch(InvocationTargetException e) { 
++public void testStartServerConnected() throws Exception { 
++   int port = 2323;
++   ServerController serverController = new ServerController(port);
++   ServerNetwork serverNetwork = new ServerNetworkTest(serverController, port);
++   int res = serverNetwork.startServer();
++   assertEquals(1, res);
+ } 
++
++
++
++/** 
++* 
++* Method: startServer() - fail to start the server
++* 
+ */ 
++@Test
++public void testStartServerFailed() throws Exception { 
++   int port = 2130098321;
++   ServerController serverController = new ServerController(port);
++   ServerNetwork serverNetwork = new ServerNetworkTest(serverController, port);
++   int res = serverNetwork.startServer();
++   assertEquals(0, res);
+ } 
+ 
+ } 
+Index: server.iml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<module type=\"JAVA_MODULE\" version=\"4\">\r\n  <component name=\"NewModuleRootManager\" inherit-compiler-output=\"true\">\r\n    <exclude-output />\r\n    <content url=\"file://$MODULE_DIR$\">\r\n      <sourceFolder url=\"file://$MODULE_DIR$/src\" isTestSource=\"false\" />\r\n      <sourceFolder url=\"file://$MODULE_DIR$/src/test/tests\" isTestSource=\"true\" />\r\n    </content>\r\n    <orderEntry type=\"inheritedJdk\" />\r\n    <orderEntry type=\"sourceFolder\" forTests=\"false\" />\r\n    <orderEntry type=\"library\" name=\"org.junit.jupiter:junit-jupiter:5.5.0\" level=\"project\" />\r\n    <orderEntry type=\"module\" module-name=\"shared\" />\r\n    <orderEntry type=\"library\" name=\"bluecatcode.junit.4.10.extended\" level=\"project\" />\r\n    <orderEntry type=\"module-library\" scope=\"TEST\">\r\n      <library name=\"JUnit5.8.1\">\r\n        <CLASSES>\r\n          <root url=\"jar://$USER_HOME$/.m2/repository/org/junit/jupiter/junit-jupiter/5.8.1/junit-jupiter-5.8.1.jar!/\" />\r\n          <root url=\"jar://$USER_HOME$/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.8.1/junit-jupiter-api-5.8.1.jar!/\" />\r\n          <root url=\"jar://$USER_HOME$/.m2/repository/org/opentest4j/opentest4j/1.2.0/opentest4j-1.2.0.jar!/\" />\r\n          <root url=\"jar://$USER_HOME$/.m2/repository/org/junit/platform/junit-platform-commons/1.8.1/junit-platform-commons-1.8.1.jar!/\" />\r\n          <root url=\"jar://$USER_HOME$/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar!/\" />\r\n          <root url=\"jar://$USER_HOME$/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.8.1/junit-jupiter-params-5.8.1.jar!/\" />\r\n          <root url=\"jar://$USER_HOME$/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.8.1/junit-jupiter-engine-5.8.1.jar!/\" />\r\n          <root url=\"jar://$USER_HOME$/.m2/repository/org/junit/platform/junit-platform-engine/1.8.1/junit-platform-engine-1.8.1.jar!/\" />\r\n        </CLASSES>\r\n        <JAVADOC />\r\n        <SOURCES />\r\n      </library>\r\n    </orderEntry>\r\n  </component>\r\n</module>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/server.iml b/server.iml
+--- a/server.iml	(revision 2aba644020b54155efdaffa0bacf4fc38aa843b9)
++++ b/server.iml	(date 1676888302658)
+@@ -14,14 +14,14 @@
+     <orderEntry type="module-library" scope="TEST">
+       <library name="JUnit5.8.1">
+         <CLASSES>
+-          <root url="jar://$USER_HOME$/.m2/repository/org/junit/jupiter/junit-jupiter/5.8.1/junit-jupiter-5.8.1.jar!/" />
+-          <root url="jar://$USER_HOME$/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.8.1/junit-jupiter-api-5.8.1.jar!/" />
+-          <root url="jar://$USER_HOME$/.m2/repository/org/opentest4j/opentest4j/1.2.0/opentest4j-1.2.0.jar!/" />
+-          <root url="jar://$USER_HOME$/.m2/repository/org/junit/platform/junit-platform-commons/1.8.1/junit-platform-commons-1.8.1.jar!/" />
+-          <root url="jar://$USER_HOME$/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar!/" />
+-          <root url="jar://$USER_HOME$/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.8.1/junit-jupiter-params-5.8.1.jar!/" />
+-          <root url="jar://$USER_HOME$/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.8.1/junit-jupiter-engine-5.8.1.jar!/" />
+-          <root url="jar://$USER_HOME$/.m2/repository/org/junit/platform/junit-platform-engine/1.8.1/junit-platform-engine-1.8.1.jar!/" />
++          <root url="jar://$MAVEN_REPOSITORY$/org/junit/jupiter/junit-jupiter/5.8.1/junit-jupiter-5.8.1.jar!/" />
++          <root url="jar://$MAVEN_REPOSITORY$/org/junit/jupiter/junit-jupiter-api/5.8.1/junit-jupiter-api-5.8.1.jar!/" />
++          <root url="jar://$MAVEN_REPOSITORY$/org/opentest4j/opentest4j/1.2.0/opentest4j-1.2.0.jar!/" />
++          <root url="jar://$MAVEN_REPOSITORY$/org/junit/platform/junit-platform-commons/1.8.1/junit-platform-commons-1.8.1.jar!/" />
++          <root url="jar://$MAVEN_REPOSITORY$/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar!/" />
++          <root url="jar://$MAVEN_REPOSITORY$/org/junit/jupiter/junit-jupiter-params/5.8.1/junit-jupiter-params-5.8.1.jar!/" />
++          <root url="jar://$MAVEN_REPOSITORY$/org/junit/jupiter/junit-jupiter-engine/5.8.1/junit-jupiter-engine-5.8.1.jar!/" />
++          <root url="jar://$MAVEN_REPOSITORY$/org/junit/platform/junit-platform-engine/1.8.1/junit-platform-engine-1.8.1.jar!/" />
+         </CLASSES>
+         <JAVADOC />
+         <SOURCES />
+Index: shared.iml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<module type=\"JAVA_MODULE\" version=\"4\">\r\n  <component name=\"NewModuleRootManager\" inherit-compiler-output=\"true\">\r\n    <exclude-output />\r\n    <content url=\"file://$MODULE_DIR$/../client/app/src/main/java\">\r\n      <sourceFolder url=\"file://$MODULE_DIR$/../client/app/src/main/java\" isTestSource=\"false\" />\r\n      <excludeFolder url=\"file://$MODULE_DIR$/../client/app/src/main/java/com\" />\r\n    </content>\r\n    <orderEntry type=\"inheritedJdk\" />\r\n    <orderEntry type=\"sourceFolder\" forTests=\"false\" />\r\n  </component>\r\n</module>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/shared.iml b/shared.iml
+--- a/shared.iml	(revision 2aba644020b54155efdaffa0bacf4fc38aa843b9)
++++ b/shared.iml	(date 1676888302739)
+@@ -2,9 +2,9 @@
+ <module type="JAVA_MODULE" version="4">
+   <component name="NewModuleRootManager" inherit-compiler-output="true">
+     <exclude-output />
+-    <content url="file://$MODULE_DIR$/../client/app/src/main/java">
+-      <sourceFolder url="file://$MODULE_DIR$/../client/app/src/main/java" isTestSource="false" />
+-      <excludeFolder url="file://$MODULE_DIR$/../client/app/src/main/java/com" />
++    <content url="file://$USER_HOME$/Desktop/client/app/src/main/java">
++      <sourceFolder url="file://$USER_HOME$/Desktop/client/app/src/main/java" isTestSource="false" />
++      <excludeFolder url="file://$USER_HOME$/Desktop/client/app/src/main/java/com" />
+     </content>
+     <orderEntry type="inheritedJdk" />
+     <orderEntry type="sourceFolder" forTests="false" />

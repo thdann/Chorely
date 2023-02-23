@@ -5,13 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2244c873-27e5-4779-add0-219b14bdef42" name="Changes" comment="coupled register/login methods -&gt; database users">
-      <change beforePath="$PROJECT_DIR$/../client/app/src/main/java/shared/transferable/Group.java" beforeDir="false" afterPath="$PROJECT_DIR$/../client/app/src/main/java/shared/transferable/Group.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/files/groups/5a159043-ab3c-4206-a279-64dc70764a4d.dat" beforeDir="false" afterPath="$PROJECT_DIR$/files/groups/5a159043-ab3c-4206-a279-64dc70764a4d.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/files/users/t.dat" beforeDir="false" afterPath="$PROJECT_DIR$/files/users/t.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/files/users/testUser.dat" beforeDir="false" afterPath="$PROJECT_DIR$/files/users/testUser.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/service/DatabaseConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/DatabaseConnection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/service/GroupQueries.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/GroupQueries.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/service/UserQueries.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/UserQueries.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared.iml" beforeDir="false" afterPath="$PROJECT_DIR$/shared.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controller/ClientHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/ClientHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/RegisteredUsers.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/RegisteredUsers.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/tests/unitTests/controller/ClientHandlerTests/LoginUserTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/tests/unitTests/controller/ClientHandlerTests/LoginUserTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/tests/unitTests/controller/ClientHandlerTests/LogoutTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/tests/unitTests/controller/ClientHandlerTests/LogoutTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/tests/unitTests/controller/ClientHandlerTests/RegisterUserTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/tests/unitTests/controller/ClientHandlerTests/RegisterUserTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/tests/unitTests/controller/ServerNetworkTests/ServerNetworkTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/tests/unitTests/controller/ServerNetworkTests/ServerNetworkTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,6 +23,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Class" />
+        <option value="JUnit5 Test Class" />
       </list>
     </option>
   </component>
@@ -49,21 +51,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="Downloaded.Files.Path.Enabled" value="false" />
-    <property name="Repository.Attach.Annotations" value="false" />
-    <property name="Repository.Attach.JavaDocs" value="false" />
-    <property name="Repository.Attach.Sources" value="false" />
-    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="project.structure.last.edited" value="Modules" />
-    <property name="project.structure.proportion" value="0.15" />
-    <property name="project.structure.side.proportion" value="0.24367817" />
-    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
-  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": ""
+  }
+}]]></component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Skola\Documents\GitHub\Chorely\server\src\service" />
+    </key>
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="" />
+    </key>
+    <key name="CreateTestDialog.RecentsKey">
+      <recent name="controller" />
+      <recent name="model" />
+    </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="service" />
     </key>

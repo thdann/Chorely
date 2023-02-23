@@ -304,3 +304,8 @@ server/logs/*.log.*
 server/logs/*.log
 client/app/.idea/workspace.xml
 .idea/Chorely.iml
+server/.idea/workspace.xml
+server/.idea/server.iml
+client/app/.idea/misc.xml
+client/app/.idea/gradle.xml
+client/app/.idea/vcs.xml
