@@ -3,11 +3,13 @@ package com.mau.chorely.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -256,6 +258,7 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
      * @return
      */
     public String searchForMember(View view) {
+        hideKeyboard();
         String searchString = ((EditText) findViewById(R.id.edit_group_memberSearchText)).getText().toString();
         if (!searchString.equals("")) {
             if (!selectedGroup.getUsers().contains(new User(searchString))) {
@@ -331,5 +334,13 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
         Message message = new Message(netCommands, model.getUser(), data);
         model.handleTask(message);
         return message;
+    }
+    public void hideKeyboard() {
+        InputMethodManager inputManager = (InputMethodManager)
+                getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+                InputMethodManager.HIDE_NOT_ALWAYS);
+
     }
 }
