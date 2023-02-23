@@ -14,7 +14,7 @@ public class Group implements Transferable {
     private String name;
     private String description;
     //private ArrayList<User> users = new ArrayList<>();
-    private ArrayList<User> members = new ArrayList<>(); //change to usernames to prevent looping
+    private ArrayList<User> members = new ArrayList<>(); //change to usernames to prevent looping?
     private int intGroupID;
     private ArrayList<Chore> chores = new ArrayList<>();
     private ArrayList<Reward> rewards = new ArrayList<>();
@@ -244,5 +244,21 @@ public class Group implements Transferable {
 
     public void setOwner(String owner) {
         this.owner = owner;
+    }
+
+    public void setLeaderboard(HashMap<User, Integer> leaderboard) {
+        this.leaderBoard = leaderboard;
+    }
+
+    public void setChores(ArrayList<Chore> choreList) {
+        this.chores = choreList;
+    }
+
+    public void setRewards(ArrayList<Reward> rewardList) {
+        this.rewards = rewardList;
+    }
+
+    public void addToLeaderboard(User user, int score) {
+        leaderBoard.put(user, score);
     }
 }

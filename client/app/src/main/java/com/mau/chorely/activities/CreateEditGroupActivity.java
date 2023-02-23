@@ -205,6 +205,8 @@ public class CreateEditGroupActivity extends AppCompatActivity implements Updata
                 selectedGroup.setName(groupName);
                 selectedGroup.setDescription(groupDescription);
                 selectedGroup.setOwner(model.getUser().getUsername());
+                selectedGroup.addMember(model.getUser());
+                selectedGroup.addToLeaderboard(model.getUser(), 0);
                 System.out.println(selectedGroup.getUsers());
                 if(newGroup) {
                     System.out.println("New group");

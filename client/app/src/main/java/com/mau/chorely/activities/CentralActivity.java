@@ -145,7 +145,7 @@ public class CentralActivity extends AppCompatActivity implements UpdatableActiv
                 public void run() {
                     FragmentChores.updateList(selectedGroup.getChores());
                     FragmentRewards.updateList(selectedGroup.getRewards());
-                    FragmentScore.updateList(selectedGroup.getPoints());
+                    FragmentScore.updateList(selectedGroup.getLeaderBoard());
                 }
             });
         }
@@ -184,7 +184,7 @@ public class CentralActivity extends AppCompatActivity implements UpdatableActiv
             selectedGroup = Model.getInstance(getFilesDir(),this).getSelectedGroup();
             chores = selectedGroup.getChores();
             rewards = selectedGroup.getRewards();
-            points = selectedGroup.getPoints();
+            points = selectedGroup.getLeaderBoard();
         }
         adapter.addFragment(FragmentChores.newInstance(chores), "Sysslor");
         adapter.addFragment(FragmentRewards.newInstance(rewards), "Belöningar");

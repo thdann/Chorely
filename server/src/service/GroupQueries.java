@@ -44,7 +44,6 @@ public class GroupQueries {
         //todo return group with all attributes, chores, members and rewards
         Group group = null;
         String query = "SELECT * FROM [Group] WHERE group_id = " + groupID + ";";
-
         try {
             ResultSet resultSet = queryExecutor.executeReadQuery(query);
             while (resultSet.next()) {
@@ -57,7 +56,12 @@ public class GroupQueries {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
+        LeaderboardQueries leaderboardQueries = new LeaderboardQueries(queryExecutor);
+        group.setLeaderboard(leaderboardQueries.getLeaderboard(groupID));
+        group.setMembers(getGroupMembers(groupID).getMembers());
+        ChoreRewardQueries choreRewardQueries = new ChoreRewardQueries(queryExecutor);
+        group.setChores(choreRewardQueries.getChoreList(groupID));
+        group.setRewards(choreRewardQueries.getRewardList(groupID));
         return group;
     }
 
