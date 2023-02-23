@@ -97,6 +97,7 @@ public class UserQueries {
                     if(adultInt == 1) adult = true;
             }
             else {
+                System.out.println("User: " + userName + " not found");
                 return null;
             }
         } catch (SQLException e) {

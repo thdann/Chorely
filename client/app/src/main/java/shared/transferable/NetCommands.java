@@ -27,6 +27,6 @@ public enum NetCommands implements Transferable {
     notificationSent,
     notificationReceived,
     choreNotificationSent,
-    choreNotificationReceived
-    ;
+    choreNotificationReceived,
+    getGroups, addMember, removeMember, removeMemberOK, removeMemberFail, addMemberOK, addMemberFail;
 }

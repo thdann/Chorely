@@ -3,9 +3,11 @@ package com.mau.chorely.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -76,6 +78,7 @@ public class CreateChoreActivity extends AppCompatActivity implements UpdatableA
      */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        hideKeyboard();
         int id = item.getItemId();
         if (id == R.id.create_chore_menu_saveChanges) {
             if (controlTextFields()) {
@@ -157,5 +160,12 @@ public class CreateChoreActivity extends AppCompatActivity implements UpdatableA
         });
 
     }
+    public void hideKeyboard() {
+        InputMethodManager inputManager = (InputMethodManager)
+                getSystemService(Context.INPUT_METHOD_SERVICE);
 
+        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+                InputMethodManager.HIDE_NOT_ALWAYS);
+
+    }
 }

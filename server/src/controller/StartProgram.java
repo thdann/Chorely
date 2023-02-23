@@ -1,5 +1,6 @@
 package controller;
 
+import model.RegisteredGroups;
 import model.RegisteredUsers;
 import service.*;
 
@@ -48,5 +49,6 @@ public class StartProgram {
         GroupQueries groupQueries = new GroupQueries(queryExecutor);
         ChoreRewardQueries choreRewardQueries = new ChoreRewardQueries(queryExecutor);
         RegisteredUsers.getInstance().setQueryPerformers(userQueries, groupQueries, choreRewardQueries);
+        RegisteredGroups.getInstance().setQueryPerformers(userQueries, groupQueries, choreRewardQueries);
     }
 }

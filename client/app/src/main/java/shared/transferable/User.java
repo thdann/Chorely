@@ -2,36 +2,42 @@ package shared.transferable;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Objects;
 
 /**
  * Objects of the User class correspond to a registered end-users of the system.
  */
 public class User implements Transferable {
     private final String username;
-    private final String password; //todo remove password storing in object, only in database
-    private final boolean adult;
-    private final ArrayList<GenericID> groups;
+    private String password; //todo remove password storing in object, only in database
+    private boolean adult;
     private ArrayList<Group> dbGroups = new ArrayList<>();
 
-    public User(String username, String password) {
-        this(username, password, true);
-    }
-    public User(String username, String password, boolean adult) {
-        this(username, password, adult, new ArrayList<GenericID>());
-    }
-    public User(String username, String password, boolean adult, ArrayList<GenericID> groups) {
+    public User(String username) {
         this.username = username;
-        this.password = password;
+    }
+
+    public User(String username, boolean adult) {
+        this(username);
         this.adult = adult;
-        this.groups = groups;
+    }
+    public User(String username, String password) {
+        this(username);
+        this.password =  password;
     }
 
-    public User(String userName, boolean adult) {
-        this(userName, null, adult);
+    public User(String username, boolean adult, ArrayList<Group> groups) {
+        this(username, adult);
+        this.dbGroups = groups;
     }
 
-    public ArrayList<GenericID> getGroups() {
-        return groups;
+    public User(String username, String password, boolean adult) {
+        this(username, password);
+        this.adult = adult;
+    }
+
+    public ArrayList<Group> getGroups() {
+        return dbGroups;
     }
 
     public String getUsername() {
@@ -42,22 +48,33 @@ public class User implements Transferable {
         return password;
     }
 
-    public void removeGroupMembership(GenericID id) {
-        groups.remove(id);
+//    public void removeGroupMembership(GenericID id) {
+//        groups.remove(id);
+//    }
+//
+//    public void addGroupMembership(GenericID newGroup) {
+//        if (!groups.contains(newGroup)) {
+//            groups.add(newGroup);
+//        }
+//    }
+    public void removeGroupMembership(Group group) {
+        dbGroups.remove(group);
     }
 
-    public void addGroupMembership(GenericID newGroup) {
-        if (!groups.contains(newGroup)) {
-            groups.add(newGroup);
+    public void addGroupMembership(Group newGroup) {
+        if (!dbGroups.contains(newGroup)) {
+            dbGroups.add(newGroup);
         }
     }
-
     @Override
     public String toString() {
+        String isAdult = "child";
+        if(isAdult()) {
+            isAdult = "adult";
+        }
         return "User{" +
-                "username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                '}';
+                "username='" + username + "', " + isAdult
+                + "}";
     }
 
     @Override
@@ -70,11 +87,10 @@ public class User implements Transferable {
         if (!(obj instanceof User)) {
             return false;
         } else {
-            String hashString = username;
-            String objHashString = ((User) obj).getUsername();
-            return hashString.hashCode() == objHashString.hashCode();
+            return username.equals(((User) obj).getUsername());
         }
     }
+
 
     public boolean compareUsernamePassword(User otherUser) {
         String otherPassword = otherUser.getPassword();

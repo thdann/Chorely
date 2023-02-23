@@ -1,9 +1,11 @@
 package com.mau.chorely.activities;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -60,6 +62,7 @@ public class LogInActivity extends AppCompatActivity implements UpdatableActivit
      * @param view Button clicked.
      */
     public void logIn(View view) {
+        hideKeyboard();
         EditText user = findViewById(R.id.username);
         EditText pass = findViewById(R.id.password);
         String username = user.getText().toString();
@@ -122,6 +125,14 @@ public class LogInActivity extends AppCompatActivity implements UpdatableActivit
                 toast.show();
             }
         });
+    }
+    public void hideKeyboard() {
+        InputMethodManager inputManager = (InputMethodManager)
+                getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+                InputMethodManager.HIDE_NOT_ALWAYS);
+
     }
 }
 

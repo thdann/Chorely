@@ -53,12 +53,12 @@ public class RegisteredUsers {
      * Saves a User object to its own file on the server.
      *
      * @param user the User object to be saved to file
-     * @return
+     * @return true upon success
      */
-    public synchronized int writeUserToFile(User user) {
-        int success = 0;
-        if (userQueries.registerUser(user.getUsername(), user.getPassword(), user.isAdult())) {
-            success = 1;
+    public synchronized boolean writeUserToFile(User user) {
+        boolean success = false;
+        if (user != null && userQueries.registerUser(user.getUsername(), user.getPassword(), user.isAdult())) {
+            success = true;
         }
         return success;
     }
@@ -89,11 +89,19 @@ public class RegisteredUsers {
      * @return the requested User-object
      */
     public synchronized User getUserFromFile(User userToFind) {
-        return userQueries.getUserInfo(userToFind.getUsername());
+        User gotUser = null;
+        if (userToFind!=null) {
+            gotUser = userQueries.getUserInfo(userToFind.getUsername());
+        }
+        return gotUser;
 
     }
     public synchronized boolean checkPassword(String username, String password) {
-        return userQueries.checkPassword(username, password);
+        boolean verified = false;
+        if (username!=null && password!=null) {
+            verified = userQueries.checkPassword(username, password);
+        }
+        return verified;
     }
 
 //    /**
@@ -132,17 +140,17 @@ public class RegisteredUsers {
 //        }
 //        writeUserToFile(user);
 //    }
-    /**
-     * Copy of previous method, deletes and re/registers user
-     * todo bad method, remove and (if needed) replace with update method
-     *
-     * @param user is the new updated version of the User object to be saved to file.
-     */
-    public synchronized void updateUser(User user) {
-        userQueries.deleteAccount(user, user.getPassword());
-        userQueries.registerUser(user.getUsername(), user.getPassword(), true);
-
-    }
+//    /**
+//     * Copy of previous method, deletes and re/registers user
+//     * todo bad method, remove and (if needed) replace with update method
+//     *
+//     * @param user is the new updated version of the User object to be saved to file.
+//     */
+//    public synchronized void updateUser(User user) {
+//        userQueries.deleteAccount(user, user.getPassword());
+//        userQueries.registerUser(user.getUsername(), user.getPassword(), true);
+//
+//    }
 //    /**
 //     * Compares the username of a new user to already registered users.
 //     *
@@ -165,7 +173,7 @@ public class RegisteredUsers {
      */
     public boolean userNameAvailable(String newUsername) {
         boolean nameAvailable = false;
-        if (userQueries.getUserInfo(newUsername) == null) {
+        if (newUsername != null && userQueries.getUserInfo(newUsername) == null) {
             nameAvailable = true;
         }
         return nameAvailable;
