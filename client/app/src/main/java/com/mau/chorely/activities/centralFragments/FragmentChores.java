@@ -45,6 +45,8 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
     private RecyclerView.LayoutManager layoutManager;
     private int selectedItem;
 
+    private Group selectedGroup;
+
     public FragmentChores() {
         // Required empty public constructor
     }
@@ -55,10 +57,11 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
      *
      * @return A new instance of fragment FragmentChores.
      */
-    public static FragmentChores newInstance(ArrayList<Chore> chores) {
+    public static FragmentChores newInstance(ArrayList<Chore> chores, Group group) {
         FragmentChores fragment = new FragmentChores();
         Bundle args = new Bundle();
         args.putSerializable("CHORES", chores);
+        args.putSerializable("GROUP", group);
         fragment.setArguments(args);
         return fragment;
     }
@@ -72,6 +75,7 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             ArrayList<Chore> chores = (ArrayList<Chore>) getArguments().getSerializable("CHORES");
+            selectedGroup = (Group) getArguments().getSerializable("GROUP");
             validateAndUpdateListData(chores);
         }
     }

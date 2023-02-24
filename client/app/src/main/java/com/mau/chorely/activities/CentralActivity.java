@@ -186,9 +186,9 @@ public class CentralActivity extends AppCompatActivity implements UpdatableActiv
             rewards = selectedGroup.getRewards();
             points = selectedGroup.getLeaderBoard();
         }
-        adapter.addFragment(FragmentChores.newInstance(chores), "Sysslor");
-        adapter.addFragment(FragmentRewards.newInstance(rewards), "Belöningar");
-        adapter.addFragment(FragmentScore.newInstance(points), "Poängtavla");
+        adapter.addFragment(FragmentChores.newInstance(chores, selectedGroup), "Sysslor");
+        adapter.addFragment(FragmentRewards.newInstance(rewards, selectedGroup), "Belöningar");
+        adapter.addFragment(FragmentScore.newInstance(points, selectedGroup), "Poängtavla");
         viewPager.setAdapter(adapter);
 
     }

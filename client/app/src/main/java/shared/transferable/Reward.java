@@ -10,7 +10,7 @@ public class Reward implements Transferable {
     private int rewardPrice;
     private String description;
     private String lastDoneByUser = "";
-    private int groupID;
+    private int groupID; //must have a group
 
 
     public Reward(String name, int rewardPrice, String description) {
@@ -20,7 +20,9 @@ public class Reward implements Transferable {
     }
 
     public Reward(String name, int rewardPrice, String description, int groupID) {
-        this(name, rewardPrice, description);
+        this.name = name;
+        this.rewardPrice = rewardPrice;
+        this.description = description;
         this.groupID = groupID;
     }
 

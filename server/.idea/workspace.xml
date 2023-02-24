@@ -6,9 +6,13 @@
   <component name="ChangeListManager">
     <list default="true" id="2244c873-27e5-4779-add0-219b14bdef42" name="Changes" comment="only looks for user info if login success">
       <change beforePath="$PROJECT_DIR$/../client/app/src/main/java/com/mau/chorely/activities/CentralActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../client/app/src/main/java/com/mau/chorely/activities/CentralActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/app/src/main/java/com/mau/chorely/activities/LogInActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../client/app/src/main/java/com/mau/chorely/activities/LogInActivity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../client/app/src/main/java/com/mau/chorely/activities/centralFragments/FragmentChores.java" beforeDir="false" afterPath="$PROJECT_DIR$/../client/app/src/main/java/com/mau/chorely/activities/centralFragments/FragmentChores.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/app/src/main/java/com/mau/chorely/model/persistentStorage/PersistentStorage.java" beforeDir="false" afterPath="$PROJECT_DIR$/../client/app/src/main/java/com/mau/chorely/model/persistentStorage/PersistentStorage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/app/src/main/java/shared/transferable/Chore.java" beforeDir="false" afterPath="$PROJECT_DIR$/../client/app/src/main/java/shared/transferable/Chore.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/app/src/main/java/shared/transferable/Reward.java" beforeDir="false" afterPath="$PROJECT_DIR$/../client/app/src/main/java/shared/transferable/Reward.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/RegisteredGroups.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/RegisteredGroups.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/ChoreRewardQueries.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/ChoreRewardQueries.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/GroupQueries.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/GroupQueries.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

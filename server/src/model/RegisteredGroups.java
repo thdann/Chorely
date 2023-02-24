@@ -134,9 +134,16 @@ public class RegisteredGroups {
      * @param group is the new updated version of the Group object to be saved to file.
      */
     public synchronized void updateGroup(Group group) {
+        //update name
         groupQueries.updateGroupName(group.getIntGroupID(), group.getName());
+        //update description
         groupQueries.updateGroupDescription(group.getIntGroupID(), group.getDescription());
+        //update members
         groupQueries.updateMembers(group);
+        //update chores
+        groupQueries.updateChores(group);
+        //update rewards
+        groupQueries.updateRewards(group);
     }
 
 //    /**

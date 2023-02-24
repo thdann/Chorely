@@ -24,10 +24,11 @@ public class ChoreRewardQueries {
     public boolean createChore (Chore chore) {
         boolean success = false;
         String sqlSafeName = makeSqlSafe(chore.getName());
-        String sqlSafeDesc = makeSqlSafe(chore.getName());
+        String sqlSafeDesc = makeSqlSafe(chore.getDescription());
         int points = chore.getScore();
         int groupID = chore.getGroupID();
-        String query = "INSERT INTO [Chore] VALUES ('" + sqlSafeName + "', '" + groupID + "', '" + sqlSafeDesc + "', '" + points + "', null)";
+        String query = "INSERT INTO [Chore] VALUES ('" + sqlSafeName + "', '" + groupID + "', '" + sqlSafeDesc + "', " + points + ", null)";
+        System.out.println(query);
         try {
             queryExecutor.executeUpdateQuery(query);
             success = true;
@@ -158,10 +159,10 @@ public class ChoreRewardQueries {
     public boolean createReward (Reward reward) {
         boolean success = false;
         String sqlSafeName = makeSqlSafe(reward.getName());
-        String sqlSafeDesc = makeSqlSafe(reward.getName());
+        String sqlSafeDesc = makeSqlSafe(reward.getDescription());
         int points = reward.getRewardPrice();
         int groupID = reward.getGroupID();
-        String query = "INSERT INTO [Reward] VALUES ('" + sqlSafeName + "', '" + groupID + "', '" + sqlSafeDesc + "', '" + points + "', null)";
+        String query = "INSERT INTO [Reward] VALUES ('" + sqlSafeName + "', '" + groupID + "', '" + sqlSafeDesc + "', " + points + ", null)";
         try {
             queryExecutor.executeUpdateQuery(query);
             success = true;
@@ -186,7 +187,7 @@ public class ChoreRewardQueries {
         String sqlSafeDesc = makeSqlSafe(reward.getDescription());
         int points = reward.getRewardPrice();
         String lastUser = reward.getLastDoneByUser();
-        String query = "UPDATE [Chore] SET" +
+        String query = "UPDATE [Reward] SET" +
                 " reward_description = '" + sqlSafeDesc + "'," +
                 " reward_price = " + points + "," +
                 " last_user = '" + lastUser + "'" +

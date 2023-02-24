@@ -256,17 +256,26 @@ public class GroupQueries {
         return groupRemoved;
     }
 
-    public void updateMembers(Group updatedGroup) {
-        int id = updatedGroup.getIntGroupID();
-        Group oldGroup = getGroupMembers(id);
-        ArrayList<Transferable> data = new ArrayList<>();
-        data.add(updatedGroup);
-        for (User u : updatedGroup.getUsers()) {
-            if (!oldGroup.getUsers().contains(u) && !Objects.equals(oldGroup.getOwner(), u.getUsername())) {
-                addMember(u, updatedGroup);
+    public boolean updateMembers(Group updatedGroup) {
+        boolean success = false;
+        try {
+            Group oldGroup = getGroupMembers(updatedGroup.getIntGroupID());
+            for (User u: oldGroup.getMembers()) { //remove if not in updated list and not owner
+                if (!updatedGroup.getUsers().contains(u) && !Objects.equals(oldGroup.getOwner(), u.getUsername())) {
+                    removeMember(u, oldGroup);
+                }
             }
+            for (User u : updatedGroup.getMembers()) { //remove if not in old list and not owner
+                if (!oldGroup.getUsers().contains(u) && !Objects.equals(oldGroup.getOwner(), u.getUsername())) {
+                    addMember(u, oldGroup);
+                }
+            }
+            success = true;
+        }catch (Exception e) {
+            System.out.println(e); //just in case
+            success = false;
         }
-
+        return success;
     }
 
     private Group getGroupMembers(int id) {
@@ -284,5 +293,54 @@ public class GroupQueries {
             e.printStackTrace();
         }
         return groupWithMembers;
+    }
+
+    public boolean updateChores(Group updatedGroup) {
+        boolean success = false;
+        try {
+            ArrayList<Chore> oldChores = choreRewardQueries.getChoreList(updatedGroup.getGroupID());
+            for (Chore chore: oldChores) { //remove if not in updated list
+                if (!updatedGroup.getChores().contains(chore)) {
+                    choreRewardQueries.deleteChore(chore);
+                }
+            }
+            for (Chore chore : updatedGroup.getChores()) {
+                if (!oldChores.contains(chore)) { //add if not in old list
+                    choreRewardQueries.createChore(chore);
+                } else { //update if found
+                    choreRewardQueries.updateChore(chore);
+                }
+            }
+            success = true;
+        }catch (Exception e) {
+            System.out.println(e); //just in case
+            success = false;
+        }
+        return success;
+    }
+
+    public boolean updateRewards(Group updatedGroup) {
+            boolean success = false;
+            try {
+                ArrayList<Reward> oldRewards = choreRewardQueries.getRewardList(updatedGroup.getGroupID());
+                for (Reward reward: oldRewards) { //remove if not in updated list
+                    if (!updatedGroup.getRewards().contains(reward)) {
+                        choreRewardQueries.deleteReward(reward);
+                    }
+                }
+                for (Reward reward : updatedGroup.getRewards()) {
+                    if (!oldRewards.contains(reward)) { //add if not in old list
+                        choreRewardQueries.createReward(reward);
+                    } else { //update if found
+                        choreRewardQueries.updateReward(reward);
+                    }
+                }
+                success = true;
+            }catch (Exception e) {
+                System.out.println(e); //just in case
+                success = false;
+            }
+            return success;
+
     }
 }
