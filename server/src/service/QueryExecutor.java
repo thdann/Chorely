@@ -16,7 +16,6 @@ public class QueryExecutor {
     LeaderboardQueries leaderboardQueries;
 
     public QueryExecutor(DatabaseConnection connection) {
-        System.out.println("build QE");
         this.connection = connection;
         choreRewardQueries = new ChoreRewardQueries(this);
         leaderboardQueries = new LeaderboardQueries(this);

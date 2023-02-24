@@ -4,15 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2244c873-27e5-4779-add0-219b14bdef42" name="Changes" comment="only looks for user info if login success">
-      <change beforePath="$PROJECT_DIR$/../client/app/src/main/java/com/mau/chorely/activities/CentralActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../client/app/src/main/java/com/mau/chorely/activities/CentralActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/app/src/main/java/com/mau/chorely/activities/centralFragments/FragmentChores.java" beforeDir="false" afterPath="$PROJECT_DIR$/../client/app/src/main/java/com/mau/chorely/activities/centralFragments/FragmentChores.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/app/src/main/java/shared/transferable/Chore.java" beforeDir="false" afterPath="$PROJECT_DIR$/../client/app/src/main/java/shared/transferable/Chore.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../client/app/src/main/java/shared/transferable/Reward.java" beforeDir="false" afterPath="$PROJECT_DIR$/../client/app/src/main/java/shared/transferable/Reward.java" afterDir="false" />
+    <list default="true" id="2244c873-27e5-4779-add0-219b14bdef42" name="Changes" comment="chores now save to correct group">
+      <change beforePath="$PROJECT_DIR$/../client/app/src/main/java/shared/transferable/Group.java" beforeDir="false" afterPath="$PROJECT_DIR$/../client/app/src/main/java/shared/transferable/Group.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../client/app/src/main/java/shared/transferable/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/../client/app/src/main/java/shared/transferable/User.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controller/ServerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/ServerController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controller/StartProgram.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/StartProgram.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/model/RegisteredGroups.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/RegisteredGroups.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/RegisteredUsers.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/RegisteredUsers.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/service/ChoreRewardQueries.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/ChoreRewardQueries.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/service/GroupQueries.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/GroupQueries.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/QueryExecutor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/QueryExecutor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/UserQueries.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/UserQueries.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -286,7 +289,13 @@
       <option name="presentableId" value="LOCAL−00020" />
       <updated>1677235523886</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL−00021" summary="chores now save to correct group">
+      <created>1677242707835</created>
+      <option name="number" value="LOCAL−00021" />
+      <option name="presentableId" value="LOCAL−00021" />
+      <updated>1677242707835</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -329,7 +338,8 @@
     <MESSAGE value="coupled query classes" />
     <MESSAGE value="server now returns all groups at login" />
     <MESSAGE value="only looks for user info if login success" />
-    <option name="LAST_COMMIT_MESSAGE" value="only looks for user info if login success" />
+    <MESSAGE value="chores now save to correct group" />
+    <option name="LAST_COMMIT_MESSAGE" value="chores now save to correct group" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

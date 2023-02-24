@@ -16,7 +16,6 @@ public class GroupQueries {
     ChoreRewardQueries choreRewardQueries;
 
     public GroupQueries(QueryExecutor queryExecutor) {
-        System.out.println("build GQ");
         this.queryExecutor = queryExecutor;
         userQueries = queryExecutor.getUserQueries();
         leaderboardQueries = queryExecutor.getLeaderboardQueries();
@@ -49,7 +48,6 @@ public class GroupQueries {
 
 
     public Group getGroup(int groupID) {
-        //todo return group with all attributes, chores, members and rewards
         Group group = null;
         String query = "SELECT * FROM [Group] WHERE group_id = " + groupID + ";";
         System.out.println(query);
@@ -61,7 +59,6 @@ public class GroupQueries {
                         resultSet.getString("group_name"),
                         resultSet.getString("group_owner"),
                         resultSet.getString("group_description"));
-                System.out.println(group);
                 group.setLeaderboard(leaderboardQueries.getLeaderboard(groupID));
                 group.setMembers(getGroupMembers(groupID).getMembers());
                 group.setChores(choreRewardQueries.getChoreList(groupID));
@@ -137,7 +134,6 @@ public class GroupQueries {
      * @return the updated group if successful, null if not
      */
     public Group addMember(User user, Group group) {
-        //todo return the group with updated attributes, chores, members and rewards
         int groupID = group.getIntGroupID();
         Group dbGroup = getGroupMembers(groupID);
         //only add member if not already a member
@@ -272,7 +268,6 @@ public class GroupQueries {
             }
             success = true;
         }catch (Exception e) {
-            System.out.println(e); //just in case
             success = false;
         }
         return success;
@@ -313,7 +308,6 @@ public class GroupQueries {
             }
             success = true;
         }catch (Exception e) {
-            System.out.println(e); //just in case
             success = false;
         }
         return success;
@@ -337,7 +331,6 @@ public class GroupQueries {
                 }
                 success = true;
             }catch (Exception e) {
-                System.out.println(e); //just in case
                 success = false;
             }
             return success;
