@@ -62,7 +62,7 @@ public class UserQueries {
             //get groups user is member of
             //todo replace with call to GroupQueries once method is written
             ArrayList<Group> groups = new ArrayList<>();
-            String query = "SELECT * FROM [Group] where group_id = (SELECT group_id from [Member] WHERE user_name = '" + sqlSafeUsername + "');";
+            String query = "SELECT * FROM [Group] INNER JOIN [Member] ON [Group].group_id = [Member].group_id WHERE user_name = " + sqlSafeUsername + ";";
             try {
                 ResultSet resultSet = queryExecutor.executeReadQuery(query);
                 while (resultSet.next()) {
