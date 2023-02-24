@@ -22,7 +22,6 @@ public class UserQueries {
     ChoreRewardQueries choreRewardQueries;
 
     public UserQueries(QueryExecutor queryExecutor){
-        System.out.println("build UQ");
        this.queryExecutor = queryExecutor;
         leaderboardQueries = queryExecutor.getLeaderboardQueries();
         choreRewardQueries = queryExecutor.getChoreRewardQueries();
@@ -48,7 +47,6 @@ public class UserQueries {
             success = true;
         }
         catch (SQLException sqlException) {
-            //todo will fail if duplicate username found -> throw appropriate error message
             sqlException.printStackTrace();
         }
         return success;

@@ -13,7 +13,6 @@ public class Group implements Transferable {
     private String owner;
     private String name;
     private String description;
-    //private ArrayList<User> users = new ArrayList<>();
     private ArrayList<User> members = new ArrayList<>(); //change to usernames to prevent looping?
     private int intGroupID;
     private ArrayList<Chore> chores = new ArrayList<>();

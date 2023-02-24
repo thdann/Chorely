@@ -42,7 +42,6 @@ public class Model {
     private static Model model;
     private Context context;
 
-    //todo reduce need for client-side storage, replace with calls to server/database
     public static Model getInstance(File appFilesDir, Context context) {
         if (model == null) {
             model = new Model(appFilesDir, context);

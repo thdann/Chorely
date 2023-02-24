@@ -7,7 +7,7 @@ import java.util.UUID;
  * This makes it possible for a client to create a unique ID without having to
  * communicate with the server to verify that another client hasn't already created
  * the same ID.
- *
+ * todo remove this class when unnecessary
  * UUID is wrapped in the GenericID class to make it Transferable.
  */
 public class GenericID implements Transferable, Comparable<GenericID> {

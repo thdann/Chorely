@@ -34,7 +34,6 @@ public class ChoreRewardQueries {
             success = true;
         }
         catch (SQLException sqlException) {
-            //todo will fail if duplicate chore found -> throw appropriate error message
             sqlException.printStackTrace();
         }
         return success;
@@ -168,7 +167,6 @@ public class ChoreRewardQueries {
             success = true;
         }
         catch (SQLException sqlException) {
-            //todo will fail if duplicate chore found -> throw appropriate error message
             sqlException.printStackTrace();
         }
         return success;
