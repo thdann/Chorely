@@ -95,21 +95,17 @@ public class ClientHandler {
     public boolean loginUser(Message message) {
         boolean success = false;
         User user = message.getUser();
-        User userFromFile = registeredUsers.getUserFromFile(user);
+        User loggedInUser = registeredUsers.loginUser(user);
         Message reply;
 
-        if (userFromFile == null) {  // userFromFile == null when the username isn't found as a registered user.
+        if (loggedInUser == null) {  // null when the username/password fail
             reply = new Message(NetCommands.loginDenied, user, new ErrorMessage("Fel användarnamn eller lösenord, försök igen!"));
         }
-//        else if (user.compareUsernamePassword(userFromFile)) {
-          else if (registeredUsers.checkPassword(user.getUsername(), user.getPassword())) {
-            reply = new Message(NetCommands.loginOk, userFromFile);
-            controller.addOnlineClient(userFromFile, ClientHandler.this);
+          else {
+            reply = new Message(NetCommands.loginOk, loggedInUser);
+            controller.addOnlineClient(loggedInUser, ClientHandler.this);
             success = true;
-        } else {
-            reply = new Message(NetCommands.loginDenied, user, new ErrorMessage("Fel användarnamn eller lösenord, försök igen!"));
         }
-
         outgoingMessages.add(reply);
         return success;
     }

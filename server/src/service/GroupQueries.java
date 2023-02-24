@@ -81,7 +81,16 @@ public class GroupQueries {
         try {
             ResultSet resultSet = queryExecutor.executeReadQuery(query);
             while (resultSet.next()) {
-                Group group = getGroup(resultSet.getInt("group_id"));
+                int groupID = resultSet.getInt("group_id");
+                Group group = new Group(
+                        groupID,
+                        resultSet.getString("group_name"),
+                        resultSet.getString("group_owner"),
+                        resultSet.getString("group_description"));
+                group.setLeaderboard(leaderboardQueries.getLeaderboard(groupID));
+                group.setMembers(getGroupMembers(groupID).getMembers());
+                group.setChores(choreRewardQueries.getChoreList(groupID));
+                group.setRewards(choreRewardQueries.getRewardList(groupID));
                 groups.add(group);
             }
         } catch (SQLException e) {
@@ -262,7 +271,7 @@ public class GroupQueries {
 
     private Group getGroupMembers(int id) {
         Group groupWithMembers = new Group();
-        String query = "SELECT * FROM [Member] WHERE group_id=" + id + ";";
+        String query = "SELECT * FROM [Member] WHERE group_id = " + id + ";";
         System.out.println(query);
         try {
             ResultSet resultSet = queryExecutor.executeReadQuery(query);

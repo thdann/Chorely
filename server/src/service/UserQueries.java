@@ -62,12 +62,7 @@ public class UserQueries {
     public User loginUser(String userName, String password) {
         User loggedInUser = null;
         if (checkPassword(userName, password)) {
-            String sqlSafeUsername = makeSqlSafe(userName);
-            //get users basic info
-            loggedInUser = getUserInfo(sqlSafeUsername);
-            //get groups user is member of
-            ArrayList<Group> groups = groupQueries.getGrouplist(sqlSafeUsername);
-            loggedInUser.setDBGroups(groups);
+            loggedInUser = getUserInfo(userName);
         }
         return loggedInUser;
     }
@@ -80,7 +75,6 @@ public class UserQueries {
      */
     public User getUserInfo(String userName) {
         String sqlSafeUsername = makeSqlSafe(userName);
-        boolean adult = false;
         User gotUser = null;
         String query = "SELECT * FROM [User] WHERE user_name = '" + sqlSafeUsername + "';";
         try {

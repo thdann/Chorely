@@ -68,12 +68,12 @@ public class User implements Transferable {
     }
     @Override
     public String toString() {
-        String isAdult = "child";
+        String isAdult = "";
         if(isAdult()) {
-            isAdult = "adult";
+            isAdult = ", adult";
         }
         return "User{" +
-                "username='" + username + "', " + isAdult
+                "username='" + username + "'" + isAdult
                 + "}";
     }
 

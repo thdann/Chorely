@@ -188,4 +188,9 @@ public class RegisteredUsers {
         this.choreRewardQueries = queryExecutor.getChoreRewardQueries();
         this.leaderboardQueries = queryExecutor.getLeaderboardQueries();
     }
+
+    public User loginUser(User user) {
+        User loggedInUser = userQueries.loginUser(user.getUsername(), user.getPassword());
+        return loggedInUser;
+    }
 }

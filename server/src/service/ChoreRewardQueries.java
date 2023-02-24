@@ -129,6 +129,7 @@ public class ChoreRewardQueries {
     public ArrayList<Chore> getChoreList(int groupID) {
         ArrayList<Chore> choreList = new ArrayList<>();
         String query = "SELECT * FROM [Chore] WHERE group_id = " + groupID;
+        System.out.println(query);
         try {
             ResultSet resultSet = queryExecutor.executeReadQuery(query);
             while (resultSet.next()) {
@@ -267,6 +268,7 @@ public class ChoreRewardQueries {
     public ArrayList<Reward> getRewardList(int groupID) {
         ArrayList<Reward> rewardList = new ArrayList<>();
         String query = "SELECT * FROM [Reward] WHERE group_id = " + groupID;
+        System.out.println(query);
         try {
             ResultSet resultSet = queryExecutor.executeReadQuery(query);
             while (resultSet.next()) {

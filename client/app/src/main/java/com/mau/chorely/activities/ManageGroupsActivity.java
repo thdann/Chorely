@@ -188,11 +188,10 @@ public class ManageGroupsActivity extends AppCompatActivity implements Updatable
                     Group group = updatedGroups.get(i);
                     if (groupList.contains(group)) {
                         int shownGroupIndex = groupList.indexOf(group);
-                        if (!groupList.get(shownGroupIndex).allIsEqual(group)) {
                             groupList.remove(shownGroupIndex);
-                            groupList.add(group);
+                            groupList.add(shownGroupIndex, group);
                             mAdapter.notifyDataSetChanged();
-                        }
+
                     } else {
                         groupList.add(group);
                         mAdapter.notifyDataSetChanged();
