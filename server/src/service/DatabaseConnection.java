@@ -12,11 +12,9 @@ public class DatabaseConnection {
 
     private java.sql.Connection conn;
     private String databaseName;
-    QueryExecutor queryExecutor;
 
     public DatabaseConnection(String databaseName) {
         this.databaseName = databaseName;
-        queryExecutor = new QueryExecutor(this);
     }
 
     private java.sql.Connection createConnection() throws SQLException, UnknownHostException {

@@ -11,16 +11,18 @@ import java.util.Objects;
 public class GroupQueries {
 
     private QueryExecutor queryExecutor;
+    UserQueries userQueries;
     LeaderboardQueries leaderboardQueries;
     ChoreRewardQueries choreRewardQueries;
-    UserQueries userQueries;
 
-    public GroupQueries(QueryExecutor queryExecutor){
+    public GroupQueries(QueryExecutor queryExecutor) {
+        System.out.println("build GQ");
         this.queryExecutor = queryExecutor;
-        leaderboardQueries = new LeaderboardQueries(queryExecutor);
-        choreRewardQueries = new ChoreRewardQueries(queryExecutor);
-        userQueries = new UserQueries(queryExecutor);
+        userQueries = queryExecutor.getUserQueries();
+        leaderboardQueries = queryExecutor.getLeaderboardQueries();
+        choreRewardQueries = queryExecutor.getChoreRewardQueries();
     }
+
     //add a group to the database
     public Group createGroup(String owner, String groupName, String description) {
         Group createdGroup = null;
@@ -50,25 +52,42 @@ public class GroupQueries {
         //todo return group with all attributes, chores, members and rewards
         Group group = null;
         String query = "SELECT * FROM [Group] WHERE group_id = " + groupID + ";";
+        System.out.println(query);
         try {
             ResultSet resultSet = queryExecutor.executeReadQuery(query);
-            while (resultSet.next()) {
+            if (resultSet.next()) {
                 group = new Group(
                         resultSet.getInt("group_id"),
                         resultSet.getString("group_name"),
                         resultSet.getString("group_owner"),
                         resultSet.getString("group_description"));
-            }
-            if (group!=null) {
+                System.out.println(group);
                 group.setLeaderboard(leaderboardQueries.getLeaderboard(groupID));
                 group.setMembers(getGroupMembers(groupID).getMembers());
                 group.setChores(choreRewardQueries.getChoreList(groupID));
                 group.setRewards(choreRewardQueries.getRewardList(groupID));
+
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         return group;
+    }
+
+    public ArrayList<Group> getGrouplist(String sqlSafeUsername) {
+        ArrayList<Group> groups = new ArrayList<>();
+        String query = "SELECT * FROM [Group] INNER JOIN [Member] ON [Group].group_id = [Member].group_id WHERE user_name = '" + sqlSafeUsername + "';";
+        System.out.println(query);
+        try {
+            ResultSet resultSet = queryExecutor.executeReadQuery(query);
+            while (resultSet.next()) {
+                Group group = getGroup(resultSet.getInt("group_id"));
+                groups.add(group);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return groups;
     }
 
     public Group updateGroupName(int id, String name) {
@@ -104,7 +123,7 @@ public class GroupQueries {
      * Method adds a member to a given group,
      * with, by default, 0 points and no admin rights
      *
-     * @param user user to add to group
+     * @param user  user to add to group
      * @param group group to be updated
      * @return the updated group if successful, null if not
      */
@@ -135,7 +154,8 @@ public class GroupQueries {
     /**
      * Remove a member from a group, if the member is the owner,
      * remove the group and all it's members/chores/rewards
-     * @param user name of member to remove
+     *
+     * @param user  name of member to remove
      * @param group group to be updated
      * @return true when success
      */
@@ -196,19 +216,18 @@ public class GroupQueries {
     }
 
     /**
-     *
      * @param group
      */
     public boolean removeGroup(Group group) {
         boolean groupRemoved = false;
         String query =          //remove chores
-                    "DELETE FROM [Chore] WHERE group_id = '" + group.getGroupID() + "');" +
-                            //remove rewards
-                            "DELETE FROM [Reward] WHERE group_id = '" + group.getGroupID() + "');" +
-                            //remove members
-                            "DELETE FROM [Member] WHERE group_id = '" + group.getGroupID() + "');" +
-                            //finally, remove group
-                            "DELETE FROM [Group] WHERE group_id = '" + group.getGroupID() + "';";
+                "DELETE FROM [Chore] WHERE group_id = '" + group.getGroupID() + "');" +
+                        //remove rewards
+                        "DELETE FROM [Reward] WHERE group_id = '" + group.getGroupID() + "');" +
+                        //remove members
+                        "DELETE FROM [Member] WHERE group_id = '" + group.getGroupID() + "');" +
+                        //finally, remove group
+                        "DELETE FROM [Group] WHERE group_id = '" + group.getGroupID() + "';";
 
 
         try {
@@ -216,14 +235,12 @@ public class GroupQueries {
             statement.executeUpdate(query);
             queryExecutor.endTransaction();
             groupRemoved = true;
-        }
-        catch (SQLException sqlException) {
+        } catch (SQLException sqlException) {
             try {
                 System.out.println(sqlException);
                 queryExecutor.rollbackTransaction();
                 groupRemoved = false;
-            }
-            catch (SQLException throwables) {
+            } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
         }

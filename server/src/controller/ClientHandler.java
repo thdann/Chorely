@@ -103,8 +103,8 @@ public class ClientHandler {
         }
 //        else if (user.compareUsernamePassword(userFromFile)) {
           else if (registeredUsers.checkPassword(user.getUsername(), user.getPassword())) {
-            reply = new Message(NetCommands.loginOk, user);
-            controller.addOnlineClient(user, ClientHandler.this);
+            reply = new Message(NetCommands.loginOk, userFromFile);
+            controller.addOnlineClient(userFromFile, ClientHandler.this);
             success = true;
         } else {
             reply = new Message(NetCommands.loginDenied, user, new ErrorMessage("Fel användarnamn eller lösenord, försök igen!"));

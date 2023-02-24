@@ -4,10 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2244c873-27e5-4779-add0-219b14bdef42" name="Changes" comment="updated user query for getting groups">
+    <list default="true" id="2244c873-27e5-4779-add0-219b14bdef42" name="Changes" comment="coupled query classes">
+      <change beforePath="$PROJECT_DIR$/../client/app/src/main/java/shared/transferable/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/../client/app/src/main/java/shared/transferable/User.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controller/ServerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/ServerController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controller/ClientHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/ClientHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controller/StartProgram.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/StartProgram.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/RegisteredGroups.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/RegisteredGroups.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/RegisteredUsers.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/RegisteredUsers.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/DatabaseConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/DatabaseConnection.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/service/GroupQueries.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/GroupQueries.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/LeaderboardQueries.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/LeaderboardQueries.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/QueryExecutor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/QueryExecutor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/service/UserQueries.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/UserQueries.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -264,7 +271,13 @@
       <option name="presentableId" value="LOCAL−00017" />
       <updated>1677224636102</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL−00018" summary="coupled query classes">
+      <created>1677225767412</created>
+      <option name="number" value="LOCAL−00018" />
+      <option name="presentableId" value="LOCAL−00018" />
+      <updated>1677225767412</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -304,7 +317,18 @@
     <MESSAGE value="coupled register/login methods -&gt; database users" />
     <MESSAGE value="usermethods now can handle null values" />
     <MESSAGE value="updated user query for getting groups" />
-    <option name="LAST_COMMIT_MESSAGE" value="updated user query for getting groups" />
+    <MESSAGE value="coupled query classes" />
+    <option name="LAST_COMMIT_MESSAGE" value="coupled query classes" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.lang.NullPointerException" package="java.lang" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/server$unitTests_in_server.ic" NAME="unitTests in server Coverage Results" MODIFIED="1676288559782" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">

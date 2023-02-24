@@ -1,8 +1,6 @@
 package model;
 
-import service.ChoreRewardQueries;
-import service.GroupQueries;
-import service.UserQueries;
+import service.*;
 import shared.transferable.Group;
 import shared.transferable.User;
 
@@ -22,6 +20,7 @@ public class RegisteredGroups {
     UserQueries userQueries;
     GroupQueries groupQueries;
     ChoreRewardQueries choreRewardQueries;
+    private LeaderboardQueries leaderboardQueries;
 
     private RegisteredGroups() {
     }
@@ -170,10 +169,12 @@ public class RegisteredGroups {
         groupQueries.removeGroup(group);
     }
 
-    public void setQueryPerformers(UserQueries userQueries, GroupQueries groupQueries, ChoreRewardQueries choreRewardQueries) {
-        this.userQueries = userQueries;
-        this.groupQueries = groupQueries;
-        this.choreRewardQueries = choreRewardQueries;
+    public void setQueryPerformers(QueryExecutor queryExecutor) {
+        System.out.println("QP set");
+        this.userQueries = queryExecutor.getUserQueries();
+        this.groupQueries = queryExecutor.getGroupQueries();
+        this.choreRewardQueries = queryExecutor.getChoreRewardQueries();
+        this.leaderboardQueries = queryExecutor.getLeaderboardQueries();
     }
 
     public boolean removeMember(User user, Group group) {

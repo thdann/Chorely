@@ -13,12 +13,33 @@ public class QueryExecutor {
     UserQueries userQueries;
     GroupQueries groupQueries;
     ChoreRewardQueries choreRewardQueries;
+    LeaderboardQueries leaderboardQueries;
 
     public QueryExecutor(DatabaseConnection connection) {
+        System.out.println("build QE");
         this.connection = connection;
+        choreRewardQueries = new ChoreRewardQueries(this);
+        leaderboardQueries = new LeaderboardQueries(this);
+
         userQueries = new UserQueries(this);
         groupQueries = new GroupQueries(this);
-        choreRewardQueries = new ChoreRewardQueries(this);
+        userQueries.setGroupQueries(groupQueries);
+    }
+
+    public UserQueries getUserQueries() {
+        return userQueries;
+    }
+
+    public GroupQueries getGroupQueries() {
+        return groupQueries;
+    }
+
+    public ChoreRewardQueries getChoreRewardQueries() {
+        return choreRewardQueries;
+    }
+
+    public LeaderboardQueries getLeaderboardQueries() {
+        return leaderboardQueries;
     }
 
     //execute queries that modify the database

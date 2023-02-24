@@ -22,7 +22,8 @@ public class LeaderboardQueries {
      */
     public HashMap<User, Integer> getLeaderboard (int groupID) {
         HashMap<User, Integer> leaderboard = new HashMap<>();
-        String query = "SELECT * FROM [Member] WHERE group_id = "+ groupID;
+        String query = "SELECT * FROM [Member] WHERE group_id = " + groupID + ";";
+        System.out.println(query);
         try {
             ResultSet resultSet = queryExecutor.executeReadQuery(query);
             while (resultSet.next()) {

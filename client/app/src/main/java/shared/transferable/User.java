@@ -112,4 +112,8 @@ public class User implements Transferable {
         success = true;
         return success;
     }
+
+    public void setAdult(boolean isAdult) {
+        this.adult = isAdult;
+    }
 }
