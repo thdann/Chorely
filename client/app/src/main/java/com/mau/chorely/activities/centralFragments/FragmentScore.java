@@ -30,8 +30,8 @@ public class FragmentScore extends Fragment {
     private static HashMap<User, Integer> scoreMap;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
-    private static CentralActivityRecyclerViewAdapter adapter;
     private static ArrayList<ListItemCentral> itemList = new ArrayList<>();
+    private static CentralActivityRecyclerViewAdapter adapter = new CentralActivityRecyclerViewAdapter(itemList);
 
     public static Fragment newInstance(HashMap<User, Integer> scoreMap) {
         FragmentScore fragment = new FragmentScore();

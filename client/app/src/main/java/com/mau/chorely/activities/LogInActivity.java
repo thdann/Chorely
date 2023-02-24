@@ -70,7 +70,6 @@ public class LogInActivity extends AppCompatActivity implements UpdatableActivit
 
         if(!username.equals("") && !password.equals("")) {
             User userToLogIn = new User(username, password);
-
             Message logInMsg = new Message(NetCommands.login, userToLogIn);
             Model.getInstance(getFilesDir(),this).handleTask(logInMsg);
             user.setVisibility(View.INVISIBLE);

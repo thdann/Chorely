@@ -41,7 +41,7 @@ import shared.transferable.User;
 public class FragmentChores extends Fragment implements View.OnClickListener {
     private static ArrayList<ListItemCentral> itemList = new ArrayList<>();
     private RecyclerView recyclerView;
-    private static CentralActivityRecyclerViewAdapter adapter;
+    private static CentralActivityRecyclerViewAdapter adapter = new CentralActivityRecyclerViewAdapter(itemList);
     private RecyclerView.LayoutManager layoutManager;
     private int selectedItem;
 
@@ -70,7 +70,6 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        itemList = new ArrayList<>();
         if (getArguments() != null) {
             ArrayList<Chore> chores = (ArrayList<Chore>) getArguments().getSerializable("CHORES");
             validateAndUpdateListData(chores);
@@ -141,6 +140,7 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
      */
     public static void updateList(ArrayList<Chore> chores) {
         validateAndUpdateListData(chores);
+        //todo solve null issue
         adapter.notifyDataSetChanged();
     }
 
@@ -151,7 +151,7 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
     private void buildRecyclerView() {
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getContext());
-        adapter = new CentralActivityRecyclerViewAdapter(itemList);
+//        adapter = new CentralActivityRecyclerViewAdapter(itemList);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
         adapter.setOnclickListener(new CentralActivityRecyclerViewAdapter.OnitemClickListener() {

@@ -38,7 +38,7 @@ import shared.transferable.User;
 public class FragmentRewards extends Fragment implements View.OnClickListener {
     private static ArrayList<ListItemCentral> itemList = new ArrayList<>();
     private RecyclerView recyclerView;
-    private static CentralActivityRecyclerViewAdapter adapter;
+    private static CentralActivityRecyclerViewAdapter adapter = new CentralActivityRecyclerViewAdapter(itemList);
     private RecyclerView.LayoutManager layoutManager;
     private int selectedItem;
 

@@ -137,7 +137,7 @@ public class CentralActivity extends AppCompatActivity implements UpdatableActiv
     @Override
     public void updateActivity() {
         final Group updatedGroup = Model.getInstance(getFilesDir(),this).getSelectedGroup();
-        if (!selectedGroup.allIsEqual(updatedGroup)) {
+
             selectedGroup = updatedGroup;
             System.out.println("UPDATING FRAGMENT LISTS");
             runOnUiThread(new Runnable() {
@@ -148,7 +148,7 @@ public class CentralActivity extends AppCompatActivity implements UpdatableActiv
                     FragmentScore.updateList(selectedGroup.getLeaderBoard());
                 }
             });
-        }
+
 
         runOnUiThread(new Runnable() {
             @Override
