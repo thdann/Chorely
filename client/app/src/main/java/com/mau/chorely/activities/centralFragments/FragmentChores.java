@@ -199,17 +199,14 @@ public class FragmentChores extends Fragment implements View.OnClickListener {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             int points = Integer.parseInt(itemList.get(selectedItem).getPoints());
-                            // updates on client side, THEN sends message to server -> suggest
-                            // we just send a message and update values with response from server = cut
-                            // need for local storage.
+                            // updates on client side, THEN sends message to server
                             Model model = Model.getInstance(getActivity().getFilesDir(),getContext());
                             Group group = model.getSelectedGroup();
                             User currentUser = model.getUser();
                             group.getChores().get(selectedItem).setLastDoneByUser(currentUser.getUsername());
-                            System.out.println(group.getChores().get(selectedItem).getLastDoneByUser());
+                            group.modifyUserPoints(model.getUser(), points);
                             ArrayList<Transferable> data = new ArrayList<>();
                             data.add(group);
-                            group.modifyUserPoints(model.getUser(), points);
                             Message message = new Message(NetCommands.clientInternalGroupUpdate, currentUser, data);
                             model.handleTask(message);
                             choreDoneNotification();

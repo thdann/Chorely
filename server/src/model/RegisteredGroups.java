@@ -65,6 +65,8 @@ public class RegisteredGroups {
         groupQueries.updateChores(group);
         //update rewards
         groupQueries.updateRewards(group);
+        //update leaderboard
+        leaderboardQueries.updateLeaderboard(group);
     }
 
     /**
