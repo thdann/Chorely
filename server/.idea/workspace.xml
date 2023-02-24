@@ -4,15 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2244c873-27e5-4779-add0-219b14bdef42" name="Changes" comment="coupled register/login methods -&gt; database users">
+    <list default="true" id="2244c873-27e5-4779-add0-219b14bdef42" name="Changes" comment="usermethods now can handle null values">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2023-02-20_11_46__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2023-02-20_11_46__Changes_.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared.iml" beforeDir="false" afterPath="$PROJECT_DIR$/shared.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controller/ClientHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/ClientHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/RegisteredUsers.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/RegisteredUsers.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/tests/unitTests/controller/ClientHandlerTests/LoginUserTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/tests/unitTests/controller/ClientHandlerTests/LoginUserTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/tests/unitTests/controller/ClientHandlerTests/LogoutTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/tests/unitTests/controller/ClientHandlerTests/LogoutTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/tests/unitTests/controller/ClientHandlerTests/RegisterUserTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/tests/unitTests/controller/ClientHandlerTests/RegisterUserTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/tests/unitTests/controller/ServerNetworkTests/ServerNetworkTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/tests/unitTests/controller/ServerNetworkTests/ServerNetworkTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/DatabaseConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/DatabaseConnection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/UserQueries.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/UserQueries.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,9 +24,14 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="PREVIOUS_COMMIT_AUTHORS">
+      <list>
+        <option value="mirsmi &lt;89800037+mirsmi@users.noreply.github.com&gt;" />
+      </list>
+    </option>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$/.." value="refactoring" />
+        <entry key="$PROJECT_DIR$/.." value="bugFix" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -51,14 +52,6 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
-    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": ""
-  }
-}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Skola\Documents\GitHub\Chorely\server\src\service" />
@@ -74,7 +67,7 @@
       <recent name="service" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.DatabaseConnection">
+  <component name="RunManager" selected="Application.StartProgram">
     <configuration name="ConnectSQL" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="controller.ConnectSQL" />
       <extension name="coverage">
@@ -140,10 +133,17 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <list>
+      <item itemvalue="Application.ConnectSQL" />
+      <item itemvalue="Application.DatabaseConnection" />
+      <item itemvalue="Application.GroupQueries" />
+      <item itemvalue="Application.StartProgram" />
+      <item itemvalue="JUnit.unitTests in server" />
+    </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.DatabaseConnection" />
         <item itemvalue="Application.StartProgram" />
+        <item itemvalue="Application.DatabaseConnection" />
         <item itemvalue="Application.GroupQueries" />
         <item itemvalue="Application.ConnectSQL" />
         <item itemvalue="JUnit.unitTests in server" />
@@ -249,7 +249,13 @@
       <option name="presentableId" value="LOCAL−00015" />
       <updated>1676820445943</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL−00016" summary="usermethods now can handle null values">
+      <created>1677223710375</created>
+      <option name="number" value="LOCAL−00016" />
+      <option name="presentableId" value="LOCAL−00016" />
+      <updated>1677223710375</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -287,7 +293,8 @@
     <MESSAGE value="create group" />
     <MESSAGE value="chore/reward queries,&#10;updated deleteUser query&#10;started linking model -&gt; service" />
     <MESSAGE value="coupled register/login methods -&gt; database users" />
-    <option name="LAST_COMMIT_MESSAGE" value="coupled register/login methods -&gt; database users" />
+    <MESSAGE value="usermethods now can handle null values" />
+    <option name="LAST_COMMIT_MESSAGE" value="usermethods now can handle null values" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/server$unitTests_in_server.ic" NAME="unitTests in server Coverage Results" MODIFIED="1676288559782" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">

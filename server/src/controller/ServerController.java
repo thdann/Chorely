@@ -446,7 +446,6 @@ public class ServerController {
             while (true) {
                 try {
                     Message message = clientTaskBuffer.take();
-                    System.out.println(message);
                     handleClientTask(message);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
