@@ -11,9 +11,15 @@ import java.util.Objects;
 public class GroupQueries {
 
     private QueryExecutor queryExecutor;
+    LeaderboardQueries leaderboardQueries;
+    ChoreRewardQueries choreRewardQueries;
+    UserQueries userQueries;
 
-    public GroupQueries(QueryExecutor database){
-        this.queryExecutor = database;
+    public GroupQueries(QueryExecutor queryExecutor){
+        this.queryExecutor = queryExecutor;
+        leaderboardQueries = new LeaderboardQueries(queryExecutor);
+        choreRewardQueries = new ChoreRewardQueries(queryExecutor);
+        userQueries = new UserQueries(queryExecutor);
     }
     //add a group to the database
     public Group createGroup(String owner, String groupName, String description) {
@@ -53,15 +59,15 @@ public class GroupQueries {
                         resultSet.getString("group_owner"),
                         resultSet.getString("group_description"));
             }
+            if (group!=null) {
+                group.setLeaderboard(leaderboardQueries.getLeaderboard(groupID));
+                group.setMembers(getGroupMembers(groupID).getMembers());
+                group.setChores(choreRewardQueries.getChoreList(groupID));
+                group.setRewards(choreRewardQueries.getRewardList(groupID));
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        LeaderboardQueries leaderboardQueries = new LeaderboardQueries(queryExecutor);
-        group.setLeaderboard(leaderboardQueries.getLeaderboard(groupID));
-        group.setMembers(getGroupMembers(groupID).getMembers());
-        ChoreRewardQueries choreRewardQueries = new ChoreRewardQueries(queryExecutor);
-        group.setChores(choreRewardQueries.getChoreList(groupID));
-        group.setRewards(choreRewardQueries.getRewardList(groupID));
         return group;
     }
 

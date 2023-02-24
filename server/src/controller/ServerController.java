@@ -123,6 +123,7 @@ public class ServerController {
     public NetCommands handleClientTask(Message msg) {
         NetCommands command = msg.getCommand();
         System.out.println("incoming: " + msg);
+        //todo add login request that returns user + groups
         switch (command) {
             case registerNewGroup:
                 registerNewGroup(msg);

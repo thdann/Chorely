@@ -17,9 +17,15 @@ import java.util.ArrayList;
 public class UserQueries {
 
     private QueryExecutor queryExecutor;
+    LeaderboardQueries leaderboardQueries;
+    ChoreRewardQueries choreRewardQueries;
+    GroupQueries groupQueries;
 
     public UserQueries(QueryExecutor queryExecutor){
        this.queryExecutor = queryExecutor;
+       leaderboardQueries = new LeaderboardQueries(queryExecutor);
+       choreRewardQueries = new ChoreRewardQueries(queryExecutor);
+       groupQueries = new GroupQueries(queryExecutor);
     }
 
     /**
@@ -60,17 +66,13 @@ public class UserQueries {
             //get users basic info
             loggedInUser = getUserInfo(sqlSafeUsername);
             //get groups user is member of
-            //todo replace with call to GroupQueries once method is written
             ArrayList<Group> groups = new ArrayList<>();
             String query = "SELECT * FROM [Group] INNER JOIN [Member] ON [Group].group_id = [Member].group_id WHERE user_name = " + sqlSafeUsername + ";";
             try {
                 ResultSet resultSet = queryExecutor.executeReadQuery(query);
                 while (resultSet.next()) {
-                    int groupId = resultSet.getInt("group_id");
-                    String groupName = resultSet.getString("group_name");
-                    String groupOwner = resultSet.getString("group_owner");
-                    String groupDesc = resultSet.getString("group_description");
-                    groups.add(new Group(groupId, groupOwner, groupName, groupDesc));
+                    Group group = groupQueries.getGroup(resultSet.getInt("group_id"));
+                    groups.add(group);
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
