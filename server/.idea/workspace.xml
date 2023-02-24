@@ -4,18 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2244c873-27e5-4779-add0-219b14bdef42" name="Changes" comment="coupled query classes">
-      <change beforePath="$PROJECT_DIR$/../client/app/src/main/java/shared/transferable/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/../client/app/src/main/java/shared/transferable/User.java" afterDir="false" />
+    <list default="true" id="2244c873-27e5-4779-add0-219b14bdef42" name="Changes" comment="server now returns all groups at login">
+      <change beforePath="$PROJECT_DIR$/../client/app/src/main/java/com/mau/chorely/activities/ManageGroupsActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../client/app/src/main/java/com/mau/chorely/activities/ManageGroupsActivity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controller/ClientHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/ClientHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controller/StartProgram.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/StartProgram.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/RegisteredGroups.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/RegisteredGroups.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/RegisteredUsers.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/RegisteredUsers.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/service/DatabaseConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/DatabaseConnection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/service/GroupQueries.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/GroupQueries.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/service/LeaderboardQueries.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/LeaderboardQueries.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/service/QueryExecutor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/QueryExecutor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/service/UserQueries.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/UserQueries.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -277,7 +268,13 @@
       <option name="presentableId" value="LOCAL−00018" />
       <updated>1677225767412</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL−00019" summary="server now returns all groups at login">
+      <created>1677229091879</created>
+      <option name="number" value="LOCAL−00019" />
+      <option name="presentableId" value="LOCAL−00019" />
+      <updated>1677229091879</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -318,7 +315,8 @@
     <MESSAGE value="usermethods now can handle null values" />
     <MESSAGE value="updated user query for getting groups" />
     <MESSAGE value="coupled query classes" />
-    <option name="LAST_COMMIT_MESSAGE" value="coupled query classes" />
+    <MESSAGE value="server now returns all groups at login" />
+    <option name="LAST_COMMIT_MESSAGE" value="server now returns all groups at login" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

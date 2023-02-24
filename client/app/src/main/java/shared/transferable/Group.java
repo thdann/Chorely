@@ -213,7 +213,7 @@ public class Group implements Transferable {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Group)
-            return intGroupID == getGroupID();
+            return intGroupID == ((Group) obj).getGroupID();
 
         else
             return false;
