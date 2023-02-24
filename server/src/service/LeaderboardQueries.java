@@ -1,11 +1,15 @@
 package service;
 
 import shared.transferable.Chore;
+import shared.transferable.Group;
+import shared.transferable.Reward;
 import shared.transferable.User;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class LeaderboardQueries {
 
@@ -53,5 +57,36 @@ public class LeaderboardQueries {
             sqlException.printStackTrace();
         }
         return boardReset;
+    }
+
+    public boolean updateLeaderboard(Group updatedGroup) {
+        boolean success = false;
+        try {
+            HashMap<User, Integer> oldLeaderboard = getLeaderboard(updatedGroup.getGroupID());
+            for (Map.Entry entry : updatedGroup.getLeaderBoard().entrySet()) {
+                User user = (User) entry.getKey();
+                int score = (Integer) entry.getValue();
+                if (score != oldLeaderboard.get(user)) {
+                    updateScore(updatedGroup.getGroupID(), user, score);
+                }
+            }
+            success = true;
+        }catch (Exception e) {
+            success = false;
+        }
+        return success;
+    }
+
+    private boolean updateScore(int groupID, User user, int score) {
+        boolean scoreUpdated = false;
+        String query = "UPDATE [Member] SET user_score = " + score + " WHERE user_name = '" + user.getUsername() + "' AND group_id = " + groupID;
+        try {
+            queryExecutor.executeUpdateQuery(query);
+            scoreUpdated = true;
+        }
+        catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        }
+        return scoreUpdated;
     }
 }
