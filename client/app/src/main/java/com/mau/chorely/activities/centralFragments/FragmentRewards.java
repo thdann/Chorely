@@ -52,10 +52,11 @@ public class FragmentRewards extends Fragment implements View.OnClickListener {
      *
      * @return A new instance of fragment FragmentRewards.
      */
-    public static FragmentRewards newInstance(ArrayList<Reward> rewards) {
+    public static FragmentRewards newInstance(ArrayList<Reward> rewards, Group selectedGroup) {
         FragmentRewards fragment = new FragmentRewards();
         Bundle args = new Bundle();
         args.putSerializable("REWARDS", rewards);
+        args.putSerializable("SELECTED GROUP", selectedGroup);
         fragment.setArguments(args);
         return fragment;
     }

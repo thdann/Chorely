@@ -17,6 +17,7 @@ import com.mau.chorely.model.Model;
 
 import java.util.ArrayList;
 
+import shared.transferable.Group;
 import shared.transferable.Message;
 import shared.transferable.NetCommands;
 import shared.transferable.Reward;
@@ -30,7 +31,7 @@ import shared.transferable.Transferable;
  * v. 1.0 2020-04-28
  */
 public class CreateRewardActivity extends AppCompatActivity implements UpdatableActivity {
-
+    Group selectedGroup;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +48,7 @@ public class CreateRewardActivity extends AppCompatActivity implements Updatable
         Bundle bundle = getIntent().getExtras();
 
         if (bundle != null) {
+            selectedGroup = (Group) bundle.get("SELECTED_GROUP");
             Reward reward = (Reward) bundle.get("reward");
             setTitle("Redigera belöning");
             ((EditText) (findViewById(R.id.activity_register_editText_nameReward))).setText(reward.getName());
@@ -89,7 +91,7 @@ public class CreateRewardActivity extends AppCompatActivity implements Updatable
      * Creates a new Reward-object from the user-input
      */
     public Reward createNewReward(String name, String desc, int points) {
-        Reward reward = new Reward(name, points, desc);
+        Reward reward = new Reward(name, points, desc, Model.getInstance(getFilesDir(),this).getSelectedGroup().getGroupID());
         return reward;
     }
 

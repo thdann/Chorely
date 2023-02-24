@@ -31,11 +31,12 @@ import shared.transferable.Transferable;
  */
 public class CreateChoreActivity extends AppCompatActivity implements UpdatableActivity {
 
-
+    Group selectedGroup;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_chore);
+
     }
 
     /**
@@ -48,6 +49,7 @@ public class CreateChoreActivity extends AppCompatActivity implements UpdatableA
         Bundle bundle = getIntent().getExtras();
 
         if (bundle != null) {
+            selectedGroup = (Group) bundle.get("SELECTED_GROUP");
             Chore chore = (Chore) bundle.get("chore");
             setTitle("Redigera syssla");
             ((EditText) (findViewById(R.id.activity_register_editText_nameChore))).setText(chore.getName());
@@ -92,7 +94,7 @@ public class CreateChoreActivity extends AppCompatActivity implements UpdatableA
      * Creates a new Chore-object from the user-input
      */
     public Chore createNewChore(String name, String desc, int points) {
-        Chore chore = new Chore(name, points, desc);
+        Chore chore = new Chore(name, points, desc, Model.getInstance(getFilesDir(),this).getSelectedGroup().getGroupID());
         return chore;
     }
 
